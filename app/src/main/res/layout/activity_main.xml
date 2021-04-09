@@ -10,12 +10,15 @@
         android:id="@+id/posters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardElevation="5dp"
+        android:layout_margin="10dp"
         app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
         app:layout_constraintBottom_toTopOf="@+id/text1"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="percent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -25,46 +28,42 @@
             <ImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
-                android:src="@drawable/escape"
                 android:scaleType="fitCenter"
-                />
-            <ImageView
-                android:layout_width="@dimen/image_width"
-                android:layout_height="@dimen/image_height"
-                android:src="@drawable/green_mile"
-                android:scaleType="fitCenter"
-                />
+                android:src="@drawable/escape" />
 
             <ImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
-                android:src="@drawable/interstellar"
                 android:scaleType="fitCenter"
-                />
+                android:src="@drawable/green_mile" />
 
             <ImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
-                android:src="@drawable/lotr"
                 android:scaleType="fitCenter"
-                />
+                android:src="@drawable/interstellar" />
+
+            <ImageView
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:scaleType="fitCenter"
+                android:src="@drawable/lotr" />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
     <TextView
+        android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text1"
-        android:text="@string/text_message"
         android:autoLink="web"
+        android:text="@string/text_message"
         android:textSize="15sp"
-        app:layout_constraintTop_toBottomOf="@+id/posters"
         app:layout_constraintBottom_toTopOf="@+id/content"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/posters" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content"
@@ -75,73 +74,73 @@
         app:layout_constraintBottom_toTopOf="@id/frame2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text1"
-        >
+        app:layout_constraintTop_toBottomOf="@id/text1">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/search"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
+            android:background="@drawable/menu_ripple"
+            android:onClick="clickSearch"
             android:text="@string/button_search"
-            android:background="#00000000"
-            android:textColor="#FF5722"
+            android:textColor="@color/button_menu"
             app:layout_constraintBottom_toTopOf="@+id/history"
             app:layout_constraintEnd_toStartOf="@+id/marked"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            android:onClick="clickSearch"/>
+            app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/marked"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
+            android:background="@drawable/menu_ripple"
+            android:onClick="clickMarked"
             android:text="@string/button_marked"
-            android:background="#00000000"
-            android:textColor="#FF5722"
+            android:textColor="@color/button_menu"
             app:layout_constraintBottom_toTopOf="@id/settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/search"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            android:onClick="clickMarked"/>
+            app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/history"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
+            android:background="@drawable/menu_ripple"
+            android:onClick="clickHistory"
             android:text="@string/button_history"
-            android:background="#00000000"
-            android:textColor="#FF5722"
+            android:textColor="@color/button_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/settings"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search"
-            android:onClick="clickHistory"/>
+            app:layout_constraintTop_toBottomOf="@+id/search" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/settings"
             android:layout_width="141dp"
             android:layout_height="79dp"
+            android:background="@drawable/menu_ripple"
+            android:onClick="clickSettings"
             android:text="@string/button_settings"
-            android:background="#00000000"
-            android:textColor="#FF5722"
+            android:textColor="@color/button_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/history"
-            app:layout_constraintTop_toBottomOf="@id/marked"
-            android:onClick="clickSettings"/>
+            app:layout_constraintTop_toBottomOf="@id/marked" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/frame2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="100dp"
         android:background="#9BFA8A"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/content" />
+        app:layout_constraintTop_toBottomOf="@+id/content"
+        tools:layout_editor_absoluteX="0dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
