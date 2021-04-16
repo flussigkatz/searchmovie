@@ -7,5 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="button_menu">#FFFFDA22</color>
+    <color name="text_color">#FFFFDA22</color>
+    <color name="gradient_start">#00FFFD</color>
+    <color name="gradient_center">#5900FF</color>
+    <color name="gradient_end">#FF0000</color>
 </resources>
