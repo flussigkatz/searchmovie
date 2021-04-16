@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/topAppBar"
-        style="@style/MyTheme"
+        style="@style/ToolBar"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -20,8 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="SearchMovie"
-            app:titleTextColor="@color/text_color"
+            style="@style/ToolBar"
+            android:background="#00000000"
             app:menu="@menu/top_app_bar"/>
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -36,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topAppBar"
-        app:layout_constraintVertical_chainStyle="spread_inside">
+        app:layout_constraintVertical_chainStyle="packed">
 
         <com.google.android.material.circularreveal.CircularRevealLinearLayout
             android:layout_width="wrap_content"
@@ -78,29 +80,19 @@
         android:autoLink="web"
         android:text="@string/text_message"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/content"
+        app:layout_constraintBottom_toTopOf="@+id/bottomToolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/posters" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="40dp"
-        app:layout_constraintBottom_toTopOf="@id/frame2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text1">
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/frame2"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomToolBar"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#9BFA8A"
+        android:layout_height="wrap_content"
+        style="@style/ToolBar"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/content"
-        tools:layout_editor_absoluteX="0dp" />
+        app:menu="@menu/bottom_app_bar"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

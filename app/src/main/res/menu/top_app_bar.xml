@@ -2,21 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/search"
-        android:icon="@drawable/search_button"
-        app:showAsAction="always"
-        android:title="@string/Search"/>
-    <item
-        android:id="@+id/history"
-        android:icon="@drawable/history_button"
-        app:showAsAction="always"
-        android:title="@string/History"/>
-    <item
-        android:id="@+id/marked"
-        android:icon="@drawable/marked_button"
-        app:showAsAction="always"
-        android:title="@string/Marked"/>
-    <item
         android:id="@+id/settings"
         android:icon="@drawable/settings_button"
         app:showAsAction="ifRoom"
