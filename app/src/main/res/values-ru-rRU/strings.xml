@@ -6,4 +6,8 @@
     <string name="button_history">История</string>
     <string name="button_settings">Настройки</string>
     <string name="text_message">Взято из 250 лучших Takes from top 250 www.kinopoisk.ru</string>
+    <string name="Search">Поиск</string>
+    <string name="Marked">Отмеченные</string>
+    <string name="History">История</string>
+    <string name="Settings">Настройки</string>
 </resources>
