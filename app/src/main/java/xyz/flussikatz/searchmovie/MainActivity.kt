@@ -1,5 +1,6 @@
 package xyz.flussikatz.searchmovie
 
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -37,6 +38,13 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+
+        val posterAnim = ObjectAnimator.ofFloat(lotr1, View.X, 0F, -500F)
+                posterAnim.setDuration(30000).start()
+
+        val posterAnim2 = ObjectAnimator.ofFloat(spisok, View.TRANSLATION_X,  -500F)
+        posterAnim2.setDuration(30000).start()
 
     }
 }
