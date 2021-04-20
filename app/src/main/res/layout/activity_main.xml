@@ -36,6 +36,7 @@
         app:cardElevation="5dp"
         android:scaleX="0"
         android:scaleY="0"
+        android:backgroundTint="#00000000"
         app:layout_constraintBottom_toTopOf="@+id/text1"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topAppBar"
@@ -45,17 +46,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/scroll"
+            android:backgroundTint="#00000000"
             >
 
 
         <com.google.android.material.circularreveal.CircularRevealLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00000000"
+            >
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/lotr1"
                 android:id="@+id/lotr1"
                 />
@@ -64,6 +71,9 @@
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/lotr2"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/lotr2"/>
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -71,6 +81,9 @@
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/forest"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/forest"/>
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -78,6 +91,9 @@
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/spisok"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/spisok"/>
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -85,12 +101,18 @@
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/escape"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/escape"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/green_mile"
                 android:id="@+id/green_mile"/>
 
@@ -99,6 +121,9 @@
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/interstellar"
                 android:id="@+id/interstellar"/>
 
@@ -107,6 +132,9 @@
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:src="@drawable/lotr"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:id="@+id/lotr"/>
 
         </com.google.android.material.circularreveal.CircularRevealLinearLayout>

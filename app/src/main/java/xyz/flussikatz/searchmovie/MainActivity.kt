@@ -71,5 +71,19 @@ class MainActivity : AppCompatActivity() {
         animatorSet.addListener(animationUpdateListener)
         animatorSet.setDuration(1000).start()
 
+
+        /*lotr.setOnClickListener{
+            ObjectAnimator.ofFloat(lotr, View.SCALE_X, 1f, 0.8f).start()
+            ObjectAnimator.ofFloat(lotr, View.SCALE_Y, 1f, 0.8f).start()
+        }*/
+        lotr1
+        lotr2
+        green_mile
+        interstellar
+        forest
+        escape
+        spisok
+
+
     }
 }
