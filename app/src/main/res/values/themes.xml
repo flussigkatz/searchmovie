@@ -29,6 +29,9 @@
         <item name="itemTextColor">@color/white</item>
         <item name="titleTextColor">@color/white</item>
     </style>
+    <style name="Recycler" parent="Theme.SearchMovie">
+        <item name="android:textColor">@color/black</item>
+    </style>
 
 
 </resources>

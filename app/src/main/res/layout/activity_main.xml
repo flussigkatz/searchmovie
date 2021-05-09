@@ -14,7 +14,8 @@
         android:id="@+id/topAppBar"
         style="@style/ToolBar"
         app:layout_constraintTop_toTopOf="parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/materialToolbar"
@@ -38,7 +39,6 @@
         android:scaleX="0"
         android:scaleY="0"
         android:backgroundTint="#00000000"
-        app:layout_constraintBottom_toTopOf="@+id/text1"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topAppBar"
         app:layout_constraintVertical_chainStyle="packed">
@@ -151,10 +151,21 @@
         android:alpha="0"
         android:text="@string/text_message"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomToolBar"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/posters" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/film_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text1"
+        tools:listitem="@layout/film_item"
+        app:layout_constraintBottom_toTopOf="@+id/bottomToolBar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomToolBar"
