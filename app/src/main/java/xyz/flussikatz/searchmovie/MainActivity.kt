@@ -3,6 +3,7 @@ package xyz.flussikatz.searchmovie
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -89,11 +90,13 @@ class MainActivity : AppCompatActivity() {
         film_recycler.apply {
             filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener{
                 override fun click(film: Film) {
+                    val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    startActivity(intent)
                 }
             })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
-            val decorator = TopSpasingItemDecoration(8)
+            val decorator = TopSpasingItemDecoration(5)
             addItemDecoration(decorator)
 
         }
