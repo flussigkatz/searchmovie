@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
 
     tools:context=".DetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:fitsSystemWindows="false"
+        android:fitsSystemWindows="true"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -44,22 +44,24 @@
         android:layout_height="wrap_content"
         android:id="@+id/details_fab"
         android:layout_margin="15dp"
-        android:backgroundTint="@color/design_default_color_primary_dark"
+        android:backgroundTint="@color/design_default_color_secondary_variant"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right"
-        app:srcCompat="@drawable/ic_launcher_foreground"
+        app:srcCompat="@drawable/ic_baseline_share_24"
         android:tint="@color/white"
         />
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        style="@style/DarkBackground">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/details_description"
         android:layout_margin="5dp"
-        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        style="@style/DarkBackground"
         android:text="@tools:sample/lorem/random"/>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

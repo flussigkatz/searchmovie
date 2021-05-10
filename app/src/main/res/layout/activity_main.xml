@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/Background"
+    style="@style/MainBackground"
     tools:context=".MainActivity">
 
 
@@ -168,6 +168,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text1"
         tools:listitem="@layout/film_item"
+        android:background="#00000000"
         app:layout_constraintBottom_toTopOf="@+id/bottomToolBar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
