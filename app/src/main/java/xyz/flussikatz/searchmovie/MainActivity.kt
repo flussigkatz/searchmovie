@@ -90,7 +90,10 @@ class MainActivity : AppCompatActivity() {
         film_recycler.apply {
             filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener{
                 override fun click(film: Film) {
+                    val bundle = Bundle()
+                    bundle.putParcelable("film", film)
                     val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    intent.putExtras(bundle)
                     startActivity(intent)
                 }
             })
