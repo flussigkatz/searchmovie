@@ -22,6 +22,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars"/>
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/favorite"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/favorite_selector"
+            android:backgroundTint="#FFEB3B"
+            android:button="@null"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

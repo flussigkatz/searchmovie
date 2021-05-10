@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.film_item.view.*
 
 class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val items = mutableListOf<Film>()
+    var items = ArrayList<Film>()
 
     override fun getItemCount() = items.size
 
