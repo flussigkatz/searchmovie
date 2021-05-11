@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/topAppBar"
         style="@style/ToolBar"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/materialToolbar"
@@ -34,98 +35,111 @@
         android:layout_margin="10dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:backgroundTint="#00000000"
         app:layout_constraintBottom_toTopOf="@+id/text1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topAppBar"
         app:layout_constraintVertical_chainStyle="packed">
 
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scroll"
+            android:backgroundTint="#00000000"
+            >
+
+
         <com.google.android.material.circularreveal.CircularRevealLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00000000"
+            >
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/lotr1"
                 android:id="@+id/lotr1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/lotr2"
-                app:layout_constraintTop_toTopOf="parent"
                 />
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/lotr2"
-                android:src="@drawable/lotr2"
-                app:layout_constraintStart_toEndOf="@+id/lotr1"
-                app:layout_constraintEnd_toStartOf="@+id/forest"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
+                android:src="@drawable/lotr2"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/forest"
-                android:src="@drawable/forest"
-                app:layout_constraintStart_toEndOf="@+id/lotr2"
-                app:layout_constraintEnd_toStartOf="@+id/spisok"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
+                android:src="@drawable/forest"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/spisok"
-                android:src="@drawable/spisok"
-                app:layout_constraintStart_toEndOf="@+id/forest"
-                app:layout_constraintEnd_toStartOf="@+id/escape"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
+                android:src="@drawable/spisok"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:id="@+id/escape"
-                android:src="@drawable/escape"
-                app:layout_constraintStart_toEndOf="@+id/spisok"
-                app:layout_constraintEnd_toStartOf="@+id/green_mile"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
+                android:src="@drawable/escape"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/green_mile"
-                android:id="@+id/green_mile"
-                app:layout_constraintStart_toEndOf="@+id/escape"
-                app:layout_constraintEnd_toStartOf="@+id/interstellar"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:id="@+id/green_mile"/>
 
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
                 android:src="@drawable/interstellar"
-                android:id="@+id/interstellar"
-                app:layout_constraintStart_toEndOf="@+id/green_mile"
-                app:layout_constraintEnd_toStartOf="@+id/lotr"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:id="@+id/interstellar"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="@dimen/image_width"
                 android:layout_height="@dimen/image_height"
                 android:scaleType="fitCenter"
                 android:src="@drawable/lotr"
-                android:id="@+id/lotr"
-                app:layout_constraintStart_toEndOf="@id/interstellar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:backgroundTint="#00000000"
+                android:clickable="true"
+                android:stateListAnimator="@animator/pressed"
+                android:id="@+id/lotr"/>
 
         </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+        </HorizontalScrollView>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -134,6 +148,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autoLink="web"
+        android:alpha="0"
         android:text="@string/text_message"
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/bottomToolBar"
