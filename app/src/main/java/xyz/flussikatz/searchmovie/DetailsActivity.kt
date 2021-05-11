@@ -2,6 +2,7 @@ package xyz.flussikatz.searchmovie
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.android.material.checkbox.MaterialCheckBox
 import kotlinx.android.synthetic.main.activity_details.*
 
 class DetailsActivity : AppCompatActivity() {
@@ -11,6 +12,8 @@ class DetailsActivity : AppCompatActivity() {
         val film = intent.extras?.get("film") as Film
         details_toolbar.title = film.title
         details_poster.setImageResource(film.poster)
-        details_description.text = film.description
+//        details_description.text = film.description
+        details_description.text = film.fav_state.toString()
+
     }
 }

@@ -30,6 +30,7 @@
             android:background="@drawable/favorite_selector"
             android:backgroundTint="#FFEB3B"
             android:button="@null"
+
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

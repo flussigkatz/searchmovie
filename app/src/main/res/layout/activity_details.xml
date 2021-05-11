@@ -50,6 +50,18 @@
         app:srcCompat="@drawable/ic_baseline_share_24"
         android:tint="@color/white"
         />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/step_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/design_default_color_secondary_variant"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|left"
+        app:srcCompat="@drawable/arrow_back"
+        android:tint="@color/white"
+        />
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

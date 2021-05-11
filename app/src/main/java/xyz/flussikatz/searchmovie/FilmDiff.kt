@@ -20,7 +20,7 @@ class FilmDiff(val oldList: ArrayList<Film>, val newList: ArrayList<Film>) : Dif
         oldList[oldItemPosition].poster == newList[newItemPosition].poster&&
         oldList[oldItemPosition].description == newList[newItemPosition].description&&
         oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state&&
-        oldList[oldItemPosition].fav_mark == newList[newItemPosition].fav_mark
+        oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state
     }
 
 }

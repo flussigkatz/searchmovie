@@ -10,10 +10,11 @@ class FilmViewHolder(private val itemView: View) : RecyclerView.ViewHolder(itemV
     private val description = itemView.description
     private val favorite = itemView.favorite
 
+
     fun bind(film: Film) {
         title.text = film.title
         poster.setImageResource(film.poster)
         description.text = film.description
-//        favorite.setImageResource(film.fav_mark)
+        favorite.isChecked = film.fav_state
     }
 }
