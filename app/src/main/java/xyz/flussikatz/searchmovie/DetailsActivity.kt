@@ -12,14 +12,15 @@ class DetailsActivity : AppCompatActivity() {
         val film = intent.extras?.get("film") as Film
         details_toolbar.title = film.title
         details_poster.setImageResource(film.poster)
-//        details_description.text = film.description
-        details_description.text = film.fav_state.toString()
+        details_description.text = film.description
+        details_favorite.isChecked = film.fav_state
+
+        details_favorite.setOnCheckedChangeListener { _, isChecked ->  film.fav_state = isChecked}
 
        step_back.setOnClickListener {
-           details_description.text = film.fav_state.toString()
+           super.finish()
        }
         details_fab.setOnClickListener {
-            film.fav_state = !film.fav_state
         }
     }
 }
