@@ -2,7 +2,9 @@ package xyz.flussikatz.searchmovie
 
 import androidx.recyclerview.widget.DiffUtil
 
-class FilmDiff(val oldList: ArrayList<Film>, val newList: ArrayList<Film>) : DiffUtil.Callback() {
+class FilmDiff(var oldList: ArrayList<Film>, val newList: ArrayList<Film>) : DiffUtil.Callback() {
+
+
     override fun getOldListSize(): Int {
         return oldList.size
     }
@@ -23,4 +25,18 @@ class FilmDiff(val oldList: ArrayList<Film>, val newList: ArrayList<Film>) : Dif
         oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state
     }
 
+    /*inner class Up(val adapter: FilmListRecyclerAdapter){
+        fun updateData(newList: ArrayList<Film>) {
+            val diffResult = DiffUtil.calculateDiff(FilmDiff(adapter.items, newList))
+            adapter.items = newList
+            diffResult.dispatchUpdatesTo(adapter)
+
+        }
+    }*/
+    fun updateData(adapter: FilmListRecyclerAdapter, newList: ArrayList<Film>) {
+        val diffResult = DiffUtil.calculateDiff(FilmDiff(adapter.items, newList))
+        adapter.items = newList
+        diffResult.dispatchUpdatesTo(adapter)
+
+    }
 }
