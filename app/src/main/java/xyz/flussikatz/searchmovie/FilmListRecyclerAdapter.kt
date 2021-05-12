@@ -1,12 +1,15 @@
 package xyz.flussikatz.searchmovie
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.film_item.view.*
 
 class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+
 
     var items = ArrayList<Film>()
 
@@ -34,4 +37,5 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
     interface OnItemClickListener {
         fun click(film: Film)
     }
+
 }

@@ -15,5 +15,11 @@ class DetailsActivity : AppCompatActivity() {
 //        details_description.text = film.description
         details_description.text = film.fav_state.toString()
 
+       step_back.setOnClickListener {
+           details_description.text = film.fav_state.toString()
+       }
+        details_fab.setOnClickListener {
+            film.fav_state = !film.fav_state
+        }
     }
 }

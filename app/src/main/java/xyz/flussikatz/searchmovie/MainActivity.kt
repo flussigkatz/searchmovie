@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         filmRecycler.apply {
             filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener{
                 override fun click(film: Film) {
+                    favorite.setOnCheckedChangeListener { _, isChecked -> film.fav_state = isChecked }
                     val bundle = Bundle()
                     bundle.putParcelable("film", film)
                     val intent = Intent(this@MainActivity, DetailsActivity::class.java)
@@ -108,17 +109,15 @@ class MainActivity : AppCompatActivity() {
         }
         filmsAdapter.addItems(filmDataBase)
 
-        val favorite = findViewById<MaterialCheckBox>(R.id.favorite)
-        fun state(holder: FilmViewHolder) {
-            val film = filmDataBase[holder.adapterPosition]
 
-//            newList.addAll(filmsAdapter.items)
-
-            film.fav_state = !film.fav_state
-//            Toast.makeText(applicationContext, film.fav_state, Toast.LENGTH_SHORT).show()
+        /*favorite.setOnClickListener {
+            FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener{
+                override fun click(film: Film) {
+                    film.fav_state = !film.fav_state
+                }
+            })
         }
-
-
+*/
 
 
     }
