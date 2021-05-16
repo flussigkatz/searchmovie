@@ -21,12 +21,16 @@
         <item name="android:background">@drawable/backgrond_gardient</item>
     </style>
 
-    <style name="ToolBar" parent="MainBackground">
-        <item name="android:background">#70000000</item>
+    <style name="AppBar" parent="MainBackground">
+        <item name="android:background">#00000000</item>
         <item name="elevation">0dp</item>
         <item name="itemIconTint">@color/white</item>
         <item name="itemTextColor">@color/white</item>
         <item name="titleTextColor">@color/white</item>
+    </style>
+
+    <style name="BottomToolBar" parent="AppBar">
+        <item name="android:background">#E6000000</item>
     </style>
 
     <style name="light_color_text" parent="Theme.SearchMovie">
