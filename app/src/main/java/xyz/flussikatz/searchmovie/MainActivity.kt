@@ -20,11 +20,11 @@ import kotlinx.android.synthetic.main.film_item.*
 import kotlinx.android.synthetic.main.film_item.view.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var filmsAdapter: FilmListRecyclerAdapter
+//    private lateinit var filmsAdapter: FilmListRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val filmDataBase = mutableListOf(
+       /* val filmDataBase = mutableListOf(
             Film(
                 10,
                 "Властелин колец: Братство Кольца",
@@ -138,39 +138,45 @@ class MainActivity : AppCompatActivity() {
                 "От лица главного героя Форреста Гампа, слабоумного безобидного человека с благородным и открытым сердцем, рассказывается история его необыкновенной жизни.Фантастическим образом превращается он в известного футболиста, героя войны, преуспевающего бизнесмена. Он становится миллиардером, но остается таким же бесхитростным, глупым и добрым. Форреста ждет постоянный успех во всем, а он любит девочку, с которой дружил в детстве, но взаимность приходит слишком поздно.",
                 false
             )
-        )
+        )*/
+
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment_container, MainFragment())
+            .addToBackStack(null)
+            .commit()
 
 
-        materialToolbar.setNavigationOnClickListener {
-        }
+//        materialToolbar.setNavigationOnClickListener {
+//        }
+//
+//        materialToolbar.setOnMenuItemClickListener {
+//            when (it.itemId) {
+//                R.id.settings -> {
+//                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
 
-        materialToolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.settings -> {
-                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
-        }
-
-        bottomToolBar.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.search -> {
-                    Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.history -> {
-                    Toast.makeText(this, "History", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.marked -> {
-                    Toast.makeText(this, "Marked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
-        }
+//        bottomToolBar.setOnNavigationItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.search -> {
+//                    Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show()
+//                    true
+//                }
+//                R.id.history -> {
+//                    Toast.makeText(this, "History", Toast.LENGTH_SHORT).show()
+//                    true
+//                }
+//                R.id.marked -> {
+//                    Toast.makeText(this, "Marked", Toast.LENGTH_SHORT).show()
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
 
 
         /*val animatorSet = AnimatorSet()
@@ -182,7 +188,7 @@ class MainActivity : AppCompatActivity() {
         animatorSet.startDelay = 500
         animatorSet.setDuration(1000).start()*/
 
-        val filmRecycler = findViewById<RecyclerView>(R.id.film_recycler)
+        /*val filmRecycler = findViewById<RecyclerView>(R.id.film_recycler)
         filmRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
@@ -200,7 +206,7 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(decorator)
 
         }
-        filmsAdapter.addItems(filmDataBase)
+        filmsAdapter.addItems(filmDataBase)*/
 
 
 
@@ -213,6 +219,19 @@ class MainActivity : AppCompatActivity() {
 //        }
 
     }
+    fun launchDetailsFragment (film: Film) {
+        val bundle = Bundle()
+        bundle.putParcelable("film", film)
+        val fragmentDetails = DetailsFragment()
+        fragmentDetails.arguments = bundle
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragmentDetails)
+            .addToBackStack(null)
+            .commit()
+    }
+
     fun updateData(adapter: FilmListRecyclerAdapter, newList: ArrayList<Film>) {
         val diffResult = DiffUtil.calculateDiff(FilmDiff(adapter.items, newList))
         adapter.items = newList
