@@ -1,7 +1,5 @@
 package xyz.flussikatz.searchmovie
 
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +43,7 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
     interface OnItemClickListener {
         fun click(film: Film)
     }
+
 
     inner class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title = itemView.title

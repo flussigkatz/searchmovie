@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         style="@style/BottomToolBar"
         app:labelVisibilityMode="labeled"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_app_bar"
         />

@@ -5,16 +5,16 @@
         android:id="@+id/search"
         android:icon="@drawable/search_button"
         app:showAsAction="always"
-        android:title="@string/Search"/>
+        android:title="@string/search"/>
     <item
         android:id="@+id/history"
         android:icon="@drawable/history_button"
         app:showAsAction="always"
-        android:title="@string/History"/>
+        android:title="@string/history"/>
     <item
         android:id="@+id/marked"
         android:icon="@drawable/marked_button"
         app:showAsAction="always"
-        android:title="@string/Marked"/>
+        android:title="@string/marked"/>
 
 </menu>

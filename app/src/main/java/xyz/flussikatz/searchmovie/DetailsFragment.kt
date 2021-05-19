@@ -33,6 +33,7 @@ class DetailsFragment : Fragment() {
         details_favorite.setOnCheckedChangeListener { _, isChecked ->  film.fav_state = isChecked}
 
         step_back.setOnClickListener {
+            (requireActivity() as MainActivity).onBackPressed()
         }
         details_fab.setOnClickListener {
         }
