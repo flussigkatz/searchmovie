@@ -3,9 +3,9 @@ package xyz.flussikatz.searchmovie
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
-    private var backPressetTime = 0L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,22 +34,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(supportFragmentManager.backStackEntryCount == 1){
+        if(supportFragmentManager.backStackEntryCount > 1){
             super.onBackPressed()
         } else {
-            if (backPressetTime + TIME_INTERVAL > System.currentTimeMillis()){
-                finish()
-            } else {
-                Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show()
-            }
-            backPressetTime = System.currentTimeMillis()
+            AlertDialog.Builder(this).setTitle("Exit?")
+                .setPositiveButton("Yes"){_, _ ->
+                    finish()
+                }
+                .setNegativeButton("No"){_, _ ->
+
+                }.show()
         }
 
 
     }
 
-    companion object {
-        const val TIME_INTERVAL = 2000L
-    }
 
 }
