@@ -3,8 +3,11 @@ package xyz.flussikatz.searchmovie
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import xyz.flussikatz.searchmovie.fragmets.MainFragment
+import xyz.flussikatz.searchmovie.fragmets.MarkedFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
@@ -19,11 +22,14 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    fun launchDetailsFragment (film: Film) {
+    fun launchDetailsFragment (film: Film, frag: Fragment) {
         val bundle = Bundle()
         bundle.putParcelable("film", film)
+        when (frag.id) {
+            MarkedFragment.instance.id -> navController.navigate(R.id.action_markedFragment_to_detailsFragment, bundle)
+            MainFragment.instance.id -> navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
+        }
 
-        navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
 
     }
 

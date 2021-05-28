@@ -15,13 +15,13 @@ class MarkedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        instance = this
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_marked, container, false)
     }
 
@@ -31,7 +31,7 @@ class MarkedFragment : Fragment() {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
-                        (requireActivity() as MainActivity).launchDetailsFragment(film)
+                        (requireActivity() as MainActivity).launchDetailsFragment(film, this@MarkedFragment)
                     }
                 })
             adapter = filmsAdapter
@@ -44,4 +44,8 @@ class MarkedFragment : Fragment() {
         filmsAdapter.addItems(markedList)
     }
 
+    companion object {
+        lateinit var instance: MarkedFragment
+            private set
+    }
 }

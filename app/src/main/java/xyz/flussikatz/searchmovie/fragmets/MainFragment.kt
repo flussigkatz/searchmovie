@@ -12,10 +12,10 @@ import xyz.flussikatz.searchmovie.*
 
 class MainFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        instance = this
     }
 
     override fun onCreateView(
@@ -48,7 +48,8 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.history -> {
-                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, this.id.toString(), Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.marked -> {
@@ -66,7 +67,7 @@ class MainFragment : Fragment() {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
-                        (requireActivity() as MainActivity).launchDetailsFragment(film)
+                        (requireActivity() as MainActivity).launchDetailsFragment(film, this@MainFragment)
                     }
                 })
             adapter = filmsAdapter
@@ -76,6 +77,11 @@ class MainFragment : Fragment() {
 
         }
         filmsAdapter.addItems(App.instance.filmDataBase)
+    }
+
+    companion object {
+        lateinit var instance: MainFragment
+            private set
     }
 
 }

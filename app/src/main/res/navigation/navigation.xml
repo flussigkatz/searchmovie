@@ -39,5 +39,13 @@
         android:id="@+id/markedFragment"
         android:name="xyz.flussikatz.searchmovie.fragmets.MarkedFragment"
         android:label="fragment_marked"
-        tools:layout="@layout/fragment_marked" />
+        tools:layout="@layout/fragment_marked" >
+        <action
+            android:id="@+id/action_markedFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit" />
+    </fragment>
 </navigation>
