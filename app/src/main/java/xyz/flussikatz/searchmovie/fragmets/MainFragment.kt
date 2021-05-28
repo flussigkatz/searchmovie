@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import xyz.flussikatz.searchmovie.*
 
 class MainFragment : Fragment() {
+    lateinit var filmsAdapter: FilmListRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,7 +27,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lateinit var filmsAdapter: FilmListRecyclerAdapter
 
         materialToolbar.setNavigationOnClickListener {
         }
@@ -52,7 +52,8 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
-                    Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_markedFragment)
+//                    Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show()
                     true
                 }
                 else -> false
