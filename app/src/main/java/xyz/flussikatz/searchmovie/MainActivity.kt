@@ -1,5 +1,6 @@
 package xyz.flussikatz.searchmovie
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -26,13 +27,14 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putParcelable("film", film)
         when (frag.id) {
-            MarkedFragment.instance.id -> navController.navigate(R.id.action_markedFragment_to_detailsFragment, bundle)
             MainFragment.instance.id -> navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
+            MarkedFragment.instance.id -> navController.navigate(R.id.action_markedFragment_to_detailsFragment, bundle)
         }
 
 
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
         if(navController.backStack.size > 2){
             super.onBackPressed()

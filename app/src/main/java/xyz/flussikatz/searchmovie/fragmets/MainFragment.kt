@@ -48,8 +48,7 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.history -> {
-//                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
-                    Toast.makeText(context, this.id.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.marked -> {
