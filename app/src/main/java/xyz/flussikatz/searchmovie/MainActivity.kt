@@ -12,7 +12,7 @@ import xyz.flussikatz.searchmovie.fragmets.MarkedFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
-    private var backPressetTime = 0L
+    private var backPressedTime = 0L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,12 +39,12 @@ class MainActivity : AppCompatActivity() {
         if(navController.backStack.size > 2){
             super.onBackPressed()
         } else {
-            if (backPressetTime + TIME_INTERVAL > System.currentTimeMillis()){
+            if (backPressedTime + TIME_INTERVAL > System.currentTimeMillis()){
                 finish()
             } else {
                 Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show()
             }
-            backPressetTime = System.currentTimeMillis()
+            backPressedTime = System.currentTimeMillis()
         }
 
 

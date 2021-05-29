@@ -26,7 +26,7 @@
         <item name="android:background">@drawable/backgrond_gardient_dark</item>
     </style>
 
-    <style name="AppBar" parent="MainBackground">
+    <style name="MainAppBar" parent="Theme.SearchMovie">
         <item name="android:background">#20000000</item>
         <item name="elevation">0dp</item>
         <item name="itemIconTint">@color/white</item>

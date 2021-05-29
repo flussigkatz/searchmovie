@@ -24,8 +24,8 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val film = arguments?.get("film") as Film
-        details_toolbar.title = film.title
-        details_poster.setImageResource(film.poster)
+        detailsToolbar.title = film.title
+        detailsPoster.setImageResource(film.poster)
         details_description.text = film.description
         details_favorite.isChecked = film.fav_state
 

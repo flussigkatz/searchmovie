@@ -28,10 +28,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        materialToolbar.setNavigationOnClickListener {
+        mainToolbar.setNavigationOnClickListener {
         }
 
-        materialToolbar.setOnMenuItemClickListener {
+        mainToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.settings -> {
                     Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
