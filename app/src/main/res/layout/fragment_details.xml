@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/detailsAppBar"
@@ -14,11 +13,13 @@
         >
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbarLayout"
+            android:id="@+id/detailsToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:minHeight="60dp"
             app:contentScrim="?attr/colorPrimary"
+            app:collapsedTitleTextAppearance="@style/DetailsAppBar"
+            app:expandedTitleTextAppearance="@style/DetailsAppBar"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:toolbarId="@+id/detailsToolbar"
             >
@@ -37,19 +38,20 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:title="@string/app_name" />
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/details_favorite"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="left|top"
+                android:layout_margin="15dp"
+                android:background="@drawable/favorite_selector"
+                android:backgroundTint="#FFEB3B"
+                android:button="@null"
+                />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/details_favorite"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="left|top"
-        android:layout_margin="15dp"
-        android:background="@drawable/favorite_selector"
-        android:backgroundTint="#FFEB3B"
-        android:button="@null"
-        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/details_fab"
