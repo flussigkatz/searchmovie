@@ -1,28 +1,36 @@
 package xyz.flussikatz.searchmovie
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import xyz.flussikatz.searchmovie.fragmets.MainFragment
+import xyz.flussikatz.searchmovie.fragmets.MarkedFragment
 
 class MainActivity : AppCompatActivity() {
-    private var backPressetTime = 0L
+    lateinit var navController: NavController
+    private var backPressedTime = 0L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
-        if(supportFragmentManager.backStackEntryCount == 1){
+        if(navController.backStack.size > 2){
             super.onBackPressed()
         } else {
-            if (backPressetTime + TIME_INTERVAL > System.currentTimeMillis()){
+            if (backPressedTime + TIME_INTERVAL > System.currentTimeMillis()){
                 finish()
             } else {
                 Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show()
             }
-            backPressetTime = System.currentTimeMillis()
+            backPressedTime = System.currentTimeMillis()
         }
 
 
