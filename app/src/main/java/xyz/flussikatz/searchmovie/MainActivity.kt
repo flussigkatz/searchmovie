@@ -10,27 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container, MainFragment())
-            .addToBackStack(null)
-            .commit()
 
-
-
-
-    }
-    fun launchDetailsFragment (film: Film) {
-        val bundle = Bundle()
-        bundle.putParcelable("film", film)
-        val fragmentDetails = DetailsFragment()
-        fragmentDetails.arguments = bundle
-
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, fragmentDetails)
-            .addToBackStack(null)
-            .commit()
     }
 
     override fun onBackPressed() {
