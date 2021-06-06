@@ -33,6 +33,12 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
         notifyDataSetChanged()
     }
 
+    fun addItems(film : Film){
+        items.clear()
+        items.add(film)
+        notifyDataSetChanged()
+    }
+
     fun updateData(newList: ArrayList<Film>) {
         val diffResult = DiffUtil.calculateDiff(FilmDiff(this.items, newList))
         this.items = newList

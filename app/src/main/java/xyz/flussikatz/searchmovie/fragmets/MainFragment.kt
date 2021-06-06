@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.fragmets
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.*
+import xyz.flussikatz.searchmovie.*
 
 class MainFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    lateinit var filmsAdapter: FilmListRecyclerAdapter
 
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,12 +23,11 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lateinit var filmsAdapter: FilmListRecyclerAdapter
 
-        materialToolbar.setNavigationOnClickListener {
+        main_toolbar.setNavigationOnClickListener {
         }
 
-        materialToolbar.setOnMenuItemClickListener {
+        main_toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.settings -> {
                     Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
@@ -40,7 +37,7 @@ class MainFragment : Fragment() {
             }
         }
 
-        bottomToolBar.setOnNavigationItemSelectedListener {
+        bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.search -> {
                     Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show()
@@ -51,7 +48,8 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
-                    Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_markedFragment)
+//                    Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show()
                     true
                 }
                 else -> false
@@ -64,7 +62,9 @@ class MainFragment : Fragment() {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
-                        (requireActivity() as MainActivity).launchDetailsFragment(film)
+                        val bundle = Bundle()
+                        bundle.putParcelable("film", film)
+                        (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
                     }
                 })
             adapter = filmsAdapter
@@ -75,5 +75,6 @@ class MainFragment : Fragment() {
         }
         filmsAdapter.addItems(App.instance.filmDataBase)
     }
+
 
 }

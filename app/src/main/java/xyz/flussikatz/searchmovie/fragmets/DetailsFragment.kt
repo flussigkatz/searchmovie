@@ -1,18 +1,18 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.fragmets
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_details.*
+import xyz.flussikatz.searchmovie.Film
+import xyz.flussikatz.searchmovie.MainActivity
+import xyz.flussikatz.searchmovie.R
 
 class DetailsFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +36,11 @@ class DetailsFragment : Fragment() {
             (requireActivity() as MainActivity).onBackPressed()
         }
         details_fab.setOnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, "Check this film: ${film.title} \n ${film.description}.")
+            intent.type = "text/plain"
+            startActivity(Intent.createChooser(intent, "Share to"))
         }
     }
 
