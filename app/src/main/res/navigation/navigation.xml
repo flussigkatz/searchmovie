@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="xyz.flussikatz.searchmovie.fragmets.MainFragment"
-        android:label="MainFragment" >
+        android:label="MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_detailsFragment"
             app:destination="@id/detailsFragment"
@@ -26,14 +26,14 @@
     <fragment
         android:id="@+id/detailsFragment"
         android:name="xyz.flussikatz.searchmovie.fragmets.DetailsFragment"
-        android:label="DetailsFragment" >
+        android:label="DetailsFragment">
 
     </fragment>
     <fragment
         android:id="@+id/markedFragment"
         android:name="xyz.flussikatz.searchmovie.fragmets.MarkedFragment"
         android:label="fragment_marked"
-        tools:layout="@layout/fragment_marked" >
+        tools:layout="@layout/fragment_marked">
         <action
             android:id="@+id/action_markedFragment_to_detailsFragment"
             app:destination="@id/detailsFragment"

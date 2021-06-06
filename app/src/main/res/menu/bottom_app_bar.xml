@@ -4,17 +4,17 @@
     <item
         android:id="@+id/search"
         android:icon="@drawable/search_button"
-        app:showAsAction="always"
-        android:title="@string/search"/>
+        android:title="@string/search"
+        app:showAsAction="always" />
     <item
         android:id="@+id/history"
         android:icon="@drawable/history_button"
-        app:showAsAction="always"
-        android:title="@string/history"/>
+        android:title="@string/history"
+        app:showAsAction="always" />
     <item
         android:id="@+id/marked"
         android:icon="@drawable/marked_button"
-        app:showAsAction="always"
-        android:title="@string/marked"/>
+        android:title="@string/marked"
+        app:showAsAction="always" />
 
 </menu>

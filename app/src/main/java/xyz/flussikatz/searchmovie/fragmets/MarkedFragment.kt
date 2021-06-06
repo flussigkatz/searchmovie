@@ -13,10 +13,6 @@ import java.util.function.Predicate
 class MarkedFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        instance = this
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +27,9 @@ class MarkedFragment : Fragment() {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
-                        (requireActivity() as MainActivity).launchDetailsFragment(film, this@MarkedFragment)
+                        val bundle = Bundle()
+                        bundle.putParcelable("film", film)
+                        (requireActivity() as MainActivity).navController.navigate(R.id.action_markedFragment_to_detailsFragment, bundle)
                     }
                 })
             adapter = filmsAdapter
@@ -44,8 +42,4 @@ class MarkedFragment : Fragment() {
         filmsAdapter.addItems(markedList)
     }
 
-    companion object {
-        lateinit var instance: MarkedFragment
-            private set
-    }
 }

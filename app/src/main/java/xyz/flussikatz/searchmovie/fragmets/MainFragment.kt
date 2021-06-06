@@ -13,10 +13,6 @@ import xyz.flussikatz.searchmovie.*
 class MainFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        instance = this
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,10 +24,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainToolbar.setNavigationOnClickListener {
+        main_toolbar.setNavigationOnClickListener {
         }
 
-        mainToolbar.setOnMenuItemClickListener {
+        main_toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.settings -> {
                     Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
@@ -41,7 +37,7 @@ class MainFragment : Fragment() {
             }
         }
 
-        bottomToolBar.setOnNavigationItemSelectedListener {
+        bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.search -> {
                     Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show()
@@ -66,7 +62,9 @@ class MainFragment : Fragment() {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
-                        (requireActivity() as MainActivity).launchDetailsFragment(film, this@MainFragment)
+                        val bundle = Bundle()
+                        bundle.putParcelable("film", film)
+                        (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
                     }
                 })
             adapter = filmsAdapter
@@ -78,9 +76,5 @@ class MainFragment : Fragment() {
         filmsAdapter.addItems(App.instance.filmDataBase)
     }
 
-    companion object {
-        lateinit var instance: MainFragment
-            private set
-    }
 
 }

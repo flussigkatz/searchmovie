@@ -1,5 +1,6 @@
 package xyz.flussikatz.searchmovie.fragmets
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,8 +25,8 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val film = arguments?.get("film") as Film
-        detailsToolbar.title = film.title
-        detailsPoster.setImageResource(film.poster)
+        details_toolbar.title = film.title
+        details_poster.setImageResource(film.poster)
         details_description.text = film.description
         details_favorite.isChecked = film.fav_state
 
@@ -35,6 +36,11 @@ class DetailsFragment : Fragment() {
             (requireActivity() as MainActivity).onBackPressed()
         }
         details_fab.setOnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, "Check this film: ${film.title} \n ${film.description}.")
+            intent.type = "text/plain"
+            startActivity(Intent.createChooser(intent, "Share to"))
         }
     }
 

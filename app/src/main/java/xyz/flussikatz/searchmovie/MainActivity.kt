@@ -18,20 +18,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-
-
-
-
-    }
-    fun launchDetailsFragment (film: Film, frag: Fragment) {
-        val bundle = Bundle()
-        bundle.putParcelable("film", film)
-        when (frag.id) {
-            MainFragment.instance.id -> navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
-            MarkedFragment.instance.id -> navController.navigate(R.id.action_markedFragment_to_detailsFragment, bundle)
-        }
-
-
     }
 
     @SuppressLint("RestrictedApi")

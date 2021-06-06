@@ -8,29 +8,29 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/mainAppBar"
+        android:id="@+id/main_appbar"
+        style="@style/MainAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/MainAppBar"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/mainToolbarLayout"
+            android:id="@+id/main_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:minHeight="60dp"
             app:collapsedTitleTextAppearance="@style/MainAppBar"
             app:expandedTitleTextAppearance="@style/MainAppBar"
             app:layout_scrollFlags="scroll|snap|enterAlways"
-            app:toolbarId="@+id/mainToolbar">
+            app:toolbarId="@+id/main_toolbar">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/mainToolbar"
+                android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/top_app_bar"
-                app:titleTextColor="@color/main_color"
-                app:title="@string/app_name" />
+                app:title="@string/app_name"
+                app:titleTextColor="@color/main_color" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
@@ -38,8 +38,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_foreground"
                 android:tint="@color/gradient_center"
-                app:layout_collapseMode="parallax"
-                />
+                app:layout_collapseMode="parallax" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -58,7 +57,7 @@
         tools:listitem="@layout/film_item" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomToolBar"
+        android:id="@+id/bottom_toolbar"
         style="@style/BottomToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
