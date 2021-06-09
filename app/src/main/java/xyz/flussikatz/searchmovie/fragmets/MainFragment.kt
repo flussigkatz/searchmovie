@@ -40,7 +40,8 @@ class MainFragment : Fragment() {
         bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.search -> {
-                    Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_searchFragment)
                     true
                 }
                 R.id.history -> {
@@ -58,7 +59,7 @@ class MainFragment : Fragment() {
 
 
 
-        film_recycler.apply {
+        main_recycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
