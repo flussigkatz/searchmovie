@@ -29,7 +29,10 @@ class MarkedFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        (requireActivity() as MainActivity).navController.navigate(R.id.action_markedFragment_to_detailsFragment, bundle)
+                        (requireActivity() as MainActivity).navController.navigate(
+                            R.id.action_markedFragment_to_detailsFragment,
+                            bundle
+                        )
                     }
                 })
             adapter = filmsAdapter
