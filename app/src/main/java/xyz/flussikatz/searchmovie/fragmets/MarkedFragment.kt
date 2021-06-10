@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_marked.*
 import xyz.flussikatz.searchmovie.*
@@ -52,6 +53,9 @@ class MarkedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var markedList = App.instance.filmDataBase.filter { it.fav_state }
+
         marked_recycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
@@ -60,6 +64,12 @@ class MarkedFragment : Fragment() {
                         bundle.putParcelable("film", film)
                         (requireActivity() as MainActivity).navController.navigate(R.id.action_markedFragment_to_detailsFragment,bundle)
                     }
+                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
+                    override fun checkedChange(position: Int, state: Boolean) {
+                        markedList[position].fav_state = state
+                        markedList = markedList.filter { it.fav_state }
+                        filmsAdapter.updateData(markedList as ArrayList<Film>)
+                    }
                 })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
@@ -67,7 +77,7 @@ class MarkedFragment : Fragment() {
             addItemDecoration(decorator)
 
         }
-        val markedList = App.instance.filmDataBase.filter { it.fav_state }
+
         filmsAdapter.addItems(markedList)
     }
 

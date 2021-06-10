@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.merge_search_fragment_content.*
 import xyz.flussikatz.searchmovie.*
@@ -95,6 +94,12 @@ class SearchFragment : Fragment() {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
                         (activity as MainActivity).navController.navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
+                    }
+                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
+                    override fun checkedChange(position: Int, state: Boolean) {
+                        val list = filmsAdapter.items
+                        list[position].fav_state = state
+                        filmsAdapter.updateData(list)
                     }
                 })
             adapter = filmsAdapter

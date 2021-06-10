@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.film_item.view.*
 
-class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, private val checkedListener: OnCheckedChangeListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items = ArrayList<Film>()
 
@@ -33,11 +33,6 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
         notifyDataSetChanged()
     }
 
-    fun addItems(film : Film){
-        items.clear()
-        items.add(film)
-        notifyDataSetChanged()
-    }
 
     fun updateData(newList: ArrayList<Film>) {
         val diffResult = DiffUtil.calculateDiff(FilmDiff(this.items, newList))
@@ -48,6 +43,10 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
 
     interface OnItemClickListener {
         fun click(film: Film)
+    }
+
+    interface OnCheckedChangeListener {
+        fun checkedChange(position: Int, state: Boolean)
     }
 
 
@@ -62,7 +61,8 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
             description.text = film.description
             favorite.isChecked = items[adapterPosition].fav_state
             favorite.setOnCheckedChangeListener { _, isChecked ->
-                items[adapterPosition].fav_state = isChecked
+//                items[adapterPosition].fav_state = isChecked
+                checkedListener.checkedChange(adapterPosition, isChecked)
             }
         }
     }

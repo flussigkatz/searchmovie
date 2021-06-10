@@ -48,8 +48,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        TransitionManager.beginDelayedTransition(root_fragment_main, Slide().apply { duration = 3000 })
-//        root_fragment_main.children.forEach { it.translationX += 10 }
 
 
         main_toolbar.setNavigationOnClickListener {
@@ -94,6 +92,12 @@ class MainFragment : Fragment() {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
                         (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
+                    }
+                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
+                    override fun checkedChange(position: Int, state: Boolean) {
+                        val list = filmsAdapter.items
+                        list[position].fav_state = state
+                        filmsAdapter.updateData(list)
                     }
                 })
             adapter = filmsAdapter
