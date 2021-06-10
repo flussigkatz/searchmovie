@@ -20,9 +20,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-
-        val sceneMainFragment = Scene.getSceneForLayout(root_activity_main, R.layout.fragment_main, this)
-        sceneMainFragment.enter()
     }
 
     @SuppressLint("RestrictedApi")
