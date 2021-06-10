@@ -1,16 +1,20 @@
 package xyz.flussikatz.searchmovie.fragmets
 
 import android.os.Bundle
+import android.transition.Scene
+import android.transition.Slide
+import android.transition.TransitionManager
+import android.transition.TransitionSet
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import androidx.lifecycle.whenResumed
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.merge_search_fragment_content.*
 import xyz.flussikatz.searchmovie.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,9 +33,22 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        seach_view.setOnClickListener { seach_view.isIconified = false }
 
-        seach_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        val scene = Scene.getSceneForLayout(root_fragment_search, R.layout.merge_search_fragment_content, requireContext())
+        val searchSlide = Slide(Gravity.TOP).addTarget(R.id.search_view)
+        val recyclerSlide = Slide(Gravity.BOTTOM).addTarget(R.id.search_recycler)
+        val customTransition = TransitionSet().apply {
+            duration = 400
+            addTransition(recyclerSlide)
+            addTransition(searchSlide)
+        }
+        TransitionManager.go(scene, customTransition)
+
+
+
+        search_view.setOnClickListener { search_view.isIconified = false }
+
+        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }

@@ -1,17 +1,26 @@
 package xyz.flussikatz.searchmovie.fragmets
 
 import android.os.Bundle
+import android.transition.Slide
+import android.transition.TransitionManager
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.*
 import xyz.flussikatz.searchmovie.*
 
 class MainFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
+
+    /*init {
+        exitTransition = Slide(Gravity.START).apply { duration = 800;mode = Slide.MODE_OUT }
+        reenterTransition = Slide(Gravity.START).apply { duration = 800; }
+    }*/
 
 
     override fun onCreateView(
@@ -23,6 +32,9 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        TransitionManager.beginDelayedTransition(root_fragment_main, Slide().apply { duration = 3000 })
+//        root_fragment_main.children.forEach { it.translationX += 10 }
+
 
         main_toolbar.setNavigationOnClickListener {
         }
