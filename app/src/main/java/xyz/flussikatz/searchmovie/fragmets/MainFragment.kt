@@ -13,8 +13,11 @@ import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.film_item.view.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import xyz.flussikatz.searchmovie.*
+
+
 
 class MainFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
@@ -97,7 +100,6 @@ class MainFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             val decorator = TopSpasingItemDecoration(5)
             addItemDecoration(decorator)
-
         }
         filmsAdapter.addItems(App.instance.filmDataBase)
     }

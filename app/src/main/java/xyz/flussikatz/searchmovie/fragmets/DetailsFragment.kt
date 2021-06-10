@@ -13,6 +13,7 @@ import xyz.flussikatz.searchmovie.Film
 import xyz.flussikatz.searchmovie.MainActivity
 import xyz.flussikatz.searchmovie.R
 
+
 class DetailsFragment : Fragment() {
     private val animDuration = 100L
 
