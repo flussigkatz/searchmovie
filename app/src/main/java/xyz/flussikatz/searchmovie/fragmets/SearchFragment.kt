@@ -1,15 +1,13 @@
 package xyz.flussikatz.searchmovie.fragmets
 
 import android.os.Bundle
-import android.transition.Scene
-import android.transition.Slide
-import android.transition.TransitionManager
-import android.transition.TransitionSet
+import android.transition.*
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -22,6 +20,30 @@ import kotlin.collections.ArrayList
 class SearchFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
     val filmDataBase = App.instance.filmDataBase
+    private val animDuration = 100L
+
+    init {
+        enterTransition = Fade().apply {
+            mode = Fade.MODE_IN
+            duration = animDuration
+            interpolator = LinearInterpolator()
+
+        }
+
+        returnTransition = Fade().apply {
+            mode = Fade.MODE_OUT
+            duration = animDuration
+            interpolator = LinearInterpolator()
+
+        }
+
+        exitTransition = Fade().apply {
+            mode = Fade.MODE_OUT
+            duration = animDuration
+            interpolator = LinearInterpolator()
+
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

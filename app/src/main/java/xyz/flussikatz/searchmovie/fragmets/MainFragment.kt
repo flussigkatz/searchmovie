@@ -1,6 +1,7 @@
 package xyz.flussikatz.searchmovie.fragmets
 
 import android.os.Bundle
+import android.transition.Fade
 import android.transition.Slide
 import android.transition.TransitionManager
 import android.view.Gravity
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +18,22 @@ import xyz.flussikatz.searchmovie.*
 
 class MainFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
+    private val animDuration = 100L
 
-    /*init {
-        exitTransition = Slide(Gravity.START).apply { duration = 800;mode = Slide.MODE_OUT }
-        reenterTransition = Slide(Gravity.START).apply { duration = 800; }
-    }*/
+    init {
+        exitTransition = Fade().apply {
+            mode = Fade.MODE_OUT
+            duration = animDuration
+            interpolator = LinearInterpolator()
+
+        }
+        reenterTransition = Fade().apply {
+            mode = Fade.MODE_IN
+            duration = animDuration
+            interpolator = LinearInterpolator()
+
+        }
+    }
 
 
     override fun onCreateView(
