@@ -11,4 +11,5 @@
     <color name="gradient_center">#6400FF</color>
     <color name="gradient_end">#FF0000</color>
     <color name="transparent">#00000000</color>
+    <color name="yellow">#FFEB3B</color>
 </resources>

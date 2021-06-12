@@ -23,11 +23,11 @@
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/favorite"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/favorite_check_box_size"
+            android:layout_height="@dimen/favorite_check_box_size"
             android:layout_margin="10dp"
             android:background="@drawable/favorite_selector"
-            android:backgroundTint="#FFEB3B"
+            android:backgroundTint="@color/yellow"
             android:button="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

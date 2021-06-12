@@ -15,7 +15,6 @@
             android:id="@+id/details_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="60dp"
             app:collapsedTitleTextAppearance="@style/DetailsAppBar"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/DetailsAppBar"
@@ -39,12 +38,12 @@
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/details_favorite"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="@dimen/favorite_check_box_size"
+                android:layout_height="@dimen/favorite_check_box_size"
                 android:layout_gravity="left|top"
-                android:layout_margin="15dp"
+                android:layout_margin="20dp"
                 android:background="@drawable/favorite_selector"
-                android:backgroundTint="#FFEB3B"
+                android:backgroundTint="@color/yellow"
                 android:button="@null" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -55,9 +54,8 @@
         android:id="@+id/details_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="20dp"
         android:backgroundTint="@color/design_default_color_secondary_variant"
-        android:tint="@color/white"
         app:layout_anchor="@id/details_appbar"
         app:layout_anchorGravity="bottom|right"
         app:srcCompat="@drawable/ic_baseline_share_24" />
@@ -66,9 +64,8 @@
         android:id="@+id/step_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="20dp"
         android:backgroundTint="@color/design_default_color_secondary_variant"
-        android:tint="@color/white"
         app:layout_anchor="@id/details_appbar"
         app:layout_anchorGravity="bottom|left"
         app:srcCompat="@drawable/arrow_back" />

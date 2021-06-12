@@ -20,7 +20,6 @@
             android:id="@+id/main_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="60dp"
             app:collapsedTitleTextAppearance="@style/MainAppBar"
             app:expandedTitleTextAppearance="@style/MainAppBar"
             app:layout_scrollFlags="scroll|snap|enterAlways"
@@ -54,7 +53,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:background="#00000000"
+        android:background="@color/transparent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/film_item" />
 
