@@ -62,8 +62,7 @@ class HomeFragment : Fragment()  {
         home_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-//                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
-                    println(App.instance.filmDataBase[0].fav_state)
+                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.history -> {
@@ -92,7 +91,6 @@ class HomeFragment : Fragment()  {
                     override fun checkedChange(position: Int, state: Boolean) {
                         val list = filmsAdapter.items
                         list[position].fav_state = state
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
                     }
                 })
             adapter = filmsAdapter
