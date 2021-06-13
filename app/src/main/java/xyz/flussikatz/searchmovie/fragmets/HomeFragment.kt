@@ -2,26 +2,20 @@ package xyz.flussikatz.searchmovie.fragmets
 
 import android.os.Bundle
 import android.transition.Fade
-import android.transition.Slide
-import android.transition.TransitionManager
-import android.transition.Visibility
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
-import androidx.core.transition.addListener
-import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.film_item.view.*
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.*
 
 
 
-class MainFragment : Fragment() {
+
+class HomeFragment : Fragment()  {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
     private val animDuration = 100L
 
@@ -45,17 +39,17 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
-        main_toolbar.setNavigationOnClickListener {
+        home_toolbar.setNavigationOnClickListener {
         }
 
-        main_toolbar.setOnMenuItemClickListener {
+        home_toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.settings -> {
                     Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
@@ -65,11 +59,11 @@ class MainFragment : Fragment() {
             }
         }
 
-        bottom_toolbar.setOnNavigationItemSelectedListener {
+        home_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.search -> {
-//                    Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show()
-                    (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_searchFragment)
+                R.id.home_page -> {
+//                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
+                    println(App.instance.filmDataBase[0].fav_state)
                     true
                 }
                 R.id.history -> {
@@ -77,8 +71,7 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
-                    (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_markedFragment)
-//                    Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).navController.navigate(R.id.action_homeFragment_to_markedFragment)
                     true
                 }
                 else -> false
@@ -87,18 +80,19 @@ class MainFragment : Fragment() {
 
 
 
-        main_recycler.apply {
+        home_recycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        (activity as MainActivity).navController.navigate(R.id.action_mainFragment_to_detailsFragment, bundle)
+                        (activity as MainActivity).navController.navigate(R.id.action_homeFragment_to_detailsFragment, bundle)
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
                     override fun checkedChange(position: Int, state: Boolean) {
                         val list = filmsAdapter.items
                         list[position].fav_state = state
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
                     }
                 })
             adapter = filmsAdapter

@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SearchMovie</string>
-    <string name="button_search">Поиск</string>
-    <string name="button_marked">Отмеченные</string>
-    <string name="button_history">История</string>
-    <string name="button_settings">Настройки</string>
-    <string name="text_message">Взято из 250 лучших Takes from top 250 www.kinopoisk.ru</string>
     <string name="search">Поиск</string>
+    <string name="home_page">Главная</string>
     <string name="marked">Отмеченные</string>
     <string name="history">История</string>
     <string name="settings">Настройки</string>

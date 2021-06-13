@@ -27,7 +27,7 @@
         <item name="android:background">@color/black</item>
     </style>
 
-    <style name="MainAppBar" parent="Theme.SearchMovie">
+    <style name="HomeAppBar" parent="Theme.SearchMovie">
         <item name="android:background">#00000000</item>
         <item name="elevation">0dp</item>
         <item name="android:textColor">@color/white</item>

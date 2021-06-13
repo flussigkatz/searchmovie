@@ -3,21 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/mainFragment">
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="xyz.flussikatz.searchmovie.fragmets.MainFragment"
-        android:label="MainFragment">
-        <action
-            android:id="@+id/action_mainFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment"/>
-        <action
-            android:id="@+id/action_mainFragment_to_markedFragment"
-            app:destination="@id/markedFragment"/>
-        <action
-            android:id="@+id/action_mainFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
-    </fragment>
+    app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/detailsFragment"
         android:name="xyz.flussikatz.searchmovie.fragmets.DetailsFragment"
@@ -34,12 +20,15 @@
             app:destination="@id/detailsFragment"/>
     </fragment>
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="xyz.flussikatz.searchmovie.fragmets.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        android:id="@+id/homeFragment"
+        android:name="xyz.flussikatz.searchmovie.fragmets.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_searchFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment"/>
+            android:id="@+id/action_homeFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_markedFragment"
+            app:destination="@id/markedFragment" />
     </fragment>
 </navigation>

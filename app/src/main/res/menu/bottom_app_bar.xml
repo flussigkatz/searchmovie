@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/search"
-        android:icon="@drawable/search_button"
-        android:title="@string/search"
+        android:id="@+id/home_page"
+        android:icon="@drawable/home_button"
+        android:title="@string/home_page"
         app:showAsAction="always" />
     <item
         android:id="@+id/history"

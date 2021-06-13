@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.activity_main.*
-import xyz.flussikatz.searchmovie.fragmets.MainFragment
+import xyz.flussikatz.searchmovie.fragmets.HomeFragment
 import xyz.flussikatz.searchmovie.fragmets.MarkedFragment
 
 class MainActivity : AppCompatActivity() {

@@ -93,7 +93,7 @@ class SearchFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        (activity as MainActivity).navController.navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
+//                        (activity as MainActivity).navController.navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
                     override fun checkedChange(position: Int, state: Boolean) {
