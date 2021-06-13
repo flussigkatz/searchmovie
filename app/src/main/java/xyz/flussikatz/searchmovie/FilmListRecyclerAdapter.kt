@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.film_item.view.*
 
-class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, private val checkedListener: OnCheckedChangeListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     var items = ArrayList<Film>()
 
@@ -18,13 +20,23 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
         return FilmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.film_item, parent, false))
     }
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder) {
-            is FilmViewHolder -> {
-                holder.bind(items[position])
-                holder.itemView.item_container.setOnClickListener {
-                    clickListener.click(items[position])
-                }
+        if(holder is FilmViewHolder) {
+            val film = items[position]
+            val title = holder.itemView.title
+            val poster = holder.itemView.poster
+            val description = holder.itemView.description
+            val favorite = holder.itemView.favorite
+            title.text = film.title
+            poster.setImageResource(film.poster)
+            description.text = film.description
+            favorite.isChecked = items[position].fav_state
+            favorite.setOnCheckedChangeListener { _, isChecked ->
+                checkedListener.checkedChange(position, isChecked)
             }
+            holder.itemView.item_container.setOnClickListener {
+                clickListener.click(items[position])
+            }
+
         }
     }
     fun addItems(list:List<Film>){
@@ -33,11 +45,6 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
         notifyDataSetChanged()
     }
 
-    fun addItems(film : Film){
-        items.clear()
-        items.add(film)
-        notifyDataSetChanged()
-    }
 
     fun updateData(newList: ArrayList<Film>) {
         val diffResult = DiffUtil.calculateDiff(FilmDiff(this.items, newList))
@@ -50,20 +57,7 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
         fun click(film: Film)
     }
 
-
-    inner class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val title = itemView.title
-        private val poster = itemView.poster
-        private val description = itemView.description
-        val favorite = itemView.favorite
-        fun bind(film: Film) {
-            title.text = film.title
-            poster.setImageResource(film.poster)
-            description.text = film.description
-            favorite.isChecked = items[adapterPosition].fav_state
-            favorite.setOnCheckedChangeListener { _, isChecked ->
-                items[adapterPosition].fav_state = isChecked
-            }
-        }
+    interface OnCheckedChangeListener {
+        fun checkedChange(position: Int, state: Boolean)
     }
 }

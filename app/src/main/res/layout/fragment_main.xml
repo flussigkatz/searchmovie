@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MainBackground"
+    android:id="@+id/root_fragment_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".fragmets.MainFragment">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,7 +20,6 @@
             android:id="@+id/main_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="60dp"
             app:collapsedTitleTextAppearance="@style/MainAppBar"
             app:expandedTitleTextAppearance="@style/MainAppBar"
             app:layout_scrollFlags="scroll|snap|enterAlways"
@@ -28,9 +29,8 @@
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:menu="@menu/top_app_bar"
                 app:title="@string/app_name"
-                app:titleTextColor="@color/main_color" />
+                app:menu="@menu/top_app_bar"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
@@ -39,6 +39,7 @@
                 android:src="@drawable/ic_launcher_foreground"
                 android:tint="@color/gradient_center"
                 app:layout_collapseMode="parallax" />
+            
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -47,12 +48,12 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/film_recycler"
+        android:id="@+id/main_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:background="#00000000"
+        android:background="@color/transparent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/film_item" />
 

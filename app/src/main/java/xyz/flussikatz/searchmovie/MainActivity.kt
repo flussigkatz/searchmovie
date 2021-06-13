@@ -3,10 +3,12 @@ package xyz.flussikatz.searchmovie
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.transition.Scene
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import kotlinx.android.synthetic.main.activity_main.*
 import xyz.flussikatz.searchmovie.fragmets.MainFragment
 import xyz.flussikatz.searchmovie.fragmets.MarkedFragment
 
