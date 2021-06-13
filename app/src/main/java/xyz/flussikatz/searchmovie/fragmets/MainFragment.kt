@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.transition.Fade
 import android.transition.Slide
 import android.transition.TransitionManager
+import android.transition.Visibility
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
+import androidx.core.transition.addListener
 import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.film_item.view.*
@@ -97,7 +99,6 @@ class MainFragment : Fragment() {
                     override fun checkedChange(position: Int, state: Boolean) {
                         val list = filmsAdapter.items
                         list[position].fav_state = state
-                        filmsAdapter.updateData(list)
                     }
                 })
             adapter = filmsAdapter
