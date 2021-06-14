@@ -5,37 +5,18 @@ import android.transition.Fade
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.*
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
-import kotlin.math.hypot
+import java.time.chrono.MinguoChronology
+import xyz.flussikatz.searchmovie.fragmets.MarkedFragment as MarkedFragment
 
 
-class HomeFragment : Fragment()  {
+class HomeFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
-    private val animDuration = 100L
-
-    init {
-
-        exitTransition = Fade().apply {
-            mode = Fade.MODE_OUT
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }
-        reenterTransition = Fade().apply {
-            mode = Fade.MODE_IN
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }
-    }
 
 
     override fun onCreateView(
@@ -48,16 +29,9 @@ class HomeFragment : Fragment()  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Executors.newSingleThreadExecutor().execute {
-            while (true) {
-                if (root_fragment_home.isAttachedToWindow) {
-                    activity?.runOnUiThread{
-//                        reveaApper()
-                    }
-                    return@execute
-                }
-            }
-        }
+        AnimationHelper.reveaAnimationAppere(root_fragment_home, requireActivity())
+
+        val frag = this
 
 
         home_toolbar.setNavigationOnClickListener {
@@ -84,7 +58,7 @@ class HomeFragment : Fragment()  {
                     true
                 }
                 R.id.marked -> {
-                    (activity as MainActivity).navController.navigate(R.id.action_homeFragment_to_markedFragment)
+                    AnimationHelper.reveaAnimationDisappere(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_markedFragment)
                     true
                 }
                 else -> false
@@ -99,9 +73,9 @@ class HomeFragment : Fragment()  {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        (activity as MainActivity).navController.navigate(R.id.action_homeFragment_to_detailsFragment, bundle)
+                        AnimationHelper.reveaAnimationDisappere(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_detailsFragment, bundle)
                     }
-                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
+                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
                         val list = filmsAdapter.items
                         list[position].fav_state = state
@@ -114,22 +88,5 @@ class HomeFragment : Fragment()  {
         }
         filmsAdapter.addItems(App.instance.filmDataBase)
     }
-
-    /*fun reveaAnimation(viewFrom: View, viewTo: View) {
-
-
-        val x: Int = root_fragment_home.width / 2
-        val y: Int = root_fragment_home.height / 2
-
-        val startRadius = 0
-        val endRadius = hypot(root_fragment_home.width.toDouble(), root_fragment_home.height.toDouble())
-
-        val anim = ViewAnimationUtils.createCircularReveal(root_fragment_home, x, y, startRadius.toFloat(), endRadius.toFloat())
-        anim.duration = 10000
-
-        root_fragment_home.visibility = View.VISIBLE
-        anim.start()
-    }*/
-
 
 }

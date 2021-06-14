@@ -20,30 +20,6 @@ import java.util.function.Predicate
 
 class MarkedFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
-    private val animDuration = 1000L
-
-    init {
-        enterTransition = Fade().apply {
-            mode = Fade.MODE_IN
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }
-
-        returnTransition = Fade().apply {
-            mode = Fade.MODE_OUT
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }
-
-        /*exitTransition = Fade().apply {
-            mode = Fade.MODE_OUT
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }*/
-    }
 
 
     override fun onCreateView(
@@ -58,11 +34,13 @@ class MarkedFragment : Fragment() {
 
         var markedList = App.instance.filmDataBase.filter { it.fav_state }
 
+        AnimationHelper.reveaAnimationAppere(root_fragment_marked, requireActivity())
+
 
         marked_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-                    (activity as MainActivity).navController.navigate(R.id.action_markedFragment_to_homeFragment)
+                    AnimationHelper.reveaAnimationDisappere(root_fragment_marked, requireActivity(), R.id.action_markedFragment_to_homeFragment)
                     true
                 }
                 R.id.history -> {
@@ -83,7 +61,7 @@ class MarkedFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        (requireActivity() as MainActivity).navController.navigate(R.id.action_markedFragment_to_detailsFragment,bundle)
+                        AnimationHelper.reveaAnimationDisappere(root_fragment_marked, requireActivity(), R.id.action_markedFragment_to_detailsFragment, bundle)
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
                     override fun checkedChange(position: Int, state: Boolean) {

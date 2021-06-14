@@ -1,16 +1,22 @@
 package xyz.flussikatz.searchmovie
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.Scene
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.fragmets.HomeFragment
 import xyz.flussikatz.searchmovie.fragmets.MarkedFragment
+import java.util.concurrent.Executors
+import kotlin.math.hypot
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
@@ -21,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+
 
     }
 

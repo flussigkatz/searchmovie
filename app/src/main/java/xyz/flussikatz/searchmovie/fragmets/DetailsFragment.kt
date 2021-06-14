@@ -11,37 +11,13 @@ import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import xyz.flussikatz.searchmovie.AnimationHelper
 import xyz.flussikatz.searchmovie.Film
 import xyz.flussikatz.searchmovie.MainActivity
 import xyz.flussikatz.searchmovie.R
 
 
 class DetailsFragment : Fragment() {
-    private val animDuration = 100L
-
-    init {
-        enterTransition = Fade().apply {
-            mode = Fade.MODE_IN
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }
-
-        returnTransition = Fade().apply {
-            mode = Fade.MODE_OUT
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }
-
-        exitTransition = Fade().apply {
-            mode = Fade.MODE_OUT
-            duration = animDuration
-            interpolator = LinearInterpolator()
-
-        }
-    }
-
 
 
     override fun onCreateView(
@@ -60,6 +36,8 @@ class DetailsFragment : Fragment() {
         details_description.text = film.description
         details_favorite.isChecked = film.fav_state
 
+        AnimationHelper.reveaAnimationAppere(root_fragment_details, requireActivity())
+
         details_favorite.setOnCheckedChangeListener { _, isChecked ->  film.fav_state = isChecked}
 
         step_back.setOnClickListener {
@@ -77,7 +55,7 @@ class DetailsFragment : Fragment() {
         details_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-                    (activity as MainActivity).navController.navigate(R.id.action_detailsFragment_to_homeFragment)
+                    AnimationHelper.reveaAnimationDisappere(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_homeFragment)
                     true
                 }
                 R.id.history -> {
@@ -85,7 +63,7 @@ class DetailsFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
-                    (activity as MainActivity).navController.navigate(R.id.action_detailsFragment_to_markedFragment)
+                    AnimationHelper.reveaAnimationDisappere(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_markedFragment)
                     true
                 }
                 else -> false
