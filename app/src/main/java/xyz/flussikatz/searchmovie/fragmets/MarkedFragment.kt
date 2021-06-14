@@ -12,13 +12,15 @@ import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_marked.*
+import kotlinx.android.synthetic.main.fragment_marked.marked_recycler
 import xyz.flussikatz.searchmovie.*
 import java.util.function.Predicate
 
 class MarkedFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
-    private val animDuration = 100L
+    private val animDuration = 1000L
 
     init {
         enterTransition = Fade().apply {
@@ -35,12 +37,12 @@ class MarkedFragment : Fragment() {
 
         }
 
-        exitTransition = Fade().apply {
+        /*exitTransition = Fade().apply {
             mode = Fade.MODE_OUT
             duration = animDuration
             interpolator = LinearInterpolator()
 
-        }
+        }*/
     }
 
 
@@ -55,6 +57,25 @@ class MarkedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var markedList = App.instance.filmDataBase.filter { it.fav_state }
+
+
+        marked_bottom_toolbar.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.home_page -> {
+                    (activity as MainActivity).navController.navigate(R.id.action_markedFragment_to_homeFragment)
+                    true
+                }
+                R.id.history -> {
+                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.marked -> {
+                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
 
         marked_recycler.apply {
             filmsAdapter =

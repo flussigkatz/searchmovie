@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MainBackground"
-    android:id="@+id/root_fragment_main"
+    android:id="@+id/root_fragment_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="invisible"
+    tools:visibility="visible"
     tools:context=".fragmets.HomeFragment">
 
 

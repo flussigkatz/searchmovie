@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_details.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.Film
 import xyz.flussikatz.searchmovie.MainActivity
 import xyz.flussikatz.searchmovie.R
@@ -69,6 +71,25 @@ class DetailsFragment : Fragment() {
             intent.putExtra(Intent.EXTRA_TEXT, "Check this film: ${film.title} \n ${film.description}.")
             intent.type = "text/plain"
             startActivity(Intent.createChooser(intent, "Share to"))
+        }
+
+
+        details_bottom_toolbar.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.home_page -> {
+                    (activity as MainActivity).navController.navigate(R.id.action_detailsFragment_to_homeFragment)
+                    true
+                }
+                R.id.history -> {
+                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.marked -> {
+                    (activity as MainActivity).navController.navigate(R.id.action_detailsFragment_to_markedFragment)
+                    true
+                }
+                else -> false
+            }
         }
     }
 

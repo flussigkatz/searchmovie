@@ -5,14 +5,16 @@ import android.transition.Fade
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.*
-
-
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import kotlin.math.hypot
 
 
 class HomeFragment : Fragment()  {
@@ -20,6 +22,7 @@ class HomeFragment : Fragment()  {
     private val animDuration = 100L
 
     init {
+
         exitTransition = Fade().apply {
             mode = Fade.MODE_OUT
             duration = animDuration
@@ -44,6 +47,17 @@ class HomeFragment : Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Executors.newSingleThreadExecutor().execute {
+            while (true) {
+                if (root_fragment_home.isAttachedToWindow) {
+                    activity?.runOnUiThread{
+//                        reveaApper()
+                    }
+                    return@execute
+                }
+            }
+        }
 
 
         home_toolbar.setNavigationOnClickListener {
@@ -100,6 +114,22 @@ class HomeFragment : Fragment()  {
         }
         filmsAdapter.addItems(App.instance.filmDataBase)
     }
+
+    /*fun reveaAnimation(viewFrom: View, viewTo: View) {
+
+
+        val x: Int = root_fragment_home.width / 2
+        val y: Int = root_fragment_home.height / 2
+
+        val startRadius = 0
+        val endRadius = hypot(root_fragment_home.width.toDouble(), root_fragment_home.height.toDouble())
+
+        val anim = ViewAnimationUtils.createCircularReveal(root_fragment_home, x, y, startRadius.toFloat(), endRadius.toFloat())
+        anim.duration = 10000
+
+        root_fragment_home.visibility = View.VISIBLE
+        anim.start()
+    }*/
 
 
 }

@@ -6,6 +6,8 @@
     style="@style/MainBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="invisible"
+    tools:visibility="visible"
     android:fitsSystemWindows="true"
     tools:context=".fragmets.MarkedFragment">
 
@@ -16,6 +18,16 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         tools:listitem="@layout/film_item" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/marked_bottom_toolbar"
+        style="@style/BottomToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:labelVisibilityMode="labeled"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:menu="@menu/bottom_app_bar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
