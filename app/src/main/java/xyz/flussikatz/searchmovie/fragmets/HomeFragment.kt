@@ -7,16 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.*
 import java.time.chrono.MinguoChronology
+import java.util.*
+import kotlin.collections.ArrayList
 import xyz.flussikatz.searchmovie.fragmets.MarkedFragment as MarkedFragment
 
 
 class HomeFragment : Fragment() {
     lateinit var filmsAdapter: FilmListRecyclerAdapter
+    private val filmDataBase = App.instance.filmDataBase
 
 
     override fun onCreateView(
@@ -31,21 +35,27 @@ class HomeFragment : Fragment() {
 
         AnimationHelper.reveaAnimationAppere(root_fragment_home, requireActivity())
 
-        val frag = this
 
+        search_view.setOnClickListener { search_view.isIconified = false }
 
-        home_toolbar.setNavigationOnClickListener {
-        }
-
-        home_toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.settings -> {
-                    Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
+        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
             }
-        }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText == null) {return true}
+                else{
+                    if (newText!!.isEmpty()) {
+                        filmsAdapter.updateData(filmDataBase as ArrayList<Film>)
+                    }
+                    val result = filmDataBase.filter { it.title.toLowerCase(Locale.getDefault()).contains(newText!!.toLowerCase(Locale.getDefault())) }
+                    filmsAdapter.updateData(result as ArrayList<Film>)
+                    return false}
+            }
+
+        })
+
 
         home_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -86,7 +96,7 @@ class HomeFragment : Fragment() {
             val decorator = TopSpasingItemDecoration(5)
             addItemDecoration(decorator)
         }
-        filmsAdapter.addItems(App.instance.filmDataBase)
+        filmsAdapter.addItems(filmDataBase)
     }
 
 }
