@@ -1,21 +1,17 @@
 package xyz.flussikatz.searchmovie.fragmets
 
 import android.os.Bundle
-import android.transition.Fade
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.*
-import java.time.chrono.MinguoChronology
 import java.util.*
 import kotlin.collections.ArrayList
-import xyz.flussikatz.searchmovie.fragmets.MarkedFragment as MarkedFragment
 
 
 class HomeFragment : Fragment() {
