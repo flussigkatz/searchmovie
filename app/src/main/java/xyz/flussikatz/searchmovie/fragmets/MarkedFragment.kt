@@ -44,7 +44,7 @@ class MarkedFragment : Fragment() {
                     true
                 }
                 R.id.history -> {
-                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                    AnimationHelper.reveaAnimationDisappere(root_fragment_marked, requireActivity(), R.id.action_markedFragment_to_historyFragment)
                     true
                 }
                 R.id.marked -> {

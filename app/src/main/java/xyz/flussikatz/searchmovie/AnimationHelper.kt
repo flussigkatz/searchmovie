@@ -13,7 +13,7 @@ class AnimationHelper {
 
 
     companion object {
-        private const val animDuration = 300L
+        private const val animDuration = 200L
 
         fun reveaAnimationAppere(view: View, activity: Activity) {
 

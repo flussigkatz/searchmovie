@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.history -> {
-                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                    AnimationHelper.reveaAnimationDisappere(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_historyFragment)
                     true
                 }
                 R.id.marked -> {

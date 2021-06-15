@@ -59,7 +59,7 @@ class DetailsFragment : Fragment() {
                     true
                 }
                 R.id.history -> {
-                    Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                    AnimationHelper.reveaAnimationDisappere(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_historyFragment)
                     true
                 }
                 R.id.marked -> {
