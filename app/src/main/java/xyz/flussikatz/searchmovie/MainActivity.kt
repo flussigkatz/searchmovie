@@ -28,6 +28,15 @@ class MainActivity : AppCompatActivity() {
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
+        /*val lottieAnimationView: LottieAnimationView = welcome_screen
+        lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                AnimationHelper.reveaAnimationDisappere(welcome_screen, this@MainActivity)
+//                AnimationHelper.reveaAnimationAppere(root_fragment_home, this@MainActivity)
+            }
+        })
+        lottieAnimationView.playAnimation()*/
+
 
     }
 
