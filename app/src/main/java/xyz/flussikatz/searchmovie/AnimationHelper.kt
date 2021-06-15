@@ -6,6 +6,10 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import java.util.concurrent.Executors
 import kotlin.math.hypot
 
@@ -13,7 +17,7 @@ class AnimationHelper {
 
 
     companion object {
-        private const val animDuration = 200L
+        private const val animDuration = 250L
 
         fun reveaAnimationAppere(view: View, activity: Activity) {
 
@@ -33,6 +37,7 @@ class AnimationHelper {
                                 endRadius.toFloat()
                             )
                             anim.duration = animDuration
+                            anim.interpolator = AccelerateDecelerateInterpolator()
                             view.visibility = View.VISIBLE
                             anim.start()
                         }
