@@ -28,7 +28,7 @@
 
 
     <style name="HomeAppBar" parent="Theme.SearchMovie">
-        <item name="android:background">#00000000</item>
+        <item name="android:background">@color/transparent</item>
         <item name="elevation">0dp</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -40,7 +40,7 @@
     <style name="BottomToolBar" parent="Theme.SearchMovie">
         <item name="itemIconTint">@color/white</item>
         <item name="itemTextColor">@color/white</item>
-        <item name="android:background">#E6000000</item>
+        <item name="android:background">@color/black_alpha_90</item>
     </style>
 
 

@@ -31,7 +31,10 @@
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:queryHint="Search"/>
+                android:background="@drawable/search_view_shape"
+                android:queryHint="Search"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
