@@ -22,7 +22,7 @@
             tools:src="@tools:sample/avatars" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/favorite"
+            android:id="@+id/favorite_check_box"
             android:layout_width="@dimen/favorite_check_box_size"
             android:layout_height="@dimen/favorite_check_box_size"
             android:layout_margin="10dp"

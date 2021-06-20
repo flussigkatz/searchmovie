@@ -25,13 +25,13 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, pr
             val title = holder.itemView.title
             val poster = holder.itemView.poster
             val description = holder.itemView.description
-            val favorite = holder.itemView.favorite
+            val favorite = holder.itemView.favorite_check_box
             title.text = film.title
             poster.setImageResource(film.poster)
             description.text = film.description
             favorite.isChecked = items[position].fav_state
             favorite.setOnCheckedChangeListener { _, isChecked ->
-                checkedListener.checkedChange(position, isChecked)
+                checkedListener.checkedChange(holder.adapterPosition, isChecked)
             }
             holder.itemView.item_container.setOnClickListener {
                 clickListener.click(items[position])
