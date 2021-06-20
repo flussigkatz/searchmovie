@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
         search_view.setOnClickListener { search_view.isIconified = false }
         //некорректно работает при нажатии на крест
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        search_view.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
