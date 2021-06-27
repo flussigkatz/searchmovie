@@ -32,6 +32,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <xyz.flussikatz.searchmovie.RatingDonutView
+            android:id="@+id/rating_donut"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:stroke="10"
+            app:progress="50"
+            android:layout_margin="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
 
         <TextView
             android:id="@+id/title"

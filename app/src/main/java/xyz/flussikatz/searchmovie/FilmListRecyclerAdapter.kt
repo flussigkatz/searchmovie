@@ -26,6 +26,7 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, pr
             val poster = holder.itemView.poster
             val description = holder.itemView.description
             val favorite = holder.itemView.favorite_check_box
+//            val rating = holder.itemView.rating_donut
             title.text = film.title
             poster.setImageResource(film.poster)
             description.text = film.description
