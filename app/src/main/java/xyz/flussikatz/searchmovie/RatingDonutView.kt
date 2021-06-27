@@ -62,6 +62,8 @@ class RatingDonutView @JvmOverloads constructor(
         val minSide = Math.min(chosenWidth, chosenHeight)
         centerX = minSide.div(2f)
         centerY = minSide.div(2f)
+
+        setMeasuredDimension(minSide, minSide)
     }
 
     override fun onDraw(canvas: Canvas?) {
