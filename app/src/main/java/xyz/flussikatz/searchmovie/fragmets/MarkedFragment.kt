@@ -33,11 +33,17 @@ class MarkedFragment : Fragment() {
         marked_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-                    AnimationHelper.coverAnimation(root_fragment_marked, requireActivity(), R.id.action_markedFragment_to_homeFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_marked, requireActivity(),
+                        R.id.action_markedFragment_to_homeFragment
+                    )
                     true
                 }
                 R.id.history -> {
-                    AnimationHelper.coverAnimation(root_fragment_marked, requireActivity(), R.id.action_markedFragment_to_historyFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_marked, requireActivity(),
+                        R.id.action_markedFragment_to_historyFragment
+                    )
                     true
                 }
                 R.id.marked -> {
@@ -54,9 +60,14 @@ class MarkedFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        AnimationHelper.coverAnimation(root_fragment_marked, requireActivity(), R.id.action_markedFragment_to_detailsFragment, bundle)
+                        AnimationHelper.coverAnimation(
+                            root_fragment_marked,
+                            requireActivity(),
+                            R.id.action_markedFragment_to_detailsFragment,
+                            bundle
+                        )
                     }
-                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener{
+                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
                         markedList[position].fav_state = state
                         markedList = markedList.filter { it.fav_state }

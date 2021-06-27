@@ -29,14 +29,18 @@ class MainActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: Animator?) {
                 root_fragment_home.visibility = View.INVISIBLE
                 navController.backStack.clear()
-                AnimationHelper.coverAnimation(welcome_screen, this@MainActivity, R.id.homeFragment)
+                AnimationHelper.coverAnimation(
+                    welcome_screen, this@MainActivity, R.id.homeFragment
+                )
             }
 
             @SuppressLint("RestrictedApi")
             override fun onAnimationCancel(animation: Animator?) {
                 root_fragment_home.visibility = View.INVISIBLE
                 navController.backStack.clear()
-                AnimationHelper.coverAnimation(welcome_screen, this@MainActivity, R.id.homeFragment)
+                AnimationHelper.coverAnimation(
+                    welcome_screen, this@MainActivity, R.id.homeFragment
+                )
             }
         })
         welcome_screen.setOnClickListener { lottieAnimationView.cancelAnimation() }

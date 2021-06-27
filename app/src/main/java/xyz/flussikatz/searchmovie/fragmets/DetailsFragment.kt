@@ -34,7 +34,7 @@ class DetailsFragment : Fragment() {
 
         AnimationHelper.revealAnimation(root_fragment_details, requireActivity())
 
-        details_favorite.setOnCheckedChangeListener { _, isChecked ->  film.fav_state = isChecked}
+        details_favorite.setOnCheckedChangeListener { _, isChecked -> film.fav_state = isChecked }
 
         step_back.setOnClickListener {
             (requireActivity() as MainActivity).onBackPressed()
@@ -42,7 +42,10 @@ class DetailsFragment : Fragment() {
         details_fab.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
-            intent.putExtra(Intent.EXTRA_TEXT, "Check this film: ${film.title} \n ${film.description}.")
+            intent.putExtra(
+                Intent.EXTRA_TEXT,
+                "Check this film: ${film.title} \n ${film.description}."
+            )
             intent.type = "text/plain"
             startActivity(Intent.createChooser(intent, "Share to"))
         }
@@ -51,15 +54,27 @@ class DetailsFragment : Fragment() {
         details_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-                    AnimationHelper.coverAnimation(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_homeFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_details,
+                        requireActivity(),
+                        R.id.action_detailsFragment_to_homeFragment
+                    )
                     true
                 }
                 R.id.history -> {
-                    AnimationHelper.coverAnimation(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_historyFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_details,
+                        requireActivity(),
+                        R.id.action_detailsFragment_to_historyFragment
+                    )
                     true
                 }
                 R.id.marked -> {
-                    AnimationHelper.coverAnimation(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_markedFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_details,
+                        requireActivity(),
+                        R.id.action_detailsFragment_to_markedFragment
+                    )
                     true
                 }
                 else -> false

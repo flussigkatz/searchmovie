@@ -35,20 +35,25 @@ class HomeFragment : Fragment() {
         search_view.setOnClickListener { search_view.isIconified = false }
         //некорректно работает при нажатии на крест
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText == null) {return true}
-                else{
+                if (newText == null) {
+                    return true
+                } else {
                     if (newText!!.isEmpty()) {
                         filmsAdapter.updateData(filmDataBase as ArrayList<Film>)
                     }
-                    val result = filmDataBase.filter { it.title.toLowerCase(Locale.getDefault()).contains(newText!!.toLowerCase(Locale.getDefault())) }
+                    val result = filmDataBase.filter {
+                        it.title.toLowerCase(Locale.getDefault())
+                            .contains(newText!!.toLowerCase(Locale.getDefault()))
+                    }
                     filmsAdapter.updateData(result as ArrayList<Film>)
-                    return false}
+                    return false
+                }
             }
 
         })
@@ -61,11 +66,19 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.history -> {
-                    AnimationHelper.coverAnimation(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_historyFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_home,
+                        requireActivity(),
+                        R.id.action_homeFragment_to_historyFragment
+                    )
                     true
                 }
                 R.id.marked -> {
-                    AnimationHelper.coverAnimation(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_markedFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_home,
+                        requireActivity(),
+                        R.id.action_homeFragment_to_markedFragment
+                    )
                     true
                 }
                 else -> false
@@ -80,7 +93,12 @@ class HomeFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        AnimationHelper.coverAnimation(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_detailsFragment, bundle)
+                        AnimationHelper.coverAnimation(
+                            root_fragment_home,
+                            requireActivity(),
+                            R.id.action_homeFragment_to_detailsFragment,
+                            bundle
+                        )
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {

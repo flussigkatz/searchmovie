@@ -28,7 +28,11 @@ class HistoryFragment : Fragment() {
         history_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-                    AnimationHelper.coverAnimation(root_fragment_history, requireActivity(), R.id.action_historyFragment_to_homeFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_history,
+                        requireActivity(),
+                        R.id.action_historyFragment_to_homeFragment
+                    )
                     true
                 }
                 R.id.history -> {
@@ -36,7 +40,11 @@ class HistoryFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
-                    AnimationHelper.coverAnimation(root_fragment_history, requireActivity(), R.id.action_historyFragment_to_markedFragment)
+                    AnimationHelper.coverAnimation(
+                        root_fragment_history,
+                        requireActivity(),
+                        R.id.action_historyFragment_to_markedFragment
+                    )
                     true
                 }
                 else -> false

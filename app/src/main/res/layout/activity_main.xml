@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_activity_main"
+    style="@style/MainBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/MainBackground"
     tools:context=".MainActivity">
 
     <fragment
@@ -14,23 +14,23 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/navigation"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/navigation" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/welcome_screen"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
         android:background="@drawable/backgrond_gardient"
-        app:lottie_rawRes="@raw/welcome_anim"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_rawRes="@raw/welcome_anim" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
