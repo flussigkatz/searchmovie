@@ -2,15 +2,11 @@ package xyz.flussikatz.searchmovie.fragmets
 
 import android.content.Intent
 import android.os.Bundle
-import android.transition.Fade
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_details.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.AnimationHelper
 import xyz.flussikatz.searchmovie.Film
 import xyz.flussikatz.searchmovie.MainActivity
@@ -36,7 +32,7 @@ class DetailsFragment : Fragment() {
         details_description.text = film.description
         details_favorite.isChecked = film.fav_state
 
-        AnimationHelper.reveaAnimationAppere(root_fragment_details, requireActivity())
+        AnimationHelper.revealAnimation(root_fragment_details, requireActivity())
 
         details_favorite.setOnCheckedChangeListener { _, isChecked ->  film.fav_state = isChecked}
 
@@ -55,15 +51,15 @@ class DetailsFragment : Fragment() {
         details_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-                    AnimationHelper.reveaAnimationDisappere(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_homeFragment)
+                    AnimationHelper.coverAnimation(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_homeFragment)
                     true
                 }
                 R.id.history -> {
-                    AnimationHelper.reveaAnimationDisappere(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_historyFragment)
+                    AnimationHelper.coverAnimation(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_historyFragment)
                     true
                 }
                 R.id.marked -> {
-                    AnimationHelper.reveaAnimationDisappere(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_markedFragment)
+                    AnimationHelper.coverAnimation(root_fragment_details, requireActivity(), R.id.action_detailsFragment_to_markedFragment)
                     true
                 }
                 else -> false

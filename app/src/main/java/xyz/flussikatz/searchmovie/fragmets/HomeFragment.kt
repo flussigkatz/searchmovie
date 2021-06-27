@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnimationHelper.reveaAnimationAppere(root_fragment_home, requireActivity())
+        AnimationHelper.revealAnimation(root_fragment_home, requireActivity())
 
 
         search_view.setOnClickListener { search_view.isIconified = false }
@@ -61,11 +61,11 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.history -> {
-                    AnimationHelper.reveaAnimationDisappere(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_historyFragment)
+                    AnimationHelper.coverAnimation(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_historyFragment)
                     true
                 }
                 R.id.marked -> {
-                    AnimationHelper.reveaAnimationDisappere(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_markedFragment)
+                    AnimationHelper.coverAnimation(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_markedFragment)
                     true
                 }
                 else -> false
@@ -80,7 +80,7 @@ class HomeFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
-                        AnimationHelper.reveaAnimationDisappere(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_detailsFragment, bundle)
+                        AnimationHelper.coverAnimation(root_fragment_home, requireActivity(), R.id.action_homeFragment_to_detailsFragment, bundle)
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {

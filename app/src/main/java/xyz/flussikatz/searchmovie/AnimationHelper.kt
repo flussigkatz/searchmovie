@@ -19,7 +19,7 @@ class AnimationHelper {
     companion object {
         private const val animDuration = 250L
 
-        fun reveaAnimationAppere(view: View, activity: Activity) {
+        fun revealAnimation(view: View, activity: Activity) {
 
             Executors.newSingleThreadExecutor().execute {
                 while (true) {
@@ -47,7 +47,7 @@ class AnimationHelper {
             }
         }
 
-        fun reveaAnimationDisappere (view: View, activity: Activity, resId: Int) {
+        fun coverAnimation (view: View, activity: Activity, resId: Int) {
 
             Executors.newSingleThreadExecutor().execute {
                 while (true) {
@@ -79,7 +79,7 @@ class AnimationHelper {
             }
         }
 
-        fun reveaAnimationDisappere (view: View, activity: Activity, resId: Int, bundle: Bundle) {
+        fun coverAnimation (view: View, activity: Activity, resId: Int, bundle: Bundle) {
 
             Executors.newSingleThreadExecutor().execute {
                 while (true) {

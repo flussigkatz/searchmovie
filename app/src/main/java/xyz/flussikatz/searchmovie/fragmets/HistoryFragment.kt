@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_history.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.AnimationHelper
 import xyz.flussikatz.searchmovie.R
 
@@ -24,12 +23,12 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnimationHelper.reveaAnimationAppere(root_fragment_history, requireActivity())
+        AnimationHelper.revealAnimation(root_fragment_history, requireActivity())
 
         history_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
-                    AnimationHelper.reveaAnimationDisappere(root_fragment_history, requireActivity(), R.id.action_historyFragment_to_homeFragment)
+                    AnimationHelper.coverAnimation(root_fragment_history, requireActivity(), R.id.action_historyFragment_to_homeFragment)
                     true
                 }
                 R.id.history -> {
@@ -37,7 +36,7 @@ class HistoryFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
-                    AnimationHelper.reveaAnimationDisappere(root_fragment_history, requireActivity(), R.id.action_historyFragment_to_markedFragment)
+                    AnimationHelper.coverAnimation(root_fragment_history, requireActivity(), R.id.action_historyFragment_to_markedFragment)
                     true
                 }
                 else -> false
