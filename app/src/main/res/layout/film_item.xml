@@ -36,9 +36,10 @@
             android:id="@+id/rating_donut"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:translationX="-2dp"
+            android:translationY="2dp"
             app:stroke="10"
             app:progress="50"
-            android:layout_margin="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />

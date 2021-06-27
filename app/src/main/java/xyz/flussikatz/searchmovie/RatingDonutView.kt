@@ -22,7 +22,7 @@ class RatingDonutView @JvmOverloads constructor(
 
     private var scaleSize = 60f
 
-    private lateinit var storkePaint: Paint
+    private lateinit var strokePaint: Paint
     private lateinit var digitPaint: Paint
     private lateinit var circlePaint: Paint
 
@@ -82,7 +82,7 @@ class RatingDonutView @JvmOverloads constructor(
         canvas.translate(centerX, centerY)
         oval.set(0f - scale, 0f - scale, scale, scale)
         canvas.drawCircle(0f, 0f, radius, circlePaint)
-        canvas.drawArc(oval, -90f, convertProgressToDegrees(progress), false, storkePaint)
+        canvas.drawArc(oval, -90f, convertProgressToDegrees(progress), false, strokePaint)
         canvas.restore()
     }
 
@@ -99,7 +99,7 @@ class RatingDonutView @JvmOverloads constructor(
 
 
     private fun initPaint() {
-        storkePaint = Paint().apply {
+        strokePaint = Paint().apply {
             style = Paint.Style.STROKE
             strokeWidth = stroke
             color = getPaintColor(progress)
