@@ -34,7 +34,7 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, pr
             favorite.setOnCheckedChangeListener { _, isChecked ->
                 checkedListener.checkedChange(holder.adapterPosition, isChecked)
             }
-            holder.itemView.item_container.setOnClickListener {
+            holder.itemView.film_item_cardview.setOnClickListener {
                 clickListener.click(items[position])
             }
 
