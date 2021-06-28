@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_details.*
-import xyz.flussikatz.searchmovie.*
+import xyz.flussikatz.searchmovie.AnimationHelper
+import xyz.flussikatz.searchmovie.Film
+import xyz.flussikatz.searchmovie.MainActivity
+import xyz.flussikatz.searchmovie.R
 
 
 class DetailsFragment : Fragment() {
