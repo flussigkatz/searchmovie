@@ -18,7 +18,7 @@ class RatingDonutView @JvmOverloads constructor(
 
     private var stroke = 10f
 
-    private var progress = 50
+    private var progress = 90
 
     private var scaleSize = 60f
 
@@ -33,7 +33,7 @@ class RatingDonutView @JvmOverloads constructor(
         )
         try {
             stroke = a.getFloat(R.styleable.RatingDonutView_stroke, stroke)
-            progress = a.getInt(R.styleable.RatingDonutView_progress, progress)
+            scaleSize = a.getFloat(R.styleable.RatingDonutView_scaleSize, scaleSize)
         } finally {
             a.recycle()
         }
@@ -124,11 +124,17 @@ class RatingDonutView @JvmOverloads constructor(
         }
     }
 
-    private fun getPaintColor(process: Int): Int = when(progress) {
+    private fun getPaintColor(progress: Int): Int = when(progress) {
         in 0 .. 25 -> Color.parseColor("#e84258")
         in 26 .. 50 -> Color.parseColor("#fd8060")
         in 51 .. 75 -> Color.parseColor("#fee191")
         else -> Color.parseColor("#b0d8a4")
+    }
+
+    fun setProgress(p: Int) {
+        progress = p
+        initPaint()
+        invalidate()
     }
 
 }
