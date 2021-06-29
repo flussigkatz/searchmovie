@@ -9,8 +9,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.transition.TransitionManager
 import com.airbnb.lottie.LottieAnimationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.film_item.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class MainActivity : AppCompatActivity() {
@@ -45,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         })
         welcome_screen.setOnClickListener { lottieAnimationView.cancelAnimation() }
         lottieAnimationView.playAnimation()
-
 
     }
 

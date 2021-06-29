@@ -1,5 +1,6 @@
 package xyz.flussikatz.searchmovie
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -18,7 +19,7 @@ class RatingDonutView @JvmOverloads constructor(
 
     private var stroke = 10f
 
-    private var progress = 90
+    private var progress = 0
 
     private var scaleSize = 60f
 
@@ -136,5 +137,4 @@ class RatingDonutView @JvmOverloads constructor(
         initPaint()
         invalidate()
     }
-
 }

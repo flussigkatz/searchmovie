@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.TransitionManager
+import kotlinx.android.synthetic.main.film_item.*
+import kotlinx.android.synthetic.main.film_item.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.*
 import java.util.*
@@ -29,7 +32,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnimationHelper.revealAnimation(root_fragment_home, requireActivity())
+        val anim = AnimationHelper.revealAnimation(root_fragment_home, requireActivity())
+
 
 
         search_view.setOnClickListener { search_view.isIconified = false }

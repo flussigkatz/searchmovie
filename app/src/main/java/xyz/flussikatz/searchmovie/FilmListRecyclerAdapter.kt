@@ -1,8 +1,12 @@
 package xyz.flussikatz.searchmovie
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewPropertyAnimator
+import android.view.animation.DecelerateInterpolator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.film_item.view.*
@@ -35,13 +39,37 @@ class FilmListRecyclerAdapter(
             val poster = holder.itemView.poster
             val description = holder.itemView.description
             val favorite = holder.itemView.favorite_check_box
-            val rating = holder.itemView.rating_donut
+            val ratingView = holder.itemView.rating_donut
 
             title.text = film.title
             poster.setImageResource(film.poster)
             description.text = film.description
-            rating.setProgress(film.rating)
+//            ratingView.setProgress(film.rating)
             favorite.isChecked = items[position].fav_state
+
+            /*val anim = ValueAnimator.ofInt(0, film.rating).apply {
+                duration = 400
+                startDelay = 200
+            }
+            anim.addUpdateListener {
+                ratingView.setProgress(it.animatedValue as Int)
+            }
+            anim.start()*/
+
+            /*ObjectAnimator.ofInt(
+                ratingView,
+                "progress",
+                film.rating)
+                .apply {
+                startDelay = 200
+                duration = 400
+                interpolator  = DecelerateInterpolator()
+                start()
+            }*/
+            AnimationHelper.ratingDonutAnimation(MainActivity, ratingView, "progress", film.rating)
+
+
+
 
             favorite.setOnCheckedChangeListener { _, isChecked ->
                 checkedListener.checkedChange(holder.adapterPosition, isChecked)
@@ -50,6 +78,7 @@ class FilmListRecyclerAdapter(
             holder.itemView.film_item_cardview.setOnClickListener {
                 clickListener.click(items[position])
             }
+
         }
     }
 

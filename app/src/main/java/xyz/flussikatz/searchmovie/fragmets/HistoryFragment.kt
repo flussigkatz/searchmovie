@@ -25,6 +25,7 @@ class HistoryFragment : Fragment() {
 
         AnimationHelper.revealAnimation(root_fragment_history, requireActivity())
 
+
         history_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {

@@ -2,20 +2,21 @@ package xyz.flussikatz.searchmovie
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.view.animation.LinearInterpolator
 import java.util.concurrent.Executors
 import kotlin.math.hypot
 
 object AnimationHelper {
 
     private const val animDuration = 250L
+
+    private var animationInProgress = false
 
     fun revealAnimation(view: View, activity: Activity) {
 
@@ -38,6 +39,13 @@ object AnimationHelper {
                         anim.interpolator = AccelerateDecelerateInterpolator()
                         view.visibility = View.VISIBLE
                         anim.start()
+                        animationInProgress = true
+
+                        anim.addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                animationInProgress = false
+                            }
+                        })
                     }
                     return@execute
                 }
@@ -45,7 +53,7 @@ object AnimationHelper {
         }
     }
 
-    fun coverAnimation (view: View, activity: Activity, resId: Int) {
+    fun coverAnimation(view: View, activity: Activity, resId: Int) {
 
         Executors.newSingleThreadExecutor().execute {
             while (true) {
@@ -77,7 +85,7 @@ object AnimationHelper {
         }
     }
 
-    fun coverAnimation (view: View, activity: Activity, resId: Int, bundle: Bundle) {
+    fun coverAnimation(view: View, activity: Activity, resId: Int, bundle: Bundle) {
 
         Executors.newSingleThreadExecutor().execute {
             while (true) {
@@ -102,6 +110,22 @@ object AnimationHelper {
                                 (activity as MainActivity).navController.navigate(resId, bundle)
                             }
                         })
+                    }
+                    return@execute
+                }
+            }
+        }
+    }
+
+    fun ratingDonutAnimation(activity: Activity, view: View, property: String,rating: Int) {
+        val anim = ObjectAnimator.ofInt(view, "$property", rating)
+        anim.duration = 500
+        anim.interpolator = DecelerateInterpolator()
+        Executors.newSingleThreadExecutor().execute {
+            while (true) {
+                if (!animationInProgress) {
+                    activity.runOnUiThread{
+                        anim.start()
                     }
                     return@execute
                 }
