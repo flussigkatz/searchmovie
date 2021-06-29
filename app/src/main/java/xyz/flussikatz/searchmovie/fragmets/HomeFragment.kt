@@ -32,9 +32,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val anim = AnimationHelper.revealAnimation(root_fragment_home, requireActivity())
-
-
+        AnimationHelper.revealAnimation(root_fragment_home, requireActivity())
 
         search_view.setOnClickListener { search_view.isIconified = false }
         //некорректно работает при нажатии на крест

@@ -14,9 +14,8 @@ import kotlin.math.hypot
 
 object AnimationHelper {
 
-    private const val animDuration = 250L
-
-    private var animationInProgress = false
+    private const val circularAnimationDuration = 250L
+    private const val ratingDonutAnimation = 400L
 
     fun revealAnimation(view: View, activity: Activity) {
 
@@ -24,8 +23,8 @@ object AnimationHelper {
             while (true) {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
-                        val x: Int = view.width / 2
-                        val y: Int = view.height / 2
+                        val x: Int = view.width.div(2)
+                        val y: Int = view.height.div(2)
                         val startRadius = 0
                         val endRadius = hypot(view.width.toDouble(), view.height.toDouble())
                         val anim = ViewAnimationUtils.createCircularReveal(
@@ -35,17 +34,10 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = animDuration
+                        anim.duration = circularAnimationDuration
                         anim.interpolator = AccelerateDecelerateInterpolator()
                         view.visibility = View.VISIBLE
                         anim.start()
-                        animationInProgress = true
-
-                        anim.addListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator?) {
-                                animationInProgress = false
-                            }
-                        })
                     }
                     return@execute
                 }
@@ -59,8 +51,8 @@ object AnimationHelper {
             while (true) {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
-                        val x: Int = view.width / 2
-                        val y: Int = view.height / 2
+                        val x: Int = view.width.div(2)
+                        val y: Int = view.height.div(2)
                         val startRadius = hypot(view.width.toDouble(), view.height.toDouble())
                         val endRadius = 0
                         val anim = ViewAnimationUtils.createCircularReveal(
@@ -70,7 +62,7 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = animDuration
+                        anim.duration = circularAnimationDuration
                         anim.start()
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
@@ -91,8 +83,8 @@ object AnimationHelper {
             while (true) {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
-                        val x: Int = view.width / 2
-                        val y: Int = view.height / 2
+                        val x: Int = view.width.div(2)
+                        val y: Int = view.height.div(2)
                         val startRadius = hypot(view.width.toDouble(), view.height.toDouble())
                         val endRadius = 0
                         val anim = ViewAnimationUtils.createCircularReveal(
@@ -102,7 +94,7 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = animDuration
+                        anim.duration = circularAnimationDuration
                         anim.start()
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
@@ -117,20 +109,12 @@ object AnimationHelper {
         }
     }
 
-    fun ratingDonutAnimation(activity: Activity, view: View, property: String,rating: Int) {
-        val anim = ObjectAnimator.ofInt(view, "$property", rating)
-        anim.duration = 500
-        anim.interpolator = DecelerateInterpolator()
-        Executors.newSingleThreadExecutor().execute {
-            while (true) {
-                if (!animationInProgress) {
-                    activity.runOnUiThread{
-                        anim.start()
-                    }
-                    return@execute
-                }
-            }
+    fun ratingDonutAnimation(view: View, property: String, rating: Int) {
+        ObjectAnimator.ofInt(view, "$property", rating).apply {
+            duration = ratingDonutAnimation
+            startDelay = circularAnimationDuration
+            interpolator = DecelerateInterpolator()
+            start()
         }
     }
-
 }
