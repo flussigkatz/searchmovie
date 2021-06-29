@@ -3,6 +3,7 @@ package xyz.flussikatz.searchmovie.fragmets
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
@@ -64,6 +65,7 @@ class HomeFragment : Fragment() {
         home_bottom_toolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
+                    touchCoordinates()
                     Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
                     true
                 }
@@ -114,6 +116,21 @@ class HomeFragment : Fragment() {
             addItemDecoration(decorator)
         }
         filmsAdapter.addItems(filmDataBase)
+    }
+
+    fun touchCoordinates() {
+        object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                var coordinates = mutableListOf(0, 0)
+                if (event?.action == MotionEvent.ACTION_UP) {
+                    coordinates[0] = event.getX().toInt()
+                    println(coordinates[0])
+                    println(coordinates[1])
+                }
+                return false
+            }
+
+        }
     }
 
 }
