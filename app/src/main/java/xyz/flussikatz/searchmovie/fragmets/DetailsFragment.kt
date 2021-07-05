@@ -6,40 +6,43 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_details.*
 import xyz.flussikatz.searchmovie.AnimationHelper
 import xyz.flussikatz.searchmovie.Film
 import xyz.flussikatz.searchmovie.MainActivity
 import xyz.flussikatz.searchmovie.R
+import xyz.flussikatz.searchmovie.databinding.FragmentDetailsBinding
 
 
 class DetailsFragment : Fragment() {
-
+    private lateinit var binding: FragmentDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_details, container, false)
+        binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        return binding.rootFragmentDetails
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val film = arguments?.get("film") as Film
-        details_toolbar.title = film.title
-        details_poster.setImageResource(film.poster)
-        details_description.text = film.description
-        details_favorite.isChecked = film.fav_state
+        binding.detailsToolbar.title = film.title
+        binding.detailsPoster.setImageResource(film.poster)
+        binding.detailsDescription.text = film.description
+        binding.detailsFavorite.isChecked = film.fav_state
 
-        AnimationHelper.revealAnimation(root_fragment_details, requireActivity())
+        AnimationHelper.revealAnimation(binding.rootFragmentDetails, requireActivity())
 
-        details_favorite.setOnCheckedChangeListener { _, isChecked -> film.fav_state = isChecked }
+        binding.detailsFavorite.setOnCheckedChangeListener { _, isChecked ->
+            film.fav_state = isChecked
+        }
 
-        step_back.setOnClickListener {
+        binding.stepBack.setOnClickListener {
             (requireActivity() as MainActivity).onBackPressed()
         }
-        details_fab.setOnClickListener {
+        binding.detailsFab.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
             intent.putExtra(
@@ -51,11 +54,11 @@ class DetailsFragment : Fragment() {
         }
 
 
-        details_bottom_toolbar.setOnNavigationItemSelectedListener {
+        binding.detailsBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_details,
+                        binding.rootFragmentDetails,
                         requireActivity(),
                         R.id.action_detailsFragment_to_homeFragment
                     )
@@ -63,7 +66,7 @@ class DetailsFragment : Fragment() {
                 }
                 R.id.history -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_details,
+                        binding.rootFragmentDetails,
                         requireActivity(),
                         R.id.action_detailsFragment_to_historyFragment
                     )
@@ -71,7 +74,7 @@ class DetailsFragment : Fragment() {
                 }
                 R.id.marked -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_details,
+                        binding.rootFragmentDetails,
                         requireActivity(),
                         R.id.action_detailsFragment_to_markedFragment
                     )

@@ -7,19 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_marked.*
-import kotlinx.android.synthetic.main.fragment_marked.marked_recycler
 import xyz.flussikatz.searchmovie.*
+import xyz.flussikatz.searchmovie.databinding.FragmentMarkedBinding
 
 class MarkedFragment : Fragment() {
-    lateinit var filmsAdapter: FilmListRecyclerAdapter
+    private lateinit var filmsAdapter: FilmListRecyclerAdapter
+    private lateinit var binding: FragmentMarkedBinding
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_marked, container, false)
+        binding = FragmentMarkedBinding.inflate(inflater, container, false)
+        return binding.rootFragmentMarked
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -27,21 +28,21 @@ class MarkedFragment : Fragment() {
 
         var markedList = App.instance.filmDataBase.filter { it.fav_state }
 
-        AnimationHelper.revealAnimation(root_fragment_marked, requireActivity())
+        AnimationHelper.revealAnimation(binding.rootFragmentMarked, requireActivity())
 
 
-        marked_bottom_toolbar.setOnNavigationItemSelectedListener {
+        binding.markedBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_marked, requireActivity(),
+                        binding.rootFragmentMarked, requireActivity(),
                         R.id.action_markedFragment_to_homeFragment
                     )
                     true
                 }
                 R.id.history -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_marked, requireActivity(),
+                        binding.rootFragmentMarked, requireActivity(),
                         R.id.action_markedFragment_to_historyFragment
                     )
                     true
@@ -54,14 +55,14 @@ class MarkedFragment : Fragment() {
             }
         }
 
-        marked_recycler.apply {
+        binding.markedRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
                         AnimationHelper.coverAnimation(
-                            root_fragment_marked,
+                            binding.rootFragmentMarked,
                             requireActivity(),
                             R.id.action_markedFragment_to_detailsFragment,
                             bundle

@@ -6,31 +6,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_history.*
 import xyz.flussikatz.searchmovie.AnimationHelper
 import xyz.flussikatz.searchmovie.R
+import xyz.flussikatz.searchmovie.databinding.FragmentHistoryBinding
 
 class HistoryFragment : Fragment() {
+    private lateinit var binding: FragmentHistoryBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false)
+        binding = FragmentHistoryBinding.inflate(inflater, container, false)
+        return binding.rootFragmentHistory
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnimationHelper.revealAnimation(root_fragment_history, requireActivity())
+        AnimationHelper.revealAnimation(binding.rootFragmentHistory, requireActivity())
 
 
-        history_bottom_toolbar.setOnNavigationItemSelectedListener {
+        binding.historyBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_history,
+                        binding.root,
                         requireActivity(),
                         R.id.action_historyFragment_to_homeFragment
                     )
@@ -42,7 +43,7 @@ class HistoryFragment : Fragment() {
                 }
                 R.id.marked -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_history,
+                        binding.rootFragmentHistory,
                         requireActivity(),
                         R.id.action_historyFragment_to_markedFragment
                     )

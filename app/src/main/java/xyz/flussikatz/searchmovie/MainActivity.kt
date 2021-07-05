@@ -6,15 +6,12 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ActionMenuView
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
-import kotlinx.android.synthetic.main.film_item.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
-import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
@@ -24,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
-        val binding1 = FragmentHomeBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)

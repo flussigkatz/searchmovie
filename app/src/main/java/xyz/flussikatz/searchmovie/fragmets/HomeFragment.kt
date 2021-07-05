@@ -8,36 +8,35 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.TransitionManager
-import kotlinx.android.synthetic.main.film_item.*
-import kotlinx.android.synthetic.main.film_item.view.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.*
+import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
-    lateinit var filmsAdapter: FilmListRecyclerAdapter
+    private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private val filmDataBase = App.instance.filmDataBase
+    private lateinit var binding: FragmentHomeBinding
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.rootFragmentHome
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnimationHelper.revealAnimation(root_fragment_home, requireActivity())
+        AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
 
-        search_view.setOnClickListener { search_view.isIconified = false }
+        binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
         //некорректно работает при нажатии на крест
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
@@ -61,7 +60,7 @@ class HomeFragment : Fragment() {
         })
 
 
-        home_bottom_toolbar.setOnNavigationItemSelectedListener {
+        binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
@@ -69,7 +68,7 @@ class HomeFragment : Fragment() {
                 }
                 R.id.history -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_home,
+                        binding.rootFragmentHome,
                         requireActivity(),
                         R.id.action_homeFragment_to_historyFragment
                     )
@@ -77,7 +76,7 @@ class HomeFragment : Fragment() {
                 }
                 R.id.marked -> {
                     AnimationHelper.coverAnimation(
-                        root_fragment_home,
+                        binding.rootFragmentHome,
                         requireActivity(),
                         R.id.action_homeFragment_to_markedFragment
                     )
@@ -89,14 +88,14 @@ class HomeFragment : Fragment() {
 
 
 
-        home_recycler.apply {
+        binding.homeRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable("film", film)
                         AnimationHelper.coverAnimation(
-                            root_fragment_home,
+                            binding.rootFragmentHome,
                             requireActivity(),
                             R.id.action_homeFragment_to_detailsFragment,
                             bundle
