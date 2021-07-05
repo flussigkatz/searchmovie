@@ -6,33 +6,37 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ActionMenuView
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.transition.TransitionManager
 import com.airbnb.lottie.LottieAnimationView
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.film_item.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
+import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     private var backPressedTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        val binding1 = FragmentHomeBinding.inflate(layoutInflater)
+        setContentView(binding.rootActivityMain)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
-        val lottieAnimationView: LottieAnimationView = welcome_screen
+        val lottieAnimationView: LottieAnimationView = binding.welcomeScreen
         lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
             @SuppressLint("RestrictedApi")
             override fun onAnimationEnd(animation: Animator?) {
                 root_fragment_home.visibility = View.INVISIBLE
                 navController.backStack.clear()
                 AnimationHelper.coverAnimation(
-                    welcome_screen, this@MainActivity, R.id.homeFragment
+                    binding.welcomeScreen, this@MainActivity, R.id.homeFragment
                 )
             }
 
@@ -41,11 +45,11 @@ class MainActivity : AppCompatActivity() {
                 root_fragment_home.visibility = View.INVISIBLE
                 navController.backStack.clear()
                 AnimationHelper.coverAnimation(
-                    welcome_screen, this@MainActivity, R.id.homeFragment
+                    binding.welcomeScreen, this@MainActivity, R.id.homeFragment
                 )
             }
         })
-        welcome_screen.setOnClickListener { lottieAnimationView.cancelAnimation() }
+        binding.welcomeScreen.setOnClickListener { lottieAnimationView.cancelAnimation() }
         lottieAnimationView.playAnimation()
 
     }
