@@ -3,39 +3,37 @@ package xyz.flussikatz.searchmovie
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.film_item.view.*
+import xyz.flussikatz.searchmovie.databinding.FilmItemBinding
 
 class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
     private val checkedListener: OnCheckedChangeListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<FilmListRecyclerAdapter.FilmViewHolder>() {
 
-    class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class FilmViewHolder(var binding: FilmItemBinding) : RecyclerView.ViewHolder(binding.rootFilmItem)
 
     var items = ArrayList<Film>()
 
 
     override fun getItemCount() = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         return FilmViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.film_item, parent, false)
+            DataBindingUtil.inflate(inflater, R.layout.film_item, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is FilmViewHolder) {
-
+    override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
             val film = items[position]
-            val title = holder.itemView.title
-            val poster = holder.itemView.poster
-            val description = holder.itemView.description
-            val favorite = holder.itemView.favorite_check_box
-            val ratingView = holder.itemView.rating_donut
+            val title = holder.binding.title
+            val poster = holder.binding.poster
+            val description = holder.binding.description
+            val favorite = holder.binding.favoriteCheckBox
+            val ratingView = holder.binding.ratingDonut
 
             title.text = film.title
             poster.setImageResource(film.poster)
@@ -48,11 +46,10 @@ class FilmListRecyclerAdapter(
                 checkedListener.checkedChange(holder.adapterPosition, isChecked)
             }
 
-            holder.itemView.film_item_cardview.setOnClickListener {
+            holder.binding.filmItemCardview.setOnClickListener {
                 clickListener.click(items[position])
             }
 
-        }
     }
 
     fun addItems(list: List<Film>) {
