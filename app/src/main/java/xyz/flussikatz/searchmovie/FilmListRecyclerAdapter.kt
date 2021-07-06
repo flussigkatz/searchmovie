@@ -12,45 +12,46 @@ class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
     private val checkedListener: OnCheckedChangeListener
 ) : RecyclerView.Adapter<FilmListRecyclerAdapter.FilmViewHolder>() {
-
-    class FilmViewHolder(var binding: FilmItemBinding) : RecyclerView.ViewHolder(binding.rootFilmItem)
-
     var items = ArrayList<Film>()
 
-
-    override fun getItemCount() = items.size
+    class FilmViewHolder(var binding: FilmItemBinding) :
+        RecyclerView.ViewHolder(binding.rootFilmItem)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return FilmViewHolder(
-            DataBindingUtil.inflate(inflater, R.layout.film_item, parent, false)
+// В модуле 32_3 было так. Не заработало. NullPointer
+// DataBindingUtil.inflate(inflater, R.layout.film_item, parent, false)
+            FilmItemBinding.inflate(inflater, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-            val film = items[position]
-            val title = holder.binding.title
-            val poster = holder.binding.poster
-            val description = holder.binding.description
-            val favorite = holder.binding.favoriteCheckBox
-            val ratingView = holder.binding.ratingDonut
+        val film = items[position]
+        val title = holder.binding.title
+        val poster = holder.binding.poster
+        val description = holder.binding.description
+        val favorite = holder.binding.favoriteCheckBox
+        val ratingView = holder.binding.ratingDonut
 
-            title.text = film.title
-            poster.setImageResource(film.poster)
-            description.text = film.description
-            favorite.isChecked = items[position].fav_state
+        title.text = film.title
+        poster.setImageResource(film.poster)
+        description.text = film.description
+        favorite.isChecked = items[position].fav_state
 
-            AnimationHelper.ratingDonutAnimation(ratingView, "progress", film.rating)
+        AnimationHelper.ratingDonutAnimation(ratingView, "progress", film.rating)
 
-            favorite.setOnCheckedChangeListener { _, isChecked ->
-                checkedListener.checkedChange(holder.adapterPosition, isChecked)
-            }
+        favorite.setOnCheckedChangeListener { _, isChecked ->
+            checkedListener.checkedChange(holder.adapterPosition, isChecked)
+        }
 
-            holder.binding.filmItemCardview.setOnClickListener {
-                clickListener.click(items[position])
-            }
+        holder.binding.filmItemCardview.setOnClickListener {
+            clickListener.click(items[position])
+        }
 
     }
+
+    override fun getItemCount() = items.size
 
     fun addItems(list: List<Film>) {
         items.clear()
