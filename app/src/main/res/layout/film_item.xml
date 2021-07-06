@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="film"
             type="xyz.flussikatz.searchmovie.Film" />
@@ -19,14 +20,14 @@
 
         <xyz.flussikatz.searchmovie.RatingDonutView
             android:id="@+id/rating_donut"
+            rating="@{film.rating}"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="bottom|start"
             android:clickable="true"
-            rating="@{film.rating}"
             android:translationZ="5dp"
-            app:stroke="10"
-            app:scaleSize="45" />
+            app:scaleSize="45"
+            app:stroke="10" />
 
 
         <androidx.cardview.widget.CardView
@@ -43,12 +44,12 @@
 
                 <ImageView
                     android:id="@+id/poster"
+                    setImageRes="@{film.posterId}"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    setImageRes="@{film.posterId}" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/favorite_check_box"
