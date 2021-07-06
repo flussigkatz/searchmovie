@@ -19,7 +19,7 @@ class FilmDiff(var oldList: ArrayList<Film>, val newList: ArrayList<Film>) : Dif
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].title == newList[newItemPosition].title&&
-        oldList[oldItemPosition].poster == newList[newItemPosition].poster&&
+        oldList[oldItemPosition].posterId == newList[newItemPosition].posterId&&
         oldList[oldItemPosition].description == newList[newItemPosition].description&&
         oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state&&
         oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state

@@ -3,6 +3,8 @@ package xyz.flussikatz.searchmovie
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.BindingMethod
+import androidx.databinding.BindingMethods
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -27,19 +29,8 @@ class FilmListRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-        val film = items[position]
-        val title = holder.binding.title
-        val poster = holder.binding.poster
-        val description = holder.binding.description
+        holder.binding.film = items[position]
         val favorite = holder.binding.favoriteCheckBox
-        val ratingView = holder.binding.ratingDonut
-
-        title.text = film.title
-        poster.setImageResource(film.poster)
-        description.text = film.description
-        favorite.isChecked = items[position].fav_state
-
-        AnimationHelper.ratingDonutAnimation(ratingView, "progress", film.rating)
 
         favorite.setOnCheckedChangeListener { _, isChecked ->
             checkedListener.checkedChange(holder.adapterPosition, isChecked)
@@ -48,7 +39,6 @@ class FilmListRecyclerAdapter(
         holder.binding.filmItemCardview.setOnClickListener {
             clickListener.click(items[position])
         }
-
     }
 
     override fun getItemCount() = items.size

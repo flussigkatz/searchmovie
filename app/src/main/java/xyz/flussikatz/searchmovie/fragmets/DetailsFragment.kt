@@ -29,7 +29,7 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val film = arguments?.get("film") as Film
         binding.detailsToolbar.title = film.title
-        binding.detailsPoster.setImageResource(film.poster)
+        binding.detailsPoster.setImageResource(film.posterId)
         binding.detailsDescription.text = film.description
         binding.detailsFavorite.isChecked = film.fav_state
 
