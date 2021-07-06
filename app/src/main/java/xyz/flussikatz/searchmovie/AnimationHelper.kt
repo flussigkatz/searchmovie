@@ -14,8 +14,8 @@ import kotlin.math.hypot
 
 object AnimationHelper {
 
-    private const val circularAnimationDuration = 250L
-    private const val ratingDonutAnimation = 400L
+    private const val circularAnimationDuration = 200L
+    private const val ratingDonutAnimation = 200L
 
     fun revealAnimation(view: View, activity: Activity) {
 

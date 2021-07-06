@@ -28,10 +28,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val film = arguments?.get("film") as Film
-        binding.detailsToolbar.title = film.title
-        binding.detailsPoster.setImageResource(film.posterId)
-        binding.detailsDescription.text = film.description
-        binding.detailsFavorite.isChecked = film.fav_state
+        binding.film = film
 
         AnimationHelper.revealAnimation(binding.rootFragmentDetails, requireActivity())
 
@@ -84,6 +81,4 @@ class DetailsFragment : Fragment() {
             }
         }
     }
-
-
 }

@@ -1,11 +1,7 @@
 package xyz.flussikatz.searchmovie
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.BindingMethod
-import androidx.databinding.BindingMethods
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import xyz.flussikatz.searchmovie.databinding.FilmItemBinding
