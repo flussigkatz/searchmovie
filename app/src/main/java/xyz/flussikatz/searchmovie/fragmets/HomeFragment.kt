@@ -74,8 +74,8 @@ class HomeFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
-//                        val list = filmsAdapter.items
-//                        filmsAdapter.items[position].fav_state = state
+                        val list = filmsAdapter.items
+                        list[position].fav_state = state
                     }
                 })
             adapter = filmsAdapter

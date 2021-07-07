@@ -45,9 +45,9 @@ class MarkedFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
-//                        markedList[position].fav_state = state
-//                        markedList = markedList.filter { it.fav_state }
-//                        filmsAdapter.updateData(markedList as ArrayList<Film>)
+                        markedList[position].fav_state = state
+                        markedList = markedList.filter { it.fav_state }
+                        filmsAdapter.updateData(markedList as ArrayList<Film>)
                     }
                 })
             adapter = filmsAdapter

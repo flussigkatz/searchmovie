@@ -32,6 +32,10 @@ class DetailsFragment : Fragment() {
 
         AnimationHelper.revealAnimation(binding.rootFragmentDetails, requireActivity())
 
+        binding.detailsFavorite.setOnCheckedChangeListener { _, isChecked ->
+            film.fav_state = isChecked
+        }
+
         binding.stepBack.setOnClickListener {
             (requireActivity() as MainActivity).onBackPressed()
         }
