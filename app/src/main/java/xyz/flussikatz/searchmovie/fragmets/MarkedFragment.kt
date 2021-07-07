@@ -28,8 +28,6 @@ class MarkedFragment : Fragment() {
 
         var markedList = App.instance.filmDataBase.filter { it.fav_state }
 
-        AnimationHelper.revealAnimation(binding.rootFragmentMarked, requireActivity())
-
         binding.markedRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
@@ -58,6 +56,8 @@ class MarkedFragment : Fragment() {
         }
 
         filmsAdapter.addItems(markedList)
+
+        AnimationHelper.revealAnimation(binding.rootFragmentMarked, requireActivity())
 
         binding.markedBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {

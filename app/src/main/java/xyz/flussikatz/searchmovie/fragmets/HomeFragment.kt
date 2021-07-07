@@ -76,6 +76,7 @@ class HomeFragment : Fragment() {
                     override fun checkedChange(position: Int, state: Boolean) {
                         val list = filmsAdapter.items
                         list[position].fav_state = state
+                        filmsAdapter.updateData(list)
                     }
                 })
             adapter = filmsAdapter

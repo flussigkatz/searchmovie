@@ -5,9 +5,11 @@
 
     <data>
 
+        <import type="xyz.flussikatz.searchmovie.Film"/>
+
         <variable
             name="film"
-            type="xyz.flussikatz.searchmovie.Film" />
+            type="Film" />
 
     </data>
 
@@ -59,6 +61,7 @@
                     android:background="@drawable/favorite_selector"
                     android:backgroundTint="@color/yellow"
                     android:button="@null"
+                    android:checked="@{film.fav_state}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

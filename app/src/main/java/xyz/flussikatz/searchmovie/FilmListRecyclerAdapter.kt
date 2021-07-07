@@ -18,8 +18,6 @@ class FilmListRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return FilmViewHolder(
-// В модуле 32_3 было так. Не заработало. NullPointer
-// DataBindingUtil.inflate(inflater, R.layout.film_item, parent, false)
             FilmItemBinding.inflate(inflater, parent, false)
         )
     }
@@ -27,7 +25,7 @@ class FilmListRecyclerAdapter(
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
         holder.binding.film = items[position]
         val favorite = holder.binding.favoriteCheckBox
-        favorite.isChecked = items[position].fav_state
+
 
         favorite.setOnCheckedChangeListener { _, isChecked ->
             checkedListener.checkedChange(holder.adapterPosition, isChecked)
