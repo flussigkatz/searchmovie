@@ -59,7 +59,7 @@
                     android:background="@drawable/favorite_selector"
                     android:backgroundTint="@color/yellow"
                     android:button="@null"
-                    android:checked="@{film.fav_state}" />
+                    android:checked="@={film.fav_state}" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>

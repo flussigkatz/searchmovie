@@ -27,6 +27,7 @@ class FilmListRecyclerAdapter(
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
         holder.binding.film = items[position]
         val favorite = holder.binding.favoriteCheckBox
+        favorite.isChecked = items[position].fav_state
 
         favorite.setOnCheckedChangeListener { _, isChecked ->
             checkedListener.checkedChange(holder.adapterPosition, isChecked)

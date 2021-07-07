@@ -59,6 +59,31 @@ class HomeFragment : Fragment() {
 
         })
 
+        binding.homeRecycler.apply {
+            filmsAdapter =
+                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
+                    override fun click(film: Film) {
+                        val bundle = Bundle()
+                        bundle.putParcelable("film", film)
+                        AnimationHelper.coverAnimation(
+                            binding.rootFragmentHome,
+                            requireActivity(),
+                            R.id.action_homeFragment_to_detailsFragment,
+                            bundle
+                        )
+                    }
+                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
+                    override fun checkedChange(position: Int, state: Boolean) {
+//                        val list = filmsAdapter.items
+//                        filmsAdapter.items[position].fav_state = state
+                    }
+                })
+            adapter = filmsAdapter
+            layoutManager = LinearLayoutManager(context)
+            val decorator = TopSpasingItemDecoration(5)
+            addItemDecoration(decorator)
+        }
+        filmsAdapter.addItems(filmDataBase)
 
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -86,33 +111,5 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-
-        binding.homeRecycler.apply {
-            filmsAdapter =
-                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: Film) {
-                        val bundle = Bundle()
-                        bundle.putParcelable("film", film)
-                        AnimationHelper.coverAnimation(
-                            binding.rootFragmentHome,
-                            requireActivity(),
-                            R.id.action_homeFragment_to_detailsFragment,
-                            bundle
-                        )
-                    }
-                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
-                    override fun checkedChange(position: Int, state: Boolean) {
-                        val list = filmsAdapter.items
-                        list[position].fav_state = state
-                    }
-                })
-            adapter = filmsAdapter
-            layoutManager = LinearLayoutManager(context)
-            val decorator = TopSpasingItemDecoration(5)
-            addItemDecoration(decorator)
-        }
-        filmsAdapter.addItems(filmDataBase)
     }
-
 }

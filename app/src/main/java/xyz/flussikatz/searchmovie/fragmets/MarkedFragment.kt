@@ -30,6 +30,34 @@ class MarkedFragment : Fragment() {
 
         AnimationHelper.revealAnimation(binding.rootFragmentMarked, requireActivity())
 
+        binding.markedRecycler.apply {
+            filmsAdapter =
+                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
+                    override fun click(film: Film) {
+                        val bundle = Bundle()
+                        bundle.putParcelable("film", film)
+                        AnimationHelper.coverAnimation(
+                            binding.rootFragmentMarked,
+                            requireActivity(),
+                            R.id.action_markedFragment_to_detailsFragment,
+                            bundle
+                        )
+                    }
+                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
+                    override fun checkedChange(position: Int, state: Boolean) {
+//                        markedList[position].fav_state = state
+//                        markedList = markedList.filter { it.fav_state }
+//                        filmsAdapter.updateData(markedList as ArrayList<Film>)
+                    }
+                })
+            adapter = filmsAdapter
+            layoutManager = LinearLayoutManager(context)
+            val decorator = TopSpasingItemDecoration(5)
+            addItemDecoration(decorator)
+
+        }
+
+        filmsAdapter.addItems(markedList)
 
         binding.markedBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -54,35 +82,5 @@ class MarkedFragment : Fragment() {
                 else -> false
             }
         }
-
-        binding.markedRecycler.apply {
-            filmsAdapter =
-                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: Film) {
-                        val bundle = Bundle()
-                        bundle.putParcelable("film", film)
-                        AnimationHelper.coverAnimation(
-                            binding.rootFragmentMarked,
-                            requireActivity(),
-                            R.id.action_markedFragment_to_detailsFragment,
-                            bundle
-                        )
-                    }
-                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
-                    override fun checkedChange(position: Int, state: Boolean) {
-                        markedList[position].fav_state = state
-                        markedList = markedList.filter { it.fav_state }
-                        filmsAdapter.updateData(markedList as ArrayList<Film>)
-                    }
-                })
-            adapter = filmsAdapter
-            layoutManager = LinearLayoutManager(context)
-            val decorator = TopSpasingItemDecoration(5)
-            addItemDecoration(decorator)
-
-        }
-
-        filmsAdapter.addItems(markedList)
     }
-
 }
