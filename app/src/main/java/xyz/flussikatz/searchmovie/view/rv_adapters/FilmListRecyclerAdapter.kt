@@ -29,9 +29,6 @@ class FilmListRecyclerAdapter(
 
         favorite.setOnCheckedChangeListener { _, isChecked ->
             checkedListener.checkedChange(holder.adapterPosition, isChecked)
-            val list = items
-            list[position].fav_state = isChecked
-            updateData(list)
         }
 
         holder.binding.filmItemCardview.setOnClickListener {

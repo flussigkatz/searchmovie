@@ -34,6 +34,7 @@ class DetailsFragment : Fragment() {
 
         binding.stepBack.setOnClickListener {
             (requireActivity() as MainActivity).onBackPressed()
+            //TODO некоректно возвращает на маркерованный фрагмент, пустой recycler
         }
         binding.detailsFab.setOnClickListener {
             val intent = Intent()

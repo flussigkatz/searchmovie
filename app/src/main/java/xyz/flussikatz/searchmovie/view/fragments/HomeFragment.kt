@@ -25,7 +25,6 @@ import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
-//    private val filmDataBase = App.instance.filmDataBase
     private lateinit var binding: FragmentHomeBinding
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
@@ -52,10 +51,8 @@ class HomeFragment : Fragment() {
             filmDataBase = it
         })
 
-        AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
-
         binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
-        //некорректно работает при нажатии на крест
+        //TODO некорректно работает при нажатии на крест
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -95,9 +92,7 @@ class HomeFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
-//                        val list = filmsAdapter.items
-//                        list[position].fav_state = state
-//                        filmsAdapter.updateData(list)
+                        filmsAdapter.items[position].fav_state = state
                     }
                 })
             adapter = filmsAdapter
@@ -105,6 +100,8 @@ class HomeFragment : Fragment() {
             val decorator = TopSpasingItemDecoration(5)
             addItemDecoration(decorator)
         }
+
+        AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
 
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {

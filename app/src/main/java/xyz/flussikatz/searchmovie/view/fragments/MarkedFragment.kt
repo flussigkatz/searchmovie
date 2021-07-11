@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentMarkedBinding
@@ -13,10 +15,20 @@ import xyz.flussikatz.searchmovie.domain.Film
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
+import xyz.flussikatz.searchmovie.viewmodel.MarkedFragmentViewModel
 
 class MarkedFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private lateinit var binding: FragmentMarkedBinding
+    private val viewModel by lazy {
+        ViewModelProvider.NewInstanceFactory().create(MarkedFragmentViewModel::class.java)
+    }
+    private var filmsDataBase = listOf<Film>()
+        set(value) {
+            if (field == value) return
+            field = value
+            filmsAdapter.addItems(field)
+        }
 
 
     override fun onCreateView(
@@ -29,8 +41,9 @@ class MarkedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        var markedList = App.instance.interactor.getFilmsDB().filter { it.fav_state }
+        viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>> {
+            filmsDataBase = it
+        })
 
         binding.markedRecycler.apply {
             filmsAdapter =
@@ -47,9 +60,9 @@ class MarkedFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
-//                        markedList[position].fav_state = state
-//                        markedList = markedList.filter { it.fav_state }
-//                        filmsAdapter.updateData(markedList as ArrayList<Film>)
+                        filmsAdapter.items[position].fav_state = state
+                        val list = filmsAdapter.items.filter { it.fav_state } as ArrayList<Film>
+                        filmsAdapter.updateData(list)
                     }
                 })
             adapter = filmsAdapter
@@ -58,8 +71,6 @@ class MarkedFragment : Fragment() {
             addItemDecoration(decorator)
 
         }
-
-        filmsAdapter.addItems(markedList)
 
         AnimationHelper.revealAnimation(binding.rootFragmentMarked, requireActivity())
 
