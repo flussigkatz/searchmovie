@@ -1,9 +1,13 @@
 package xyz.flussikatz.searchmovie
 
 import android.app.Application
+import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.domain.Interactor
 
 class App : Application() {
+    lateinit var repo: MainRepository
+    lateinit var interactor: Interactor
 
     val filmDataBase = mutableListOf(
         Film(
@@ -130,6 +134,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        repo = MainRepository()
+        interactor = Interactor(repo)
     }
 
     companion object {

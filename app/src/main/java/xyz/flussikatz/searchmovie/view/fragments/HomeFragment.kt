@@ -7,21 +7,35 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.domain.FilmDiff
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
+import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
-    private val filmDataBase = App.instance.filmDataBase
+//    private val filmDataBase = App.instance.filmDataBase
     private lateinit var binding: FragmentHomeBinding
+    private val viewModel by lazy {
+        ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
+    }
+    private var filmDataBase = listOf<Film>()
+    set(value) {
+        if (field == value) return
+        field = value
+        filmsAdapter.addItems(field)
+    }
 
 
     override fun onCreateView(
@@ -34,6 +48,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>>{
+            filmDataBase = it
+        })
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
 
@@ -78,9 +95,9 @@ class HomeFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
-                        val list = filmsAdapter.items
-                        list[position].fav_state = state
-                        filmsAdapter.updateData(list)
+//                        val list = filmsAdapter.items
+//                        list[position].fav_state = state
+//                        filmsAdapter.updateData(list)
                     }
                 })
             adapter = filmsAdapter
@@ -88,7 +105,6 @@ class HomeFragment : Fragment() {
             val decorator = TopSpasingItemDecoration(5)
             addItemDecoration(decorator)
         }
-        filmsAdapter.addItems(filmDataBase)
 
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {

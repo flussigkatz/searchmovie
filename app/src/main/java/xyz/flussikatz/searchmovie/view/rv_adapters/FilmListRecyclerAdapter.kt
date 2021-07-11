@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import xyz.flussikatz.searchmovie.FilmDiff
+import xyz.flussikatz.searchmovie.domain.FilmDiff
 import xyz.flussikatz.searchmovie.databinding.FilmItemBinding
 import xyz.flussikatz.searchmovie.domain.Film
 import xyz.flussikatz.searchmovie.view.rv_viewholder.FilmViewHolder
@@ -29,6 +29,9 @@ class FilmListRecyclerAdapter(
 
         favorite.setOnCheckedChangeListener { _, isChecked ->
             checkedListener.checkedChange(holder.adapterPosition, isChecked)
+            val list = items
+            list[position].fav_state = isChecked
+            updateData(list)
         }
 
         holder.binding.filmItemCardview.setOnClickListener {
@@ -46,8 +49,8 @@ class FilmListRecyclerAdapter(
 
 
     fun updateData(newList: ArrayList<Film>) {
-        val diffResult = DiffUtil.calculateDiff(FilmDiff(this.items, newList))
-        this.items = newList
+        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList))
+        items = newList
         diffResult.dispatchUpdatesTo(this)
     }
 

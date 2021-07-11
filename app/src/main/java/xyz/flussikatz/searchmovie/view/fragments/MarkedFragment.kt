@@ -30,7 +30,7 @@ class MarkedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var markedList = App.instance.filmDataBase.filter { it.fav_state }
+        var markedList = App.instance.interactor.getFilmsDB().filter { it.fav_state }
 
         binding.markedRecycler.apply {
             filmsAdapter =
@@ -47,9 +47,9 @@ class MarkedFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
                     override fun checkedChange(position: Int, state: Boolean) {
-                        markedList[position].fav_state = state
-                        markedList = markedList.filter { it.fav_state }
-                        filmsAdapter.updateData(markedList as ArrayList<Film>)
+//                        markedList[position].fav_state = state
+//                        markedList = markedList.filter { it.fav_state }
+//                        filmsAdapter.updateData(markedList as ArrayList<Film>)
                     }
                 })
             adapter = filmsAdapter

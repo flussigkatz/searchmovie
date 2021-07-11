@@ -5,7 +5,7 @@ import xyz.flussikatz.searchmovie.domain.Film
 
 class MainRepository {
 
-    val filmDataBase = mutableListOf(
+    val filmsDataBase = mutableListOf(
         Film(
             10,
             "Властелин колец: Братство Кольца1",
