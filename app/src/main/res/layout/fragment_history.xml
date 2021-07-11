@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="invisible"
-    tools:context=".fragmets.HistoryFragment"
+    tools:context=".view.fragments.HistoryFragment"
     tools:visibility="visible">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

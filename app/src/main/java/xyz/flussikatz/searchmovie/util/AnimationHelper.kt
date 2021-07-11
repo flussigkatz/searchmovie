@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.util
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import xyz.flussikatz.searchmovie.view.MainActivity
 import java.util.concurrent.Executors
 import kotlin.math.hypot
 

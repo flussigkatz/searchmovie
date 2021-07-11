@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.fragmets
+package xyz.flussikatz.searchmovie.view.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import xyz.flussikatz.searchmovie.AnimationHelper
+import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.databinding.FragmentHistoryBinding
 

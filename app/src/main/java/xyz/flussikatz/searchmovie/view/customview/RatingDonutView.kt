@@ -1,10 +1,10 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.view.customview
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import xyz.flussikatz.searchmovie.R
 
 class RatingDonutView @JvmOverloads constructor(
     context: Context,

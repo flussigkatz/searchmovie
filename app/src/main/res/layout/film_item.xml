@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="xyz.flussikatz.searchmovie.Film"/>
+        <import type="xyz.flussikatz.searchmovie.domain.Film"/>
 
         <variable
             name="film"
-            type="Film" />
+            type="xyz.flussikatz.searchmovie.domain.Film" />
 
     </data>
 
@@ -20,7 +20,7 @@
         app:cardCornerRadius="10dp">
 
 
-        <xyz.flussikatz.searchmovie.RatingDonutView
+        <xyz.flussikatz.searchmovie.view.customview.RatingDonutView
             android:id="@+id/rating_donut"
             rating="@{film.rating}"
             android:layout_width="40dp"

@@ -1,10 +1,12 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.domain
 
 import android.os.Parcelable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import kotlinx.android.parcel.Parcelize
+import xyz.flussikatz.searchmovie.util.AnimationHelper
+import xyz.flussikatz.searchmovie.view.customview.RatingDonutView
 
 @Parcelize
 data class Film(

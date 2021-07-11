@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:visibility="invisible"
-    tools:context=".fragmets.MarkedFragment"
+    tools:context=".view.fragments.MarkedFragment"
     tools:visibility="visible">
 
     <androidx.recyclerview.widget.RecyclerView

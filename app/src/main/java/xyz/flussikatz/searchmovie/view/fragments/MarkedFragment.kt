@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.fragmets
+package xyz.flussikatz.searchmovie.view.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentMarkedBinding
+import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.util.AnimationHelper
+import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
+import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 
 class MarkedFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter

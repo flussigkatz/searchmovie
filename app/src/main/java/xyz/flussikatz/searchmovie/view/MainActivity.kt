@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.view
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -11,6 +11,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import kotlinx.android.synthetic.main.fragment_home.*
+import xyz.flussikatz.searchmovie.R
+import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

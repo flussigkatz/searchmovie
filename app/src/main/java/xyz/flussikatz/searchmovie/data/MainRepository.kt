@@ -1,9 +1,9 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.data
 
-import android.app.Application
+import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.domain.Film
 
-class App : Application() {
+class MainRepository {
 
     val filmDataBase = mutableListOf(
         Film(
@@ -124,17 +124,5 @@ class App : Application() {
             true
         )
     )
-
-
-
-    override fun onCreate() {
-        super.onCreate()
-        instance = this
-    }
-
-    companion object {
-        lateinit var instance: App
-        private set
-    }
 
 }

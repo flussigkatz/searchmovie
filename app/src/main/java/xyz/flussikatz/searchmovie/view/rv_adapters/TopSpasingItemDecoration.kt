@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.view.rv_adapters
 
 import android.content.res.Resources
 import android.graphics.Rect

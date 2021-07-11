@@ -1,19 +1,19 @@
-package xyz.flussikatz.searchmovie
+package xyz.flussikatz.searchmovie.view.rv_adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import xyz.flussikatz.searchmovie.FilmDiff
 import xyz.flussikatz.searchmovie.databinding.FilmItemBinding
+import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.view.rv_viewholder.FilmViewHolder
 
 class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
     private val checkedListener: OnCheckedChangeListener
-) : RecyclerView.Adapter<FilmListRecyclerAdapter.FilmViewHolder>() {
+) : RecyclerView.Adapter<FilmViewHolder>() {
     var items = ArrayList<Film>()
-
-    class FilmViewHolder(var binding: FilmItemBinding) :
-        RecyclerView.ViewHolder(binding.rootFilmItem)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -49,7 +49,6 @@ class FilmListRecyclerAdapter(
         val diffResult = DiffUtil.calculateDiff(FilmDiff(this.items, newList))
         this.items = newList
         diffResult.dispatchUpdatesTo(this)
-
     }
 
     interface OnItemClickListener {
