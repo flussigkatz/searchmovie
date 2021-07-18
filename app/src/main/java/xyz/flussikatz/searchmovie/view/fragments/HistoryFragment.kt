@@ -6,12 +6,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.gson.Gson
+import okhttp3.*
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.databinding.FragmentHistoryBinding
+import xyz.flussikatz.searchmovie.domain.Movie
+import java.io.IOException
+import java.lang.Exception
 
 class HistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
+
+    init {
+        val gson = Gson()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("https://api.themoviedb.org/3/movie/550?api_key=0e2890e9ecce0e067130f88a04963bfa")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val responseBodyString = response.body()?.string()
+                    binding.movie = gson.fromJson(responseBodyString, Movie::class.java)
+                } catch (e: Exception) {
+                    println(response)
+                    e.printStackTrace()
+                }
+            }
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
