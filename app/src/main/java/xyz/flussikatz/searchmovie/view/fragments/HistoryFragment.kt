@@ -78,27 +78,7 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        Glide.with(this)
-//            .load("https://image.tmdb.org/t/p/w500$moviePoster")
-//            .centerCrop()
-//            .into(binding.hystoryPoster)
-
-        /*Executors.newSingleThreadExecutor().execute {
-            while (moviePoster == "") {
-                if (moviePoster != "") {
-                    println("!!! $moviePoster")
-                    (activity as MainActivity).runOnUiThread {
-                       Glide.with(this)
-                       .load("https://image.tmdb.org/t/p/w500$moviePoster")
-                       .centerCrop()
-                       .into(binding.hystoryPoster) }
-                }
-            }
-            return@execute
-        }*/
-
         AnimationHelper.revealAnimation(binding.rootFragmentHistory, requireActivity())
-
 
         binding.historyBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
