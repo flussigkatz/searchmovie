@@ -11,7 +11,7 @@ class MarkedFragmentViewModel : ViewModel() {
     private  var interactor: Interactor = App.instance.interactor
 
     init {
-        val films = interactor.getFilmsDB().filter { it.fav_state }
-        filmListLiveData.postValue(films)
+//        val films = interactor.getFilmsDB().filter { it.fav_state }
+//        filmListLiveData.postValue(films)
     }
 }
