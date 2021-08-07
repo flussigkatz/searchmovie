@@ -17,7 +17,7 @@ data class Film(
     val title: String,
     val posterId: String,
     val description: String,
-    var rating: Double = 0.0,
+    var rating: Int = 0,
     var fav_state: Boolean = false
 ) : Parcelable {
 
@@ -36,11 +36,11 @@ data class Film(
 
         @BindingAdapter("rating")
         @JvmStatic
-        fun animationRatingDonut(view: RatingDonutView, rating: Double) {
+        fun animationRatingDonut(view: RatingDonutView, rating: Int) {
             AnimationHelper.ratingDonutAnimation(
                 view,
                 "progress",
-                rating.toInt()
+                rating
             )
         }
 

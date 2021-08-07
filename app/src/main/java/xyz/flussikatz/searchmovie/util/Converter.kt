@@ -13,7 +13,7 @@ object Converter {
                     title = it.title,
                     posterId = it.posterPath,
                     description = it.overview,
-                    rating = it.voteAverage
+                    rating = (it.voteAverage * 10).toInt()
                     )
             )
         }
