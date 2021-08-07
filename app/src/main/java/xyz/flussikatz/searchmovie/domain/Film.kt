@@ -4,7 +4,9 @@ import android.os.Parcelable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
+import com.squareup.picasso.Picasso
 import kotlinx.android.parcel.Parcelize
+import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.view.customview.RatingDonutView
 
@@ -12,7 +14,7 @@ import xyz.flussikatz.searchmovie.view.customview.RatingDonutView
 data class Film(
     val id: Int,
     val title: String,
-    @DrawableRes val posterId: Int,
+    val posterId: Int,
     val description: String,
     var rating: Int = 0,
     var fav_state: Boolean = false
@@ -21,8 +23,14 @@ data class Film(
     companion object {
         @BindingAdapter("setImageRes")
         @JvmStatic
-        fun setImage(view: ImageView, imageId: Int) {
-            view.setImageResource(imageId)
+        fun setImage(view: ImageView, image: Int) {
+            Picasso.get()
+                .load(image)
+                .fit()
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(view)
         }
 
         @BindingAdapter("rating")
