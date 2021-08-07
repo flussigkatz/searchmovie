@@ -29,8 +29,8 @@ data class Film(
                 .load(ApiConstants.IMAGES_URL + "w342" + image)
                 .fit()
                 .centerCrop()
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.upload_wait)
+                .error(R.drawable.upload_fail)
                 .into(view)
         }
 
