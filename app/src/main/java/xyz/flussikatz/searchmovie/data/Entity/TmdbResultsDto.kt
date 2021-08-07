@@ -3,7 +3,7 @@ package xyz.flussikatz.searchmovie.data.Entity
 
 import com.google.gson.annotations.SerializedName
 
-data class TmdbResulstDto(
+data class TmdbResultsDto(
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")
