@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.util
+package xyz.flussikatz.searchmovie.data
 
 object ApiConstants {
     const val BASE_URL = "https://api.themoviedb.org/3/"
