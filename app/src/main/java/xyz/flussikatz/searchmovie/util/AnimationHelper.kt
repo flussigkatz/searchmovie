@@ -15,8 +15,8 @@ import kotlin.math.hypot
 
 object AnimationHelper {
 
-    private const val circularAnimationDuration = 200L
-    private const val ratingDonutAnimation = 200L
+    private const val CIRCULAR_ANIMATION_DURATION = 200L
+    private const val RATING_DONUT_ANIMATION = 200L
 
     fun revealAnimation(view: View, activity: Activity) {
 
@@ -35,7 +35,7 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = circularAnimationDuration
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.interpolator = AccelerateDecelerateInterpolator()
                         view.visibility = View.VISIBLE
                         anim.start()
@@ -63,7 +63,7 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = circularAnimationDuration
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
@@ -95,7 +95,7 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = circularAnimationDuration
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
@@ -111,9 +111,9 @@ object AnimationHelper {
     }
 
     fun ratingDonutAnimation(view: View, property: String, rating: Int) {
-        ObjectAnimator.ofInt(view, "$property", rating).apply {
-            duration = ratingDonutAnimation
-            startDelay = circularAnimationDuration
+        ObjectAnimator.ofInt(view, property, rating).apply {
+            duration = RATING_DONUT_ANIMATION
+            startDelay = CIRCULAR_ANIMATION_DURATION
             interpolator = DecelerateInterpolator()
             start()
         }
