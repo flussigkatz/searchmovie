@@ -81,9 +81,12 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_ver"
 
     //Retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.6.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:3.12.6"
+    def retrofit_ver = "2.9.0"
+    def converter_gson_ver = "2.6.0"
+    def logging_interceptor_ver = "3.12.6"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_ver"
+    implementation "com.squareup.retrofit2:converter-gson:$converter_gson_ver"
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_ver"
 
     //Picasso
     def picasso_ver = "2.71828"
