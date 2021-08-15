@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="favorite_check_box_size">30dp</dimen>
+    <dimen name="film_item_favorite_check_box_size">30dp</dimen>
+    <dimen name="film_item_favorite_check_box_margin">2dp</dimen>
+    <dimen name="details_favorite_check_box_margin">20dp</dimen>
+    <dimen name="details_favorite_check_box_size">30dp</dimen>
+    <dimen name="film_item_root_width">150dp</dimen>
+    <dimen name="film_item_rating_donut_size">40dp</dimen>
+    <dimen name="film_item_rating_donut_translation_z">5dp</dimen>
+    <dimen name="film_item_cardview_margins">10dp</dimen>
+    <dimen name="film_item_cardview_corner_radius">10dp</dimen>
+    <dimen name="film_item_textview_description_padding">8dp</dimen>
+    <dimen name="film_item_textview_description_width">0dp</dimen>
+    <dimen name="film_item_textview_description_height">0dp</dimen>
+    <dimen name="film_item_textview_title_width">0dp</dimen>
+    <dimen name="film_item_textview_title_padding">8dp</dimen>
+    <dimen name="film_item_imageview_poster_width">150dp</dimen>
 </resources>

@@ -16,18 +16,17 @@
     <FrameLayout
         android:id="@+id/root_film_item"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:cardCornerRadius="10dp">
+        android:layout_height="@dimen/film_item_root_width">
 
 
         <xyz.flussikatz.searchmovie.view.customview.RatingDonutView
             android:id="@+id/rating_donut"
             rating="@{film.rating}"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/film_item_rating_donut_size"
+            android:layout_height="@dimen/film_item_rating_donut_size"
             android:layout_gravity="bottom|start"
             android:clickable="true"
-            android:translationZ="5dp"
+            android:translationZ="@dimen/film_item_rating_donut_translation_z"
             app:scaleSize="45"
             app:stroke="10" />
 
@@ -36,9 +35,9 @@
             android:id="@+id/film_item_cardview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            app:cardCornerRadius="10dp">
+            android:layout_marginStart="@dimen/film_item_cardview_margins"
+            android:layout_marginEnd="@dimen/film_item_cardview_margins"
+            app:cardCornerRadius="@dimen/film_item_cardview_corner_radius">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -47,7 +46,7 @@
                 <ImageView
                     android:id="@+id/poster"
                     setImageRes="@{film.posterId}"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/film_item_imageview_poster_width"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="parent"
@@ -55,9 +54,9 @@
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/favorite_check_box"
-                    android:layout_width="@dimen/favorite_check_box_size"
-                    android:layout_height="@dimen/favorite_check_box_size"
-                    android:layout_margin="2dp"
+                    android:layout_width="@dimen/film_item_favorite_check_box_size"
+                    android:layout_height="@dimen/film_item_favorite_check_box_size"
+                    android:layout_margin="@dimen/film_item_favorite_check_box_margin"
                     android:background="@drawable/favorite_selector"
                     android:backgroundTint="@color/yellow"
                     android:button="@null"
@@ -69,9 +68,9 @@
                 <TextView
                     android:id="@+id/title"
                     style="@style/DetailsTheme"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/film_item_textview_title_width"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:padding="@dimen/film_item_textview_title_padding"
                     android:text="@{film.title}"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
@@ -82,9 +81,9 @@
                 <TextView
                     android:id="@+id/description"
                     style="@style/DetailsTheme"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:padding="8dp"
+                    android:layout_width="@dimen/film_item_textview_description_width"
+                    android:layout_height="@dimen/film_item_textview_description_height"
+                    android:padding="@dimen/film_item_textview_description_padding"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
