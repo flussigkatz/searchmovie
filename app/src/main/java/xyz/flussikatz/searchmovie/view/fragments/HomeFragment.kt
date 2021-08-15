@@ -103,6 +103,8 @@ class HomeFragment : Fragment() {
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
 
+
+        //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {

@@ -15,7 +15,8 @@ import kotlin.math.hypot
 
 object AnimationHelper {
 
-    private const val CIRCULAR_ANIMATION_DURATION = 200L
+    private const val CIRCULAR_ANIMATION_DURATION = 2000L
+    private const val DELAY_COVER_ANIMATION_WELCOME_SCREEN = 200L
 
     fun revealAnimation(view: View, activity: Activity) {
 
@@ -63,6 +64,39 @@ object AnimationHelper {
                             endRadius.toFloat()
                         )
                         anim.duration = CIRCULAR_ANIMATION_DURATION
+                        anim.start()
+                        anim.addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                view.visibility = View.INVISIBLE
+                                (activity as MainActivity).navController.navigate(resId)
+                            }
+                        })
+                    }
+                    return@execute
+                }
+            }
+        }
+    }
+
+    fun coverAnimation(view: View, navHostRoot: View, activity: Activity, resId: Int) {
+
+        Executors.newSingleThreadExecutor().execute {
+            while (true) {
+                if (view.isAttachedToWindow) {
+                    activity.runOnUiThread {
+                        val x: Int = view.width.div(2)
+                        val y: Int = view.height.div(2)
+                        val startRadius = hypot(view.width.toDouble(), view.height.toDouble())
+                        val endRadius = 0
+                        val anim = ViewAnimationUtils.createCircularReveal(
+                            view,
+                            x,
+                            y,
+                            startRadius.toFloat(),
+                            endRadius.toFloat()
+                        )
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
+                        anim.startDelay = DELAY_COVER_ANIMATION_WELCOME_SCREEN
                         anim.start()
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {

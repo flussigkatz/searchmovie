@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
-import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
@@ -29,22 +28,32 @@ class MainActivity : AppCompatActivity() {
 
         val lottieAnimationView: LottieAnimationView = binding.welcomeScreen
         lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator?, isReverse: Boolean) {
+                binding.rootNavHost.visibility = View.INVISIBLE
+            }
+
             @SuppressLint("RestrictedApi")
             override fun onAnimationEnd(animation: Animator?) {
-                root_fragment_home.visibility = View.INVISIBLE
                 navController.backStack.clear()
                 AnimationHelper.coverAnimation(
-                    binding.welcomeScreen, this@MainActivity, R.id.homeFragment
+                    binding.welcomeScreen,
+                    binding.rootNavHost,
+                    this@MainActivity,
+                    R.id.homeFragment
                 )
+                binding.rootNavHost.visibility = View.VISIBLE
             }
 
             @SuppressLint("RestrictedApi")
             override fun onAnimationCancel(animation: Animator?) {
-                root_fragment_home.visibility = View.INVISIBLE
                 navController.backStack.clear()
                 AnimationHelper.coverAnimation(
-                    binding.welcomeScreen, this@MainActivity, R.id.homeFragment
+                    binding.welcomeScreen,
+                    binding.rootNavHost,
+                    this@MainActivity,
+                    R.id.homeFragment
                 )
+                binding.rootNavHost.visibility = View.VISIBLE
             }
         })
         binding.welcomeScreen.setOnClickListener { lottieAnimationView.cancelAnimation() }

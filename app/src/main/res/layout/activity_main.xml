@@ -8,6 +8,13 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
+    <FrameLayout
+        android:id="@+id/root_nav_host"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/MainBackground"
+        android:translationZ="5dp">
+
     <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -20,12 +27,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/navigation" />
 
+    </FrameLayout>
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/welcome_screen"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/backgrond_gardient"
         android:visibility="visible"
+        android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
