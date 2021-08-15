@@ -33,16 +33,5 @@ data class Film(
                 .error(R.drawable.upload_fail)
                 .into(view)
         }
-
-        @BindingAdapter("rating")
-        @JvmStatic
-        fun animationRatingDonut(view: RatingDonutView, rating: Int) {
-            AnimationHelper.ratingDonutAnimation(
-                view,
-                "progress",
-                rating
-            )
-        }
-
     }
 }

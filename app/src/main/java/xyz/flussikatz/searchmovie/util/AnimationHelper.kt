@@ -16,7 +16,6 @@ import kotlin.math.hypot
 object AnimationHelper {
 
     private const val CIRCULAR_ANIMATION_DURATION = 200L
-    private const val RATING_DONUT_ANIMATION = 200L
 
     fun revealAnimation(view: View, activity: Activity) {
 
@@ -107,15 +106,6 @@ object AnimationHelper {
                     return@execute
                 }
             }
-        }
-    }
-
-    fun ratingDonutAnimation(view: View, property: String, rating: Int) {
-        ObjectAnimator.ofInt(view, property, rating).apply {
-            duration = RATING_DONUT_ANIMATION
-            startDelay = CIRCULAR_ANIMATION_DURATION
-            interpolator = DecelerateInterpolator()
-            start()
         }
     }
 }
