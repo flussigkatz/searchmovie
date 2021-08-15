@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
                     this@MainActivity,
                     R.id.homeFragment
                 )
-                binding.rootNavHost.visibility = View.VISIBLE
             }
 
             @SuppressLint("RestrictedApi")
@@ -53,7 +52,6 @@ class MainActivity : AppCompatActivity() {
                     this@MainActivity,
                     R.id.homeFragment
                 )
-                binding.rootNavHost.visibility = View.VISIBLE
             }
         })
         binding.welcomeScreen.setOnClickListener { lottieAnimationView.cancelAnimation() }

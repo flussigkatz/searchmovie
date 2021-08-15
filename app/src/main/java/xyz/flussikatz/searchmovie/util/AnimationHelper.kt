@@ -15,8 +15,8 @@ import kotlin.math.hypot
 
 object AnimationHelper {
 
-    private const val CIRCULAR_ANIMATION_DURATION = 2000L
-    private const val DELAY_COVER_ANIMATION_WELCOME_SCREEN = 200L
+    private const val CIRCULAR_ANIMATION_DURATION = 200L
+    private const val DELAY_COVER_ANIMATION_WELCOME_SCREEN = 500L
 
     fun revealAnimation(view: View, activity: Activity) {
 
@@ -78,7 +78,7 @@ object AnimationHelper {
         }
     }
 
-    fun coverAnimation(view: View, navHostRoot: View, activity: Activity, resId: Int) {
+    fun coverAnimation(view: View, rootNavHost: View, activity: Activity, resId: Int) {
 
         Executors.newSingleThreadExecutor().execute {
             while (true) {
@@ -102,6 +102,7 @@ object AnimationHelper {
                             override fun onAnimationEnd(animation: Animator?) {
                                 view.visibility = View.INVISIBLE
                                 (activity as MainActivity).navController.navigate(resId)
+                                rootNavHost.visibility = View.VISIBLE
                             }
                         })
                     }
