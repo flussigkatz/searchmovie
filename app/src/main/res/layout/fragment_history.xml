@@ -2,7 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_fragment_history"
     style="@style/MainBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +10,6 @@
     tools:visibility="visible">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/history_bottom_toolbar"
         style="@style/BottomToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
