@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.rootFragmentHome
     }
@@ -65,12 +65,12 @@ class HomeFragment : Fragment() {
                 if (newText == null) {
                     return true
                 } else {
-                    if (newText!!.isEmpty()) {
+                    if (newText.isEmpty()) {
                         filmsAdapter.updateData(filmDataBase as ArrayList<Film>)
                     }
                     val result = filmDataBase.filter {
-                        it.title.toLowerCase(Locale.getDefault())
-                            .contains(newText!!.toLowerCase(Locale.getDefault()))
+                        it.title.lowercase(Locale.getDefault())
+                            .contains(newText.lowercase(Locale.getDefault()))
                     }
                     filmsAdapter.updateData(result as ArrayList<Film>)
                     return false

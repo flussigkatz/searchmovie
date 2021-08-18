@@ -13,7 +13,7 @@ import xyz.flussikatz.searchmovie.domain.Remote
 @InstallIn(FragmentComponent::class)
 object ViewModelModule {
     @Provides
-    fun provideRetrofit(): Remote = Remote()
+    fun provideRetrofit(): TmdbApi = Remote().retrofitService
 
     @Provides
     fun provideInteractor(retrofitService: TmdbApi): Interactor = MainInteractor(retrofitService)
