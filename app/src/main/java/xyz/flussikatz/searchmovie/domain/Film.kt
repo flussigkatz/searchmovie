@@ -2,14 +2,11 @@ package xyz.flussikatz.searchmovie.domain
 
 import android.os.Parcelable
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.ApiConstants
-import xyz.flussikatz.searchmovie.util.AnimationHelper
-import xyz.flussikatz.searchmovie.view.customview.RatingDonutView
 
 @Parcelize
 data class Film(
@@ -29,8 +26,8 @@ data class Film(
                 .load(ApiConstants.IMAGES_URL + "w154" + image)
                 .fit()
                 .centerCrop()
-                .placeholder(R.drawable.upload_wait)
-                .error(R.drawable.upload_fail)
+                .placeholder(R.drawable.wait)
+                .error(R.drawable.err)
                 .into(view)
         }
     }

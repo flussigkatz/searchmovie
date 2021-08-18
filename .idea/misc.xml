@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/err.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/wait.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/film_item.xml" value="0.20260416666666667" />
       </map>
     </option>
