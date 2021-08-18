@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.data.Entity
+package xyz.flussikatz.searchmovie.data.entity
 
 
 import com.google.gson.annotations.SerializedName

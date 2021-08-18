@@ -9,7 +9,7 @@ import xyz.flussikatz.searchmovie.data.ApiConstants
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import java.util.concurrent.TimeUnit
 
-object Remote {
+class Remote {
     val okHttpClient = OkHttpClient.Builder()
         .callTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)

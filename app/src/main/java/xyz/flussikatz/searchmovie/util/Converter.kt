@@ -1,6 +1,6 @@
 package xyz.flussikatz.searchmovie.util
 
-import xyz.flussikatz.searchmovie.data.Entity.TmdbFilm
+import xyz.flussikatz.searchmovie.data.entity.TmdbFilm
 import xyz.flussikatz.searchmovie.domain.Film
 
 object Converter {
