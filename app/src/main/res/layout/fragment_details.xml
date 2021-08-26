@@ -37,9 +37,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/details_poster"
-                    setImageRes="@{film.posterId}"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="500dp"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="pin" />
 
@@ -52,10 +51,10 @@
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/details_favorite"
-                    android:layout_width="@dimen/favorite_check_box_size"
-                    android:layout_height="@dimen/favorite_check_box_size"
+                    android:layout_width="@dimen/details_favorite_check_box_size"
+                    android:layout_height="@dimen/details_favorite_check_box_size"
                     android:layout_gravity="left|top"
-                    android:layout_margin="20dp"
+                    android:layout_margin="@dimen/details_favorite_check_box_margin"
                     android:background="@drawable/favorite_selector"
                     android:backgroundTint="@color/yellow"
                     android:button="@null"

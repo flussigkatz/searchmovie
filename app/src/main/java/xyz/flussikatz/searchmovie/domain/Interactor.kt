@@ -1,7 +1,8 @@
 package xyz.flussikatz.searchmovie.domain
 
-import xyz.flussikatz.searchmovie.data.MainRepository
+import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
 
-class Interactor(val repo: MainRepository) {
-    fun getFilmsDB(): List<Film> = repo.filmsDataBase
+
+interface Interactor {
+    fun getFilmsFromApi(page: Int, callback: HomeFragmentViewModel.ApiCallback)
 }

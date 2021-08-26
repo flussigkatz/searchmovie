@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.squareup.picasso.Picasso
 import xyz.flussikatz.searchmovie.domain.Film
 import xyz.flussikatz.searchmovie.R
+import xyz.flussikatz.searchmovie.data.ApiConstants
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussikatz.searchmovie.view.MainActivity
@@ -36,6 +38,15 @@ class DetailsFragment : Fragment() {
             (requireActivity() as MainActivity).onBackPressed()
             //TODO некоректно возвращает на маркерованный фрагмент, пустой recycler
         }
+
+        Picasso.get()
+            .load(ApiConstants.IMAGES_URL + "w500" + film.posterId)
+            .fit()
+            .centerCrop()
+            .placeholder(R.drawable.upload_wait)
+            .error(R.drawable.upload_fail)
+            .into(binding.detailsPoster)
+
         binding.detailsFab.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND

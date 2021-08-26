@@ -15,8 +15,8 @@ import kotlin.math.hypot
 
 object AnimationHelper {
 
-    private const val circularAnimationDuration = 200L
-    private const val ratingDonutAnimation = 200L
+    private const val CIRCULAR_ANIMATION_DURATION = 200L
+    private const val DELAY_COVER_ANIMATION_WELCOME_SCREEN = 500L
 
     fun revealAnimation(view: View, activity: Activity) {
 
@@ -35,7 +35,7 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = circularAnimationDuration
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.interpolator = AccelerateDecelerateInterpolator()
                         view.visibility = View.VISIBLE
                         anim.start()
@@ -63,12 +63,46 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = circularAnimationDuration
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
                                 view.visibility = View.INVISIBLE
                                 (activity as MainActivity).navController.navigate(resId)
+                            }
+                        })
+                    }
+                    return@execute
+                }
+            }
+        }
+    }
+
+    fun coverAnimation(view: View, rootNavHost: View, activity: Activity, resId: Int) {
+
+        Executors.newSingleThreadExecutor().execute {
+            while (true) {
+                if (view.isAttachedToWindow) {
+                    activity.runOnUiThread {
+                        val x: Int = view.width.div(2)
+                        val y: Int = view.height.div(2)
+                        val startRadius = hypot(view.width.toDouble(), view.height.toDouble())
+                        val endRadius = 0
+                        val anim = ViewAnimationUtils.createCircularReveal(
+                            view,
+                            x,
+                            y,
+                            startRadius.toFloat(),
+                            endRadius.toFloat()
+                        )
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
+                        anim.startDelay = DELAY_COVER_ANIMATION_WELCOME_SCREEN
+                        anim.start()
+                        anim.addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                view.visibility = View.INVISIBLE
+                                (activity as MainActivity).navController.navigate(resId)
+                                rootNavHost.visibility = View.VISIBLE
                             }
                         })
                     }
@@ -95,7 +129,7 @@ object AnimationHelper {
                             startRadius.toFloat(),
                             endRadius.toFloat()
                         )
-                        anim.duration = circularAnimationDuration
+                        anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
@@ -107,15 +141,6 @@ object AnimationHelper {
                     return@execute
                 }
             }
-        }
-    }
-
-    fun ratingDonutAnimation(view: View, property: String, rating: Int) {
-        ObjectAnimator.ofInt(view, "$property", rating).apply {
-            duration = ratingDonutAnimation
-            startDelay = circularAnimationDuration
-            interpolator = DecelerateInterpolator()
-            start()
         }
     }
 }

@@ -2,18 +2,29 @@ package xyz.flussikatz.searchmovie.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.DiffUtil
-import xyz.flussikatz.searchmovie.App
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import xyz.flussikatz.searchmovie.domain.Film
-import xyz.flussikatz.searchmovie.domain.FilmDiff
-import xyz.flussikatz.searchmovie.domain.Interactor
+import xyz.flussikatz.searchmovie.domain.MainInteractor
 
-class HomeFragmentViewModel : ViewModel() {
+class HomeFragmentViewModel : ViewModel(), KoinComponent {
     val filmListLiveData = MutableLiveData<List<Film>>()
-    private var interactor: Interactor = App.instance.interactor
+    private val mainInteractor: MainInteractor by inject()
 
     init {
-        val films = interactor.getFilmsDB()
-        filmListLiveData.postValue(films)
+        mainInteractor.getFilmsFromApi(1, object : ApiCallback {
+            override fun onSuccess(films: List<Film>) {
+                filmListLiveData.postValue(films)
+            }
+
+            override fun onFailure() {
+            }
+
+        })
+    }
+
+    interface ApiCallback {
+        fun onSuccess(films: List<Film>)
+        fun onFailure()
     }
 }

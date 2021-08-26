@@ -1,10 +1,16 @@
 package xyz.flussikatz.searchmovie.view.customview
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.DecelerateInterpolator
+import androidx.databinding.BindingAdapter
 import xyz.flussikatz.searchmovie.R
+import xyz.flussikatz.searchmovie.util.AnimationHelper
+
+private const val RATING_DONUT_ANIMATION = 200L
 
 class RatingDonutView @JvmOverloads constructor(
     context: Context,
@@ -136,5 +142,17 @@ class RatingDonutView @JvmOverloads constructor(
         progress = p
         initPaint()
         invalidate()
+    }
+
+    companion object {
+        @BindingAdapter("rating")
+        @JvmStatic
+        fun animationRatingDonut(view: RatingDonutView, rating: Int) {
+            ObjectAnimator.ofInt(view, "progress", rating).apply {
+                duration = RATING_DONUT_ANIMATION
+                interpolator = DecelerateInterpolator()
+                start()
+            }
+        }
     }
 }

@@ -2,7 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'
+    id 'kotlin-parcelize'
+
 }
 
 android {
@@ -40,19 +41,58 @@ android {
 }
 
 dependencies {
-
+    def kotlin_version = "1.5.21"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    def core_ktx_ver = "1.6.0"
+    implementation "androidx.core:core-ktx:$core_ktx_ver"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.airbnb.android:lottie:3.4.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
+
+    //Test
+    def espresso_ver = "3.4.0"
+    def ext_junit_ver = "1.1.3"
+    def junit_ver = "4.13.2"
+    testImplementation "junit:junit:$junit_ver"
+    androidTestImplementation "androidx.test.ext:junit:$ext_junit_ver"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_ver"
+
+    //Constraintlayout
+    def constraintlayout_ver = "2.1.0"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_ver"
+
+    //Material
+    def material_ver = "1.4.0"
+    implementation "com.google.android.material:material:$material_ver"
+
+    //AppCompat
+    def appcompat_ver = "1.3.1"
+    implementation "androidx.appcompat:appcompat:$appcompat_ver"
+
+    //RV
+    def rv_ver = "1.2.1"
+    implementation "androidx.recyclerview:recyclerview:$rv_ver"
+
+    //Lottie
+    def lottie_ver = "3.4.4"
+    implementation "com.airbnb.android:lottie:$lottie_ver"
+
+    //Navigation
+    def navigation_ver = "2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_ver"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_ver"
+
+    //Retrofit
+    def retrofit_ver = "2.9.0"
+    def converter_gson_ver = "2.6.0"
+    def logging_interceptor_ver = "3.12.6"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_ver"
+    implementation "com.squareup.retrofit2:converter-gson:$converter_gson_ver"
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_ver"
+
+    //Picasso
+    def picasso_ver = "2.71828"
+    implementation "com.squareup.picasso:picasso:$picasso_ver"
+
+    //Koin
+    implementation "org.koin:koin-android:2.0.1"
 }
