@@ -2,13 +2,13 @@ package xyz.flussikatz.searchmovie.util
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.DecelerateInterpolator
+import android.widget.FrameLayout
+import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.view.MainActivity
 import java.util.concurrent.Executors
 import kotlin.math.hypot
@@ -21,7 +21,8 @@ object AnimationHelper {
     fun revealAnimation(view: View, activity: Activity) {
 
         Executors.newSingleThreadExecutor().execute {
-            while (true) {
+            var isAnimate = false
+            while (!isAnimate) {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
                         val x: Int = view.width.div(2)
@@ -37,8 +38,16 @@ object AnimationHelper {
                         )
                         anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.interpolator = AccelerateDecelerateInterpolator()
-                        view.visibility = View.VISIBLE
+                        anim.addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationStart(animation: Animator?) {
+                                view.visibility = View.VISIBLE
+                                activity
+                                    .findViewById<FrameLayout>(R.id.root_nav_host)
+                                    .visibility = View.VISIBLE
+                            }
+                        })
                         anim.start()
+                        isAnimate = true
                     }
                     return@execute
                 }
@@ -49,7 +58,8 @@ object AnimationHelper {
     fun coverAnimation(view: View, activity: Activity, resId: Int) {
 
         Executors.newSingleThreadExecutor().execute {
-            while (true) {
+            var isAnimate = false
+            while (!isAnimate) {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
                         val x: Int = view.width.div(2)
@@ -65,44 +75,11 @@ object AnimationHelper {
                         )
                         anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
+                        isAnimate = true
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
-                                view.visibility = View.INVISIBLE
+                                view.visibility = View.GONE
                                 (activity as MainActivity).navController.navigate(resId)
-                            }
-                        })
-                    }
-                    return@execute
-                }
-            }
-        }
-    }
-
-    fun coverAnimation(view: View, rootNavHost: View, activity: Activity, resId: Int) {
-
-        Executors.newSingleThreadExecutor().execute {
-            while (true) {
-                if (view.isAttachedToWindow) {
-                    activity.runOnUiThread {
-                        val x: Int = view.width.div(2)
-                        val y: Int = view.height.div(2)
-                        val startRadius = hypot(view.width.toDouble(), view.height.toDouble())
-                        val endRadius = 0
-                        val anim = ViewAnimationUtils.createCircularReveal(
-                            view,
-                            x,
-                            y,
-                            startRadius.toFloat(),
-                            endRadius.toFloat()
-                        )
-                        anim.duration = CIRCULAR_ANIMATION_DURATION
-                        anim.startDelay = DELAY_COVER_ANIMATION_WELCOME_SCREEN
-                        anim.start()
-                        anim.addListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator?) {
-                                view.visibility = View.INVISIBLE
-                                (activity as MainActivity).navController.navigate(resId)
-                                rootNavHost.visibility = View.VISIBLE
                             }
                         })
                     }
@@ -115,7 +92,8 @@ object AnimationHelper {
     fun coverAnimation(view: View, activity: Activity, resId: Int, bundle: Bundle) {
 
         Executors.newSingleThreadExecutor().execute {
-            while (true) {
+            var isAnimate = false
+            while (!isAnimate) {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
                         val x: Int = view.width.div(2)
@@ -131,9 +109,10 @@ object AnimationHelper {
                         )
                         anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
+                        isAnimate = true
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
-                                view.visibility = View.INVISIBLE
+                                view.visibility = View.GONE
                                 (activity as MainActivity).navController.navigate(resId, bundle)
                             }
                         })

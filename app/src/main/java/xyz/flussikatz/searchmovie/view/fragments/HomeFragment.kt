@@ -5,21 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussikatz.searchmovie.domain.Film
-import xyz.flussikatz.searchmovie.domain.FilmDiff
 import xyz.flussikatz.searchmovie.util.AnimationHelper
+import xyz.flussikatz.searchmovie.view.MainActivity
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
 import java.util.*
+import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
 
@@ -30,11 +31,11 @@ class HomeFragment : Fragment() {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
     }
     private var filmDataBase = listOf<Film>()
-    set(value) {
-        if (field == value) return
-        field = value
-        filmsAdapter.addItems(field)
-    }
+        set(value) {
+            if (field == value) return
+            field = value
+            filmsAdapter.addItems(field)
+        }
 
 
     override fun onCreateView(
@@ -47,9 +48,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>>{
+        viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>> {
             filmDataBase = it
         })
+
+        AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
 
         binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
         //TODO некорректно работает при нажатии на крест
@@ -100,9 +103,6 @@ class HomeFragment : Fragment() {
             val decorator = TopSpasingItemDecoration(5)
             addItemDecoration(decorator)
         }
-
-        AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
-
 
         //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
