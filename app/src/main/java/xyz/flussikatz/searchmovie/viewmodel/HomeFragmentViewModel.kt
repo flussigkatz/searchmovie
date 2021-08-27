@@ -2,17 +2,20 @@ package xyz.flussikatz.searchmovie.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.domain.Film
-import xyz.flussikatz.searchmovie.domain.MainInteractor
+import xyz.flussikatz.searchmovie.domain.Interactor
+import javax.inject.Inject
 
-class HomeFragmentViewModel : ViewModel(), KoinComponent {
+class HomeFragmentViewModel : ViewModel() {
     val filmListLiveData = MutableLiveData<List<Film>>()
-    private val mainInteractor: MainInteractor by inject()
+    @Inject
+    lateinit var interactor: Interactor
 
     init {
-        mainInteractor.getFilmsFromApi(1, object : ApiCallback {
+        App.instance.dagger.inject(this)
+
+        interactor.getFilmsFromApi(1, object : ApiCallback {
             override fun onSuccess(films: List<Film>) {
                 filmListLiveData.postValue(films)
             }

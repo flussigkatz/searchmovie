@@ -1,5 +1,7 @@
-package xyz.flussikatz.searchmovie.domain
+package xyz.flussikatz.searchmovie.di.modules
 
+import dagger.Module
+import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -8,9 +10,13 @@ import xyz.flussikatz.searchmovie.BuildConfig
 import xyz.flussikatz.searchmovie.data.ApiConstants
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
-object Remote {
-    val okHttpClient = OkHttpClient.Builder()
+@Module
+class RemoteModule {
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .callTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(HttpLoggingInterceptor().apply {
@@ -20,11 +26,16 @@ object Remote {
         })
         .build()
 
-    val retrofit = Retrofit.Builder()
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(ApiConstants.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
 
-    val retrofitService = retrofit.create(TmdbApi::class.java)
+    @Provides
+    @Singleton
+    fun provideTmdbApi(retrofit: Retrofit): TmdbApi = retrofit.create(TmdbApi::class.java)
+
 }
