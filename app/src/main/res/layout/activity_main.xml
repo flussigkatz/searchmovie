@@ -8,11 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/root_nav_host"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
 
         <fragment
             android:id="@+id/nav_host_fragment"
@@ -26,7 +21,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navGraph="@navigation/navigation" />
 
-    </FrameLayout>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/welcome_screen"

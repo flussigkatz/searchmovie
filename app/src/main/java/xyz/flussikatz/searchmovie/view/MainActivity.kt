@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
@@ -31,8 +32,8 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_host_fragment
         )
 
-        //TODO Сделать задержку после сплеш скрина
         val lottieAnimationView: LottieAnimationView = binding.welcomeScreen
+        lottieAnimationView.speed = 0.7F
         lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
 
             override fun onAnimationEnd(animation: Animator?) {
@@ -46,7 +47,8 @@ class MainActivity : AppCompatActivity() {
             @SuppressLint("RestrictedApi")
             fun endAnimationWelcomeScreen() {
                 this@MainActivity
-                    .findViewById<FrameLayout>(R.id.root_nav_host).visibility = View.INVISIBLE
+                    .findViewById<CoordinatorLayout>(R.id.root_fragment_home)
+                    .visibility = View.INVISIBLE
 
                 navController.backStack.clear()
                 AnimationHelper.coverAnimation(
