@@ -38,7 +38,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/details_poster"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp"
+                    android:layout_height="@dimen/details_poster_heigth"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="pin" />
 
@@ -68,7 +68,7 @@
             android:id="@+id/details_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="@dimen/details_fab_margin"
             android:backgroundTint="@color/design_default_color_secondary_variant"
             app:layout_anchor="@id/details_appbar"
             app:layout_anchorGravity="bottom|right"
@@ -78,7 +78,7 @@
             android:id="@+id/step_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="@dimen/details_step_back_margin"
             android:backgroundTint="@color/design_default_color_secondary_variant"
             app:layout_anchor="@id/details_appbar"
             app:layout_anchorGravity="bottom|left"
@@ -95,7 +95,7 @@
                 style="@style/DetailsTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/details_description_margin"
                 android:text="@{film.description}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
         </androidx.core.widget.NestedScrollView>
