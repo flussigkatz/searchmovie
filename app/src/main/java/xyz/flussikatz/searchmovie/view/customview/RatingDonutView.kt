@@ -10,7 +10,7 @@ import androidx.databinding.BindingAdapter
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 
-private const val RATING_DONUT_ANIMATION = 200L
+private const val RATING_DONUT_ANIMATION = 400L
 
 class RatingDonutView @JvmOverloads constructor(
     context: Context,

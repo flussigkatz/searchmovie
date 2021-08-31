@@ -6,13 +6,16 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
@@ -24,31 +27,32 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(
+            this@MainActivity,
+            R.id.nav_host_fragment
+        )
 
         val lottieAnimationView: LottieAnimationView = binding.welcomeScreen
+        lottieAnimationView.speed = 0.7F
         lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator?, isReverse: Boolean) {
-                binding.rootNavHost.visibility = View.INVISIBLE
-            }
 
-            @SuppressLint("RestrictedApi")
             override fun onAnimationEnd(animation: Animator?) {
-                navController.backStack.clear()
-                AnimationHelper.coverAnimation(
-                    binding.welcomeScreen,
-                    binding.rootNavHost,
-                    this@MainActivity,
-                    R.id.homeFragment
-                )
+                endAnimationWelcomeScreen()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+                endAnimationWelcomeScreen()
             }
 
             @SuppressLint("RestrictedApi")
-            override fun onAnimationCancel(animation: Animator?) {
+            fun endAnimationWelcomeScreen() {
+                this@MainActivity
+                    .findViewById<CoordinatorLayout>(R.id.root_fragment_home)
+                    .visibility = View.INVISIBLE
+
                 navController.backStack.clear()
                 AnimationHelper.coverAnimation(
                     binding.welcomeScreen,
-                    binding.rootNavHost,
                     this@MainActivity,
                     R.id.homeFragment
                 )
@@ -59,12 +63,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
-        if(navController.backStack.size > 2){
+        if (navController.backStack.size > 2) {
             super.onBackPressed()
         } else {
-            if (backPressedTime + TIME_INTERVAL > System.currentTimeMillis()){
+            if (backPressedTime + TIME_INTERVAL > System.currentTimeMillis()) {
                 finish()
             } else {
                 Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show()
