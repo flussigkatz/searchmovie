@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.rootFragmentHome
     }
@@ -54,10 +54,10 @@ class HomeFragment : Fragment() {
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
 
-        binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
+        binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
         //TODO некорректно работает при нажатии на крест
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
@@ -66,12 +66,12 @@ class HomeFragment : Fragment() {
                 if (newText == null) {
                     return true
                 } else {
-                    if (newText!!.isEmpty()) {
+                    if (newText.isEmpty()) {
                         filmsAdapter.updateData(filmDataBase as ArrayList<Film>)
                     }
                     val result = filmDataBase.filter {
-                        it.title.toLowerCase(Locale.getDefault())
-                            .contains(newText!!.toLowerCase(Locale.getDefault()))
+                        it.title.lowercase(Locale.getDefault())
+                            .contains(newText.lowercase(Locale.getDefault()))
                     }
                     filmsAdapter.updateData(result as ArrayList<Film>)
                     return false
