@@ -12,4 +12,6 @@ import javax.inject.Singleton
 
 interface AppComponent {
     fun inject(homeFragmentViewModel: HomeFragmentViewModel)
+
+    fun inject(settingsFragmentViewModel: SettingsFragmentViewModel)
 }

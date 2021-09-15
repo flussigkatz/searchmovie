@@ -3,6 +3,9 @@ package xyz.flussikatz.searchmovie
 import android.app.Application
 import xyz.flussikatz.searchmovie.di.AppComponent
 import xyz.flussikatz.searchmovie.di.DaggerAppComponent
+import xyz.flussikatz.searchmovie.di.modules.DatabaseModule
+import xyz.flussikatz.searchmovie.di.modules.DomainModule
+import xyz.flussikatz.searchmovie.di.modules.RemoteModule
 
 class App : Application() {
 
@@ -12,8 +15,11 @@ class App : Application() {
         super.onCreate()
         instance = this
 
-        dagger = DaggerAppComponent.create()
-
+        dagger = DaggerAppComponent.builder()
+            .remoteModule(RemoteModule())
+            .databaseModule(DatabaseModule())
+            .domainModule(DomainModule(this))
+            .build()
 
 
     }
