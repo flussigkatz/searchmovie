@@ -127,6 +127,14 @@ class HomeFragment : Fragment() {
                     )
                     true
                 }
+                R.id.settings -> {
+                    AnimationHelper.coverAnimation(
+                        binding.rootFragmentHome,
+                        requireActivity(),
+                        R.id.action_global_settingsFragment
+                    )
+                    true
+                }
                 else -> false
             }
         }

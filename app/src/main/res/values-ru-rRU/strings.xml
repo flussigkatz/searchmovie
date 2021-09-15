@@ -4,5 +4,11 @@
     <string name="home_page">Главная</string>
     <string name="marked">Отмеченные</string>
     <string name="history">История</string>
+    <string name="settings">Настройки</string>
+    <string name="radio_group_header">Подборка на главном экране</string>
+    <string name="radio_popular">Популярные</string>
+    <string name="radio_top_rated">Рейтинговые</string>
+    <string name="radio_upcoming">Скоро</string>
+    <string name="radio_in_cinemas">В кинотеатрах</string>
     <string name="exit_message">Ещё раз назад для выхода</string>
 </resources>
