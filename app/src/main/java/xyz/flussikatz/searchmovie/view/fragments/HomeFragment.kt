@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
                         AnimationHelper.coverAnimation(
                             binding.rootFragmentHome,
                             requireActivity(),
-                            R.id.action_homeFragment_to_detailsFragment,
+                            R.id.action_global_detailsFragment,
                             bundle
                         )
                     }
@@ -115,7 +115,7 @@ class HomeFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentHome,
                         requireActivity(),
-                        R.id.action_homeFragment_to_historyFragment
+                        R.id.action_global_historyFragment
                     )
                     true
                 }
@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentHome,
                         requireActivity(),
-                        R.id.action_homeFragment_to_markedFragment
+                        R.id.action_global_markedFragment
                     )
                     true
                 }

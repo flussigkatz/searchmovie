@@ -6,7 +6,10 @@ import androidx.core.content.edit
 
 class PreferenceProvider(context: Context) {
     private val appContext = context.applicationContext
-    private val preference: SharedPreferences = appContext.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    private val preference: SharedPreferences = appContext.getSharedPreferences(
+        "settings",
+        Context.MODE_PRIVATE
+    )
 
     init {
         if(preference.getBoolean(KEY_FIRST_LAUNCH, false)) {

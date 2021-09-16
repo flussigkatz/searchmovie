@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import xyz.flussikatz.searchmovie.R
@@ -40,21 +41,56 @@ class SettingsFragment : Fragment() {
             }
         })
 
-        binding.settingsRadioGroup.setOnCheckedChangeListener{group, chekedId ->
-            when(chekedId) {
+        binding.settingsRadioGroup.setOnCheckedChangeListener { group, chekedId ->
+            when (chekedId) {
                 R.id.radio_popular -> viewModel.putCategoryProperty(POPULAR_CATEGORY)
                 R.id.radio_top_rated -> viewModel.putCategoryProperty(TOP_RATED_CATEGORY)
                 R.id.radio_upcoming -> viewModel.putCategoryProperty(UPCOMING_CATEGORY)
                 R.id.radio_in_cinemas -> viewModel.putCategoryProperty(IN_CINEMAS_CATEGORY)
             }
         }
+
+        //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
+        binding.settingsBottomToolbar.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.home_page -> {
+                    AnimationHelper.coverAnimation(
+                        binding.rootFragmentSettings,
+                        requireActivity(),
+                        R.id.action_global_homeFragment
+                    )
+                    true
+                }
+                R.id.history -> {
+                    AnimationHelper.coverAnimation(
+                        binding.rootFragmentSettings,
+                        requireActivity(),
+                        R.id.action_global_historyFragment
+                    )
+                    true
+                }
+                R.id.marked -> {
+                    AnimationHelper.coverAnimation(
+                        binding.rootFragmentSettings,
+                        requireActivity(),
+                        R.id.action_global_markedFragment
+                    )
+                    true
+                }
+                R.id.settings -> {
+                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     companion object {
         private const val POPULAR_CATEGORY = "popular"
-        private const val TOP_RATED_CATEGORY = "popular"
-        private const val UPCOMING_CATEGORY = "popular"
-        private const val IN_CINEMAS_CATEGORY = "popular"
+        private const val TOP_RATED_CATEGORY = "top_rated"
+        private const val UPCOMING_CATEGORY = "upcoming"
+        private const val IN_CINEMAS_CATEGORY = "in_cinemas"
     }
 
 }

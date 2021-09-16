@@ -33,7 +33,7 @@ class HistoryFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.root,
                         requireActivity(),
-                        R.id.action_historyFragment_to_homeFragment
+                        R.id.action_global_homeFragment
                     )
                     true
                 }
@@ -45,7 +45,7 @@ class HistoryFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentHistory,
                         requireActivity(),
-                        R.id.action_historyFragment_to_markedFragment
+                        R.id.action_global_markedFragment
                     )
                     true
                 }
