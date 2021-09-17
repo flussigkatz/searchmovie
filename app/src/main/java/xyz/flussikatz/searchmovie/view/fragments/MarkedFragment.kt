@@ -54,7 +54,7 @@ class MarkedFragment : Fragment() {
                         AnimationHelper.coverAnimation(
                             binding.rootFragmentMarked,
                             requireActivity(),
-                            R.id.action_markedFragment_to_detailsFragment,
+                            R.id.action_global_detailsFragment,
                             bundle
                         )
                     }
@@ -79,14 +79,14 @@ class MarkedFragment : Fragment() {
                 R.id.home_page -> {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentMarked, requireActivity(),
-                        R.id.action_markedFragment_to_homeFragment
+                        R.id.action_global_homeFragment
                     )
                     true
                 }
                 R.id.history -> {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentMarked, requireActivity(),
-                        R.id.action_markedFragment_to_historyFragment
+                        R.id.action_global_historyFragment
                     )
                     true
                 }

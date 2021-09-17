@@ -14,7 +14,10 @@ class HomeFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
+        getFilms()
+    }
 
+    fun getFilms() {
         interactor.getFilmsFromApi(1, object : ApiCallback {
             override fun onSuccess(films: List<Film>) {
                 filmListLiveData.postValue(films)

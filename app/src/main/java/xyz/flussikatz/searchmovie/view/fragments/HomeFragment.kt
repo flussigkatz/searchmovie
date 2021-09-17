@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -15,12 +14,10 @@ import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussikatz.searchmovie.domain.Film
 import xyz.flussikatz.searchmovie.util.AnimationHelper
-import xyz.flussikatz.searchmovie.view.MainActivity
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
 import java.util.*
-import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
 
@@ -39,7 +36,8 @@ class HomeFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -50,9 +48,12 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>> {
             filmDataBase = it
+            filmsAdapter.addItems(it)
         })
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
+
+        initPullToRefresh()
 
         binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
         //TODO некорректно работает при нажатии на крест
@@ -89,7 +90,7 @@ class HomeFragment : Fragment() {
                         AnimationHelper.coverAnimation(
                             binding.rootFragmentHome,
                             requireActivity(),
-                            R.id.action_homeFragment_to_detailsFragment,
+                            R.id.action_global_detailsFragment,
                             bundle
                         )
                     }
@@ -115,7 +116,7 @@ class HomeFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentHome,
                         requireActivity(),
-                        R.id.action_homeFragment_to_historyFragment
+                        R.id.action_global_historyFragment
                     )
                     true
                 }
@@ -123,7 +124,15 @@ class HomeFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentHome,
                         requireActivity(),
-                        R.id.action_homeFragment_to_markedFragment
+                        R.id.action_global_markedFragment
+                    )
+                    true
+                }
+                R.id.settings -> {
+                    AnimationHelper.coverAnimation(
+                        binding.rootFragmentHome,
+                        requireActivity(),
+                        R.id.action_global_settingsFragment
                     )
                     true
                 }
@@ -131,5 +140,13 @@ class HomeFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun initPullToRefresh() {
+        binding.homeRefresh.setOnRefreshListener {
+            filmsAdapter.items.clear()
+            viewModel.getFilms()
+            binding.homeRefresh.isRefreshing = false
+        }
     }
 }

@@ -3,6 +3,12 @@
     <string name="home_page">Home page</string>
     <string name="marked">Marked</string>
     <string name="history">History</string>
+    <string name="settings">Settings</string>
+    <string name="radio_group_header">A selection on the home screen</string>
+    <string name="radio_popular">Popular</string>
+    <string name="radio_top_rated">Top</string>
+    <string name="radio_upcoming">Upcoming</string>
+    <string name="radio_now_playing">Now playing</string>
     <string name="exit_message">Back again to exit</string>
 
 

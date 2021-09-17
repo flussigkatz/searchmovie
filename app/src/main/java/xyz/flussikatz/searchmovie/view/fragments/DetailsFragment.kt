@@ -65,7 +65,7 @@ class DetailsFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentDetails,
                         requireActivity(),
-                        R.id.action_detailsFragment_to_homeFragment
+                        R.id.action_global_homeFragment
                     )
                     true
                 }
@@ -73,7 +73,7 @@ class DetailsFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentDetails,
                         requireActivity(),
-                        R.id.action_detailsFragment_to_historyFragment
+                        R.id.action_global_historyFragment
                     )
                     true
                 }
@@ -81,7 +81,7 @@ class DetailsFragment : Fragment() {
                     AnimationHelper.coverAnimation(
                         binding.rootFragmentDetails,
                         requireActivity(),
-                        R.id.action_detailsFragment_to_markedFragment
+                        R.id.action_global_markedFragment
                     )
                     true
                 }
