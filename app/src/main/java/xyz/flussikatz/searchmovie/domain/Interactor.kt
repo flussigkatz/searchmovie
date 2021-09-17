@@ -5,7 +5,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import xyz.flussikatz.searchmovie.data.Api
 import xyz.flussikatz.searchmovie.data.MainRepository
-import xyz.flussikatz.searchmovie.data.PreferenceProvider
+import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.util.Converter
@@ -18,7 +18,11 @@ class Interactor(
     ) {
 
     fun getFilmsFromApi(page: Int, callback: HomeFragmentViewModel.ApiCallback) {
-        retrofitService.getFilms(getDefaultCategoryFromPreferences(), Api.API_KEY, "ru-RU", page)
+        retrofitService.getFilms(
+            getDefaultCategoryFromPreferences(),
+            Api.API_KEY,
+            "ru-RU",
+            page)
             .enqueue(object : Callback<TmdbResultsDto> {
                 override fun onResponse(
                     call: Call<TmdbResultsDto>,
@@ -36,7 +40,7 @@ class Interactor(
             })
     }
 
-    fun saveDefaultCategoryFromPreferences(category: String) {
+    fun saveDefaultCategoryToPreferences(category: String) {
         preferences.saveDefaultCategory(category)
     }
 

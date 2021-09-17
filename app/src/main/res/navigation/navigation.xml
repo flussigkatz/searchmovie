@@ -6,12 +6,12 @@
     <fragment
         android:id="@+id/detailsFragment"
         android:name="xyz.flussikatz.searchmovie.view.fragments.DetailsFragment"
-        android:label="DetailsFragment"/>
+        android:label="DetailsFragment" />
     <fragment
         android:id="@+id/markedFragment"
         android:name="xyz.flussikatz.searchmovie.view.fragments.MarkedFragment"
         android:label="fragment_marked"
-        tools:layout="@layout/fragment_marked"/>
+        tools:layout="@layout/fragment_marked" />
     <fragment
         android:id="@+id/homeFragment"
         android:name="xyz.flussikatz.searchmovie.view.fragments.HomeFragment"
@@ -22,7 +22,7 @@
         android:id="@+id/historyFragment"
         android:name="xyz.flussikatz.searchmovie.view.fragments.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history"/>
+        tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="xyz.flussikatz.searchmovie.view.fragments.SettingsFragment"
@@ -33,6 +33,14 @@
         app:destination="@id/settingsFragment" />
     <action
         android:id="@+id/action_global_homeFragment"
-        app:destination="@id/homeFragment"
-        app:launchSingleTop="false" /><action android:id="@+id/action_global_detailsFragment" app:destination="@id/detailsFragment"/><action android:id="@+id/action_global_historyFragment" app:destination="@id/historyFragment"/><action android:id="@+id/action_global_markedFragment" app:destination="@id/markedFragment"/>
+        app:destination="@id/homeFragment" />
+    <action
+        android:id="@+id/action_global_detailsFragment"
+        app:destination="@id/detailsFragment" />
+    <action
+        android:id="@+id/action_global_historyFragment"
+        app:destination="@id/historyFragment" />
+    <action
+        android:id="@+id/action_global_markedFragment"
+        app:destination="@id/markedFragment" />
 </navigation>

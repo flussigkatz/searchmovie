@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.data
+package xyz.flussikatz.searchmovie.data.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -29,7 +29,7 @@ class PreferenceProvider(context: Context) {
     companion object {
         private const val KEY_FIRST_LAUNCH = "first_launch"
         private const val KEY_DEFAULT_CATEGORY = "deafult_category"
-        private const val DEFAULT_CATEGORY = "porular"
+        private const val DEFAULT_CATEGORY = "popular"
 
     }
 }

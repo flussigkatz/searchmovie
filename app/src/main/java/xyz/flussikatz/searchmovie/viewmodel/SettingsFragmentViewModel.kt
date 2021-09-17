@@ -13,7 +13,7 @@ class SettingsFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
-
+        getCategoryProperty()
     }
 
     private fun getCategoryProperty() {
@@ -21,7 +21,7 @@ class SettingsFragmentViewModel : ViewModel() {
     }
 
     fun putCategoryProperty(category: String) {
-        interactor.saveDefaultCategoryFromPreferences(category)
+        interactor.saveDefaultCategoryToPreferences(category)
         getCategoryProperty()
     }
 }

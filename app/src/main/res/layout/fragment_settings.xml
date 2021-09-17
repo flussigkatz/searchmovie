@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     style="@style/MainBackground"
+    android:visibility="invisible"
     android:id="@+id/root_fragment_settings"
     tools:context=".view.fragments.SettingsFragment">
 
@@ -49,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="@string/radio_in_cinemas"/>
+            android:text="@string/radio_now_playing"/>
 
     </RadioGroup>
 

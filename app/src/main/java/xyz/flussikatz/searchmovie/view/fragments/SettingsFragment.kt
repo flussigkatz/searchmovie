@@ -23,7 +23,7 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -37,7 +37,7 @@ class SettingsFragment : Fragment() {
                 POPULAR_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_popular)
                 TOP_RATED_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_top_rated)
                 UPCOMING_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_upcoming)
-                IN_CINEMAS_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_in_cinemas)
+                NOW_PLAYING_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_in_cinemas)
             }
         })
 
@@ -46,7 +46,7 @@ class SettingsFragment : Fragment() {
                 R.id.radio_popular -> viewModel.putCategoryProperty(POPULAR_CATEGORY)
                 R.id.radio_top_rated -> viewModel.putCategoryProperty(TOP_RATED_CATEGORY)
                 R.id.radio_upcoming -> viewModel.putCategoryProperty(UPCOMING_CATEGORY)
-                R.id.radio_in_cinemas -> viewModel.putCategoryProperty(IN_CINEMAS_CATEGORY)
+                R.id.radio_in_cinemas -> viewModel.putCategoryProperty(NOW_PLAYING_CATEGORY)
             }
         }
 
@@ -90,7 +90,7 @@ class SettingsFragment : Fragment() {
         private const val POPULAR_CATEGORY = "popular"
         private const val TOP_RATED_CATEGORY = "top_rated"
         private const val UPCOMING_CATEGORY = "upcoming"
-        private const val IN_CINEMAS_CATEGORY = "in_cinemas"
+        private const val NOW_PLAYING_CATEGORY = "now_playing"
     }
 
 }
