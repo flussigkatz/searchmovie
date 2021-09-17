@@ -36,7 +36,8 @@ class HomeFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -47,9 +48,12 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>> {
             filmDataBase = it
+            filmsAdapter.addItems(it)
         })
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
+
+        initPullToRefresh()
 
         binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
         //TODO некорректно работает при нажатии на крест
@@ -136,5 +140,13 @@ class HomeFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun initPullToRefresh() {
+        binding.homeRefresh.setOnRefreshListener {
+            filmsAdapter.items.clear()
+            viewModel.getFilms()
+            binding.homeRefresh.isRefreshing = false
+        }
     }
 }
