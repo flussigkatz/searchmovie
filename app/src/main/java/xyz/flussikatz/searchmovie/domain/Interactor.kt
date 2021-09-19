@@ -28,9 +28,9 @@ class Interactor(
                     call: Call<TmdbResultsDto>,
                     response: Response<TmdbResultsDto>
                 ) {
-                    callback.onSuccess(
-                        Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    )
+                    val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
+                    list.forEach{repo.putToDb(film = it)}
+                    callback.onSuccess(list)
                 }
 
                 override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
@@ -45,4 +45,6 @@ class Interactor(
     }
 
     fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
+
+    fun getFilmsFromDb(): List<Film> = repo.getAllFromDb()
 }
