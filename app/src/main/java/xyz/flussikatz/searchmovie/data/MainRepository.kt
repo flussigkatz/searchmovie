@@ -10,7 +10,7 @@ class MainRepository(databaseHelper: DatabaseHelper) {
     private val sqlDb = databaseHelper.readableDatabase
     private lateinit var cursor: Cursor
 
-    fun putToDb(film: Film) {
+    fun putToDB(film: Film) {
         val cv = ContentValues()
         cv.apply {
             put(DatabaseHelper.COLUMN_ID, film.id)

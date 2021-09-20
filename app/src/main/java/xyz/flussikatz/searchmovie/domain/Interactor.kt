@@ -29,7 +29,7 @@ class Interactor(
                     response: Response<TmdbResultsDto>
                 ) {
                     val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    list.forEach{repo.putToDb(film = it)}
+                    list.forEach{repo.putToDB(film = it)}
                     callback.onSuccess(list)
                 }
 
