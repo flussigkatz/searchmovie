@@ -43,8 +43,8 @@ class DetailsFragment : Fragment() {
             .load(ApiConstants.IMAGES_URL + "w500" + film.posterId)
             .fit()
             .centerCrop()
-            .placeholder(R.drawable.upload_wait)
-            .error(R.drawable.upload_fail)
+            .placeholder(R.drawable.wait)
+            .error(R.drawable.err)
             .into(binding.detailsPoster)
 
         binding.detailsFab.setOnClickListener {

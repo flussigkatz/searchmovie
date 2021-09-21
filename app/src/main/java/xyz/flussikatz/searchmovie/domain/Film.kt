@@ -10,7 +10,7 @@ import xyz.flussikatz.searchmovie.data.ApiConstants
 
 @Parcelize
 data class Film(
-    val id: Int,
+    val id: Int = 0,
     val title: String,
     val posterId: String,
     val description: String,
