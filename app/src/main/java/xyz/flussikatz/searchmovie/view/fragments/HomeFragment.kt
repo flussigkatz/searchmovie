@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
-import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration

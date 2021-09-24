@@ -3,7 +3,7 @@ package xyz.flussikatz.searchmovie.data
 import android.content.ContentValues
 import android.database.Cursor
 import xyz.flussikatz.searchmovie.data.db.DatabaseHelper
-import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.data.entity.Film
 
 
 class MainRepository(databaseHelper: DatabaseHelper) {
@@ -19,8 +19,10 @@ class MainRepository(databaseHelper: DatabaseHelper) {
             put(DatabaseHelper.COLUMN_DESCRIPTION, film.description)
             put(DatabaseHelper.COLUMN_RATING, film.rating)
         }
-        sqlDb.delete(DatabaseHelper.TABLE_NAME,null,null)
         sqlDb.insert(DatabaseHelper.TABLE_NAME, null, cv)
+        cursor = sqlDb.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)
+        println("!!! ${cursor.count}")
+        cursor.close()
     }
 
     fun getAllFromDb(): List<Film> {
@@ -35,16 +37,28 @@ class MainRepository(databaseHelper: DatabaseHelper) {
                 val description = cursor.getString(3)
                 val rating = cursor.getInt(4)
 
-                result.add(Film(
+                result.add(
+                    Film(
                     id = id,
                     title = title,
                     posterId = posterId,
                     description = description,
                     rating = rating,
-                ))
+                )
+                )
             } while (cursor.moveToNext())
         }
         cursor.close()
+        return result
+    }
+
+    fun clearDB(): Boolean {
+        var result = false
+        sqlDb.delete(DatabaseHelper.TABLE_NAME,null,null)
+        cursor = sqlDb.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)
+        if (cursor.count == 0 || cursor == null) result = true
+        cursor.close()
+        println("!!! Del")
         return result
     }
 }

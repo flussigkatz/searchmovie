@@ -3,7 +3,7 @@ package xyz.flussikatz.searchmovie.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.flussikatz.searchmovie.App
-import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 

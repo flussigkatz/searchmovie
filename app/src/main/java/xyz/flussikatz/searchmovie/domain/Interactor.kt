@@ -8,6 +8,7 @@ import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
+import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.Converter
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
 
@@ -29,7 +30,7 @@ class Interactor(
                     response: Response<TmdbResultsDto>
                 ) {
                     val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    list.forEach{repo.putToDB(film = it)}
+                    if (repo.clearDB()) list.forEach{repo.putToDB(film = it)}
                     callback.onSuccess(list)
                 }
 

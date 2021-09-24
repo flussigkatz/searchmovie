@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.domain
+package xyz.flussikatz.searchmovie.data.entity
 
 import android.os.Parcelable
 import android.widget.ImageView
