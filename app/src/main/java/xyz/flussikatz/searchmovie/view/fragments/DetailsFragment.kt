@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.ApiConstants
 import xyz.flussikatz.searchmovie.util.AnimationHelper

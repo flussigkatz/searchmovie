@@ -1,20 +1,25 @@
-package xyz.flussikatz.searchmovie.domain
+package xyz.flussikatz.searchmovie.data.entity
 
 import android.os.Parcelable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.squareup.picasso.Picasso
 import kotlinx.parcelize.Parcelize
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.ApiConstants
 
 @Parcelize
+@Entity(tableName = "cashed_films", indices = [Index(value = ["title"], unique = true)])
 data class Film(
-    val id: Int = 0,
-    val title: String,
-    val posterId: String,
-    val description: String,
-    var rating: Int = 0,
+    @PrimaryKey val id: Int = 0,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "poster_path") val posterId: String,
+    @ColumnInfo(name = "overview") val description: String,
+    @ColumnInfo(name = "vote_average") var rating: Int = 0,
     var fav_state: Boolean = false
 ) : Parcelable {
 

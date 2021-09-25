@@ -1,7 +1,7 @@
 package xyz.flussikatz.searchmovie.util
 
 import xyz.flussikatz.searchmovie.data.entity.TmdbFilm
-import xyz.flussikatz.searchmovie.domain.Film
+import xyz.flussikatz.searchmovie.data.entity.Film
 
 object Converter {
     fun convertApiListToDtoList(list: List<TmdbFilm>?): List<Film> {

@@ -1,8 +1,7 @@
 package xyz.flussikatz.searchmovie.domain
 
 import androidx.recyclerview.widget.DiffUtil
-import xyz.flussikatz.searchmovie.domain.Film
-import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
+import xyz.flussikatz.searchmovie.data.entity.Film
 
 class FilmDiff(var oldList: ArrayList<Film>, val newList: ArrayList<Film>) : DiffUtil.Callback() {
 

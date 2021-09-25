@@ -8,8 +8,10 @@ import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
+import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.Converter
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
+import java.util.concurrent.Executors
 
 class Interactor(
     private val repo: MainRepository,
@@ -29,7 +31,15 @@ class Interactor(
                     response: Response<TmdbResultsDto>
                 ) {
                     val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    list.forEach{repo.putToDB(film = it)}
+                    var onEnd = false
+                    Executors.newSingleThreadExecutor().execute {
+                       while (!onEnd) {
+                           if (repo.clearDB() >= 0) {
+                               repo.putToDB(list)
+                               onEnd = true
+                           }
+                       }
+                    }
                     callback.onSuccess(list)
                 }
 
@@ -46,5 +56,13 @@ class Interactor(
 
     fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
 
-    fun getFilmsFromDb(): List<Film> = repo.getAllFromDb()
+    fun saveLoadFromApiTimeIntervalToPreferences(time: Long) {
+        preferences.saveLoadFromApiTimeInterval(time)
+    }
+
+    fun getLoadFromApiTimeIntervalToPreferences(): Long {
+        return preferences.getLoadFromApiTimeInterval()
+    }
+
+    fun getFilmsFromDB(): List<Film> = repo.getAllFromDb()
 }

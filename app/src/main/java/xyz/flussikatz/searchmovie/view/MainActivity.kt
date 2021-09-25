@@ -6,18 +6,29 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
+import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.R
+import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
+import javax.inject.Inject
 
+private const val LOTTIE_ANIMATION_SPEED = 0.7F
 
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var preferences: PreferenceProvider
+
+    init {
+        App.instance.dagger.inject(this)
+    }
+
     lateinit var navController: NavController
     private var backPressedTime = 0L
 
@@ -27,39 +38,49 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
+        val viewHomeFragment = this@MainActivity
+            .findViewById<CoordinatorLayout>(R.id.root_fragment_home)
+
         navController = Navigation.findNavController(
             this@MainActivity,
             R.id.nav_host_fragment
         )
 
-        val lottieAnimationView: LottieAnimationView = binding.welcomeScreen
-        lottieAnimationView.speed = 0.7F
+        val lottieAnimationView: LottieAnimationView = binding.splashScreen
+        lottieAnimationView.speed = LOTTIE_ANIMATION_SPEED
         lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
 
             override fun onAnimationEnd(animation: Animator?) {
-                endAnimationWelcomeScreen()
+                endAnimationSplashScreen()
             }
 
             override fun onAnimationCancel(animation: Animator?) {
-                endAnimationWelcomeScreen()
+                endAnimationSplashScreen()
             }
 
             @SuppressLint("RestrictedApi")
-            fun endAnimationWelcomeScreen() {
-                this@MainActivity
-                    .findViewById<CoordinatorLayout>(R.id.root_fragment_home)
-                    .visibility = View.INVISIBLE
+            fun endAnimationSplashScreen() {
+                viewHomeFragment.visibility = View.INVISIBLE
 
                 navController.backStack.clear()
                 AnimationHelper.coverAnimation(
-                    binding.welcomeScreen,
+                    binding.splashScreen,
                     this@MainActivity,
                     R.id.homeFragment
                 )
             }
         })
-        binding.welcomeScreen.setOnClickListener { lottieAnimationView.cancelAnimation() }
-        lottieAnimationView.playAnimation()
+
+        binding.splashScreen.setOnClickListener { lottieAnimationView.cancelAnimation() }
+
+        if (preferences.getPlaySplashScreenState()) {
+            lottieAnimationView.playAnimation()
+            preferences.setPlaySplashScreenState(false)
+        } else {
+            viewHomeFragment.visibility = View.INVISIBLE
+            binding.splashScreen.visibility = View.INVISIBLE
+            AnimationHelper.revealAnimation(viewHomeFragment, this)
+        }
 
     }
 

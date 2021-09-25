@@ -16,7 +16,6 @@ import kotlin.math.hypot
 object AnimationHelper {
 
     private const val CIRCULAR_ANIMATION_DURATION = 700L
-//    private const val DELAY_COVER_ANIMATION_WELCOME_SCREEN = 500L
 
     fun revealAnimation(view: View, activity: Activity) {
 
