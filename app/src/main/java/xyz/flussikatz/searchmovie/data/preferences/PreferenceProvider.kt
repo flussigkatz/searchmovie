@@ -20,6 +20,9 @@ class PreferenceProvider(context: Context) {
 
     fun saveDefaultCategory(category: String) {
         preference.edit() { putString(KEY_DEFAULT_CATEGORY, category) }
+        preference.edit() {
+            putLong(KEY_LOAD_FROM_API_TIME_INTERVAL, DEFAULT_LOAD_FROM_API_TIME_INTERVAL)
+        }
     }
 
     fun getDefaultCategory(): String {
@@ -27,12 +30,12 @@ class PreferenceProvider(context: Context) {
     }
 
     fun saveLoadFromApiTimeInterval(time: Long) {
-        preference.edit() { putLong(LOAD_FROM_API_TIME_INTERVAL, time) }
+        preference.edit() { putLong(KEY_LOAD_FROM_API_TIME_INTERVAL, time) }
     }
 
     fun getLoadFromApiTimeInterval(): Long {
         return preference.getLong(
-            LOAD_FROM_API_TIME_INTERVAL,
+            KEY_LOAD_FROM_API_TIME_INTERVAL,
             DEFAULT_LOAD_FROM_API_TIME_INTERVAL
         )
     }
@@ -41,7 +44,7 @@ class PreferenceProvider(context: Context) {
         private const val KEY_FIRST_LAUNCH = "first_launch"
         private const val KEY_DEFAULT_CATEGORY = "deafult_category"
         private const val DEFAULT_CATEGORY = "popular"
-        private const val LOAD_FROM_API_TIME_INTERVAL = "load_from_api_time_interval"
+        private const val KEY_LOAD_FROM_API_TIME_INTERVAL = "load_from_api_time_interval"
         private const val DEFAULT_LOAD_FROM_API_TIME_INTERVAL = 0L
 
 

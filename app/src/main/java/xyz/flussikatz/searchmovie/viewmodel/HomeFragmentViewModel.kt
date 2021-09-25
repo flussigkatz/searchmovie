@@ -23,23 +23,19 @@ class HomeFragmentViewModel : ViewModel() {
     fun getFilms() {
         val realTime = System.currentTimeMillis()
         val lastLoadTime = interactor.getLoadFromApiTimeIntervalToPreferences()
-        interactor.getFilmsFromApi(1, object : ApiCallback {
-            override fun onSuccess(films: List<Film>) {
-                if (realTime - lastLoadTime >= TIME_INTERVAL) {
+        if (lastLoadTime + TIME_INTERVAL < realTime) {
+            interactor.getFilmsFromApi(1, object : ApiCallback {
+                override fun onSuccess(films: List<Film>) {
                     filmListLiveData.postValue(films)
-                    println("!!! Load from api ${realTime - lastLoadTime}")
                     interactor.saveLoadFromApiTimeIntervalToPreferences(System.currentTimeMillis())
-                } else {
-                    println("!!! Load from DB ${realTime - lastLoadTime}")
+                }
+
+                override fun onFailure() {
                     loadFilmsFromDBInSingleThread()
                 }
-            }
 
-            override fun onFailure() {
-                loadFilmsFromDBInSingleThread()
-            }
-
-        })
+            })
+        }
     }
 
     fun loadFilmsFromDBInSingleThread() {
