@@ -16,8 +16,10 @@ import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
 
+private const val LOTTIE_ANIMATION_SPEED = 0.7F
 
 class MainActivity : AppCompatActivity() {
+
     lateinit var navController: NavController
     private var backPressedTime = 0L
 
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val lottieAnimationView: LottieAnimationView = binding.welcomeScreen
-        lottieAnimationView.speed = 0.7F
+        lottieAnimationView.speed = LOTTIE_ANIMATION_SPEED
         lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
 
             override fun onAnimationEnd(animation: Animator?) {

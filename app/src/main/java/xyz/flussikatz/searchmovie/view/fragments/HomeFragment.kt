@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
 
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
-            filmsAdapter.items.clear()
+//            filmsAdapter.items.clear()
             viewModel.getFilms()
             binding.homeRefresh.isRefreshing = false
         }

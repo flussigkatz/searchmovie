@@ -20,9 +20,6 @@ class MainRepository(databaseHelper: DatabaseHelper) {
             put(DatabaseHelper.COLUMN_RATING, film.rating)
         }
         sqlDb.insert(DatabaseHelper.TABLE_NAME, null, cv)
-        cursor = sqlDb.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)
-        println("!!! ${cursor.count}")
-        cursor.close()
     }
 
     fun getAllFromDb(): List<Film> {
@@ -56,9 +53,10 @@ class MainRepository(databaseHelper: DatabaseHelper) {
         var result = false
         sqlDb.delete(DatabaseHelper.TABLE_NAME,null,null)
         cursor = sqlDb.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)
-        if (cursor.count == 0 || cursor == null) result = true
+        if (cursor.count == 0) {
+            result = true
+        }
         cursor.close()
-        println("!!! Del")
         return result
     }
 }

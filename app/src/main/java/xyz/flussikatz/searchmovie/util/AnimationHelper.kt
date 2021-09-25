@@ -13,10 +13,9 @@ import xyz.flussikatz.searchmovie.view.MainActivity
 import java.util.concurrent.Executors
 import kotlin.math.hypot
 
-object AnimationHelper {
+private const val CIRCULAR_ANIMATION_DURATION = 700L
 
-    private const val CIRCULAR_ANIMATION_DURATION = 700L
-//    private const val DELAY_COVER_ANIMATION_WELCOME_SCREEN = 500L
+object AnimationHelper {
 
     fun revealAnimation(view: View, activity: Activity) {
 

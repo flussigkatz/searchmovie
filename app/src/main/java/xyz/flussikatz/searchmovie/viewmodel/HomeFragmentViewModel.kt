@@ -14,6 +14,7 @@ class HomeFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
+        filmListLiveData.postValue(interactor.getFilmsFromDb())
         getFilms()
     }
 
