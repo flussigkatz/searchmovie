@@ -10,34 +10,50 @@ import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
     val filmListLiveData = MutableLiveData<List<Film>>()
+
     @Inject
     lateinit var interactor: Interactor
 
     init {
         App.instance.dagger.inject(this)
-        Executors.newSingleThreadExecutor().execute{
-            filmListLiveData.postValue(interactor.getFilmsFromDb())
-        }
+        loadFilmsFromDBInSingleThread()
         getFilms()
     }
 
     fun getFilms() {
+        val realTime = System.currentTimeMillis()
+        val lastLoadTime = interactor.getLoadFromApiTimeIntervalToPreferences()
         interactor.getFilmsFromApi(1, object : ApiCallback {
             override fun onSuccess(films: List<Film>) {
-                filmListLiveData.postValue(films)
+                if (realTime - lastLoadTime >= TIME_INTERVAL) {
+                    filmListLiveData.postValue(films)
+                    println("!!! Load from api ${realTime - lastLoadTime}")
+                    interactor.saveLoadFromApiTimeIntervalToPreferences(System.currentTimeMillis())
+                } else {
+                    println("!!! Load from DB ${realTime - lastLoadTime}")
+                    loadFilmsFromDBInSingleThread()
+                }
             }
 
             override fun onFailure() {
-                Executors.newSingleThreadExecutor().execute{
-                    filmListLiveData.postValue(interactor.getFilmsFromDb())
-                }
+                loadFilmsFromDBInSingleThread()
             }
 
         })
     }
 
+    fun loadFilmsFromDBInSingleThread() {
+        Executors.newSingleThreadExecutor().execute {
+            filmListLiveData.postValue(interactor.getFilmsFromDB())
+        }
+    }
+
     interface ApiCallback {
         fun onSuccess(films: List<Film>)
         fun onFailure()
+    }
+
+    companion object {
+        private const val TIME_INTERVAL = 600000L
     }
 }

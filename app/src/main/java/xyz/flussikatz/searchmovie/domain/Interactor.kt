@@ -56,5 +56,13 @@ class Interactor(
 
     fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
 
-    fun getFilmsFromDb(): List<Film> = repo.getAllFromDb()
+    fun saveLoadFromApiTimeIntervalToPreferences(time: Long) {
+        preferences.saveLoadFromApiTimeInterval(time)
+    }
+
+    fun getLoadFromApiTimeIntervalToPreferences(): Long {
+        return preferences.getLoadFromApiTimeInterval()
+    }
+
+    fun getFilmsFromDB(): List<Film> = repo.getAllFromDb()
 }
