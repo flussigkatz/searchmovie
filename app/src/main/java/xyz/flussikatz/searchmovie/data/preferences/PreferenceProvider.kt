@@ -40,9 +40,16 @@ class PreferenceProvider(context: Context) {
         )
     }
 
+    fun setPlaySplashScreenState(state: Boolean) {
+        preference.edit() { putBoolean(KEY_PLAY_SPLASH_SCREEN, state)}
+    }
+
+    fun getPlaySplashScreenState() = preference.getBoolean(KEY_PLAY_SPLASH_SCREEN, true)
+
     companion object {
         private const val KEY_FIRST_LAUNCH = "first_launch"
-        private const val KEY_DEFAULT_CATEGORY = "deafult_category"
+        private const val KEY_PLAY_SPLASH_SCREEN = "splash_screen"
+        private const val KEY_DEFAULT_CATEGORY = "default_category"
         private const val DEFAULT_CATEGORY = "popular"
         private const val KEY_LOAD_FROM_API_TIME_INTERVAL = "load_from_api_time_interval"
         private const val DEFAULT_LOAD_FROM_API_TIME_INTERVAL = 0L
