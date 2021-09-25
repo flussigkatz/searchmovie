@@ -11,6 +11,7 @@ import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.Converter
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
+import java.util.concurrent.Executors
 
 class Interactor(
     private val repo: MainRepository,
@@ -30,7 +31,15 @@ class Interactor(
                     response: Response<TmdbResultsDto>
                 ) {
                     val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    if (repo.clearDB()) list.forEach{repo.putToDB(film = it)}
+                    var onEnd = false
+                    Executors.newSingleThreadExecutor().execute {
+                       while (!onEnd) {
+                           if (repo.clearDB() >= 0) {
+                               repo.putToDB(list)
+                               onEnd = true
+                           }
+                       }
+                    }
                     callback.onSuccess(list)
                 }
 

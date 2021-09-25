@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.domain.Interactor
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
@@ -14,7 +15,9 @@ class HomeFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
-        filmListLiveData.postValue(interactor.getFilmsFromDb())
+        Executors.newSingleThreadExecutor().execute{
+            filmListLiveData.postValue(interactor.getFilmsFromDb())
+        }
         getFilms()
     }
 
@@ -25,7 +28,9 @@ class HomeFragmentViewModel : ViewModel() {
             }
 
             override fun onFailure() {
-                filmListLiveData.postValue(interactor.getFilmsFromDb())
+                Executors.newSingleThreadExecutor().execute{
+                    filmListLiveData.postValue(interactor.getFilmsFromDb())
+                }
             }
 
         })
