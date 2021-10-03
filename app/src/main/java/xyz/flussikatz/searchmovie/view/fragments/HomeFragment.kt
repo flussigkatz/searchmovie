@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -103,6 +104,10 @@ class HomeFragment : Fragment() {
             addItemDecoration(decorator)
         }
 
+        viewModel.progressBar.observe(viewLifecycleOwner) {
+            binding.homeProgressBar.isVisible = it
+        }
+
         //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -142,7 +147,6 @@ class HomeFragment : Fragment() {
 
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
-//            filmsAdapter.items.clear()
             viewModel.getFilms()
             binding.homeRefresh.isRefreshing = false
         }
