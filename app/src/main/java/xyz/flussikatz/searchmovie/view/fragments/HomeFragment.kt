@@ -154,7 +154,6 @@ class HomeFragment : Fragment() {
             viewModel.getFilms()
             viewModel.inProgress.observe(viewLifecycleOwner) {
                 binding.homeRefresh.isRefreshing = it
-                println("!!! $it")
             }
         }
     }

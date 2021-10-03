@@ -46,7 +46,6 @@ class HomeFragmentViewModel : ViewModel() {
             })
         } else {
             progressBarState(false)
-            println("!!!")
         }
     }
 
