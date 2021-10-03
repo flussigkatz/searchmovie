@@ -4,15 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.flussikatz.searchmovie.App
+import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.ApiCallback
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.domain.Interactor
-import java.util.concurrent.Executors
+import xyz.flussikatz.searchmovie.util.SingleLiveEvent
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
     val filmListLiveData: LiveData<List<Film>>
-    val progressBar: MutableLiveData<Boolean> = MutableLiveData()
+    val inProgress = MutableLiveData<Boolean>()
+    val errorEvent = SingleLiveEvent<String>()
 
     @Inject
     lateinit var interactor: Interactor
@@ -38,19 +40,22 @@ class HomeFragmentViewModel : ViewModel() {
 
                 override fun onFailure() {
                     progressBarState(false)
+                    errorUploadInit(R.string.error_upload_message.toString())
                 }
 
             })
         } else {
             progressBarState(false)
+            println("!!!")
         }
     }
 
     fun progressBarState(state: Boolean) {
-        Executors.newSingleThreadExecutor().execute {
-            progressBar.postValue(state)
-            return@execute
-        }
+            inProgress.postValue(state)
+    }
+
+    fun errorUploadInit(errorMassage: String) {
+            errorEvent.postValue(errorMassage)
     }
 
 

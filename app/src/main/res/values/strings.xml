@@ -10,6 +10,7 @@
     <string name="radio_upcoming">Upcoming</string>
     <string name="radio_now_playing">Now playing</string>
     <string name="exit_message">Back again to exit</string>
+    <string name="error_upload_message">Error upload. Check internet connction.</string>
 
 
 </resources>

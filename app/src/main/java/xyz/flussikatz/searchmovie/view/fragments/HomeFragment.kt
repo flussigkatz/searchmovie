@@ -54,6 +54,10 @@ class HomeFragment : Fragment() {
 
         initPullToRefresh()
 
+        viewModel.errorEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it.toInt(), Toast.LENGTH_SHORT).show()
+        }
+
         binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
         //TODO некорректно работает при нажатии на крест
 
@@ -104,9 +108,9 @@ class HomeFragment : Fragment() {
             addItemDecoration(decorator)
         }
 
-        viewModel.progressBar.observe(viewLifecycleOwner) {
-            binding.homeProgressBar.isVisible = it
-        }
+//        viewModel.progressBar.observe(viewLifecycleOwner) {
+//            binding.homeProgressBar.isVisible = it
+//        }
 
         //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
@@ -148,7 +152,10 @@ class HomeFragment : Fragment() {
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
             viewModel.getFilms()
-            binding.homeRefresh.isRefreshing = false
+            viewModel.inProgress.observe(viewLifecycleOwner) {
+                binding.homeRefresh.isRefreshing = it
+                println("!!! $it")
+            }
         }
     }
 }
