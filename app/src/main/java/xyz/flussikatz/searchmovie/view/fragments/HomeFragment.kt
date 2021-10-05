@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
         initPullToRefresh()
 
         viewModel.errorEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it.toInt(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
 
         binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }

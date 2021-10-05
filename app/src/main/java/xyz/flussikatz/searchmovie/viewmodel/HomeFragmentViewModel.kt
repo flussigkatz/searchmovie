@@ -1,5 +1,6 @@
 package xyz.flussikatz.searchmovie.viewmodel
 
+import android.text.format.DateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,7 +27,6 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
 
-
     fun getFilms() {
         progressBarState(true)
         val realTime = System.currentTimeMillis()
@@ -40,25 +40,52 @@ class HomeFragmentViewModel : ViewModel() {
 
                 override fun onFailure() {
                     progressBarState(false)
-                    errorUploadInit(R.string.error_upload_message.toString())
+                    errorEvent.postValue(getText(R.string.error_upload_message))
                 }
 
             })
         } else {
             progressBarState(false)
+            val timeFormatted = timeFormatter(realTime - lastLoadTime)
+            errorEvent.postValue(
+                timeFormatted + getText(R.string.upload_time_interval_massage)
+            )
+
         }
     }
 
     fun progressBarState(state: Boolean) {
-            inProgress.postValue(state)
+        inProgress.postValue(state)
     }
 
-    fun errorUploadInit(errorMassage: String) {
-            errorEvent.postValue(errorMassage)
+    fun timeFormatter(time: Long): String {
+        var min = DateFormat.format("mm", time)
+        var sec = DateFormat.format("ss", time)
+        var arr = arrayOf(min, sec)
+        var res = ""
+
+        for (i in arr.indices) {
+            if (arr[i].get(0).toString().equals("0")) {
+                arr[i] = arr[i].get(1).toString()
+            }
+        }
+
+        if (time < ONE_MIN) {
+            res = "${arr[1]} ${getText(R.string.sec)}"
+        } else {
+            res = "${arr[0]} ${getText(R.string.min)} ${arr[1]} ${getText(R.string.sec)}"
+        }
+
+        return res
+    }
+
+    fun getText(resId: Int): String {
+        return App.instance.getText(resId).toString()
     }
 
 
     companion object {
         private const val TIME_INTERVAL = 600000L
+        private const val ONE_MIN = 60000L
     }
 }
