@@ -11,4 +11,8 @@
     <string name="radio_upcoming">Скоро</string>
     <string name="radio_now_playing">В кинотеатрах</string>
     <string name="exit_message">Ещё раз назад для выхода</string>
+    <string name="error_upload_message">Ошибка загрузки. Проверьте интернет соединение.</string>
+    <string name="upload_time_interval_massage"> прошло c момента последнего обновления данных. Зачем чаще? </string>
+    <string name="min">мин.</string>
+    <string name="sec">сек.</string>
 </resources>

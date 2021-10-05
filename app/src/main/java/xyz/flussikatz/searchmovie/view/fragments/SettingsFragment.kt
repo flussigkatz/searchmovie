@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.databinding.FragmentSettingsBinding
 import xyz.flussikatz.searchmovie.util.AnimationHelper
@@ -15,9 +15,7 @@ import xyz.flussikatz.searchmovie.viewmodel.SettingsFragmentViewModel
 
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
-    private val viewModel by lazy {
-        ViewModelProvider.NewInstanceFactory().create(SettingsFragmentViewModel::class.java)
-    }
+    private val viewModel: SettingsFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

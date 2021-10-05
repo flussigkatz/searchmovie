@@ -10,6 +10,9 @@
     <string name="radio_upcoming">Upcoming</string>
     <string name="radio_now_playing">Now playing</string>
     <string name="exit_message">Back again to exit</string>
-
+    <string name="error_upload_message">Error upload. Check internet connction.</string>
+    <string name="upload_time_interval_massage"> have passed since the last data update. Why more often? .</string>
+    <string name="min">min.</string>
+    <string name="sec">sec.</string>
 
 </resources>

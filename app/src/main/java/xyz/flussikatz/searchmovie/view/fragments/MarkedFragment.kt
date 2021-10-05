@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentMarkedBinding
@@ -20,9 +20,7 @@ import xyz.flussikatz.searchmovie.viewmodel.MarkedFragmentViewModel
 class MarkedFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private lateinit var binding: FragmentMarkedBinding
-    private val viewModel by lazy {
-        ViewModelProvider.NewInstanceFactory().create(MarkedFragmentViewModel::class.java)
-    }
+    private val viewModel:MarkedFragmentViewModel by activityViewModels()
     private var filmsDataBase = listOf<Film>()
         set(value) {
             if (field == value) return

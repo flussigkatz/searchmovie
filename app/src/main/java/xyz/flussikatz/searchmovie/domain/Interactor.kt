@@ -1,16 +1,17 @@
 package xyz.flussikatz.searchmovie.domain
 
+import androidx.lifecycle.LiveData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import xyz.flussikatz.searchmovie.data.Api
+import xyz.flussikatz.searchmovie.data.ApiCallback
 import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.Converter
-import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
 import java.util.concurrent.Executors
 
 class Interactor(
@@ -19,7 +20,7 @@ class Interactor(
     private val preferences: PreferenceProvider
     ) {
 
-    fun getFilmsFromApi(page: Int, callback: HomeFragmentViewModel.ApiCallback) {
+    fun getFilmsFromApi(page: Int, callback: ApiCallback) {
         retrofitService.getFilms(
             getDefaultCategoryFromPreferences(),
             Api.API_KEY,
@@ -40,7 +41,7 @@ class Interactor(
                            }
                        }
                     }
-                    callback.onSuccess(list)
+                    callback.onSuccess()
                 }
 
                 override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
@@ -54,7 +55,9 @@ class Interactor(
         preferences.saveDefaultCategory(category)
     }
 
-    fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
+    fun getDefaultCategoryFromPreferences(): String {
+        return preferences.getDefaultCategory()
+    }
 
     fun saveLoadFromApiTimeIntervalToPreferences(time: Long) {
         preferences.saveLoadFromApiTimeInterval(time)
@@ -64,5 +67,7 @@ class Interactor(
         return preferences.getLoadFromApiTimeInterval()
     }
 
-    fun getFilmsFromDB(): List<Film> = repo.getAllFromDb()
+    fun getFilmsFromDB(): LiveData<List<Film>> {
+        return repo.getAllFromDB()
+    }
 }

@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
@@ -24,9 +25,7 @@ import kotlin.collections.ArrayList
 class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private lateinit var binding: FragmentHomeBinding
-    private val viewModel by lazy {
-        ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
-    }
+    private val viewModel: HomeFragmentViewModel by activityViewModels()
     private var filmDataBase = listOf<Film>()
         set(value) {
             if (field == value) return
@@ -54,6 +53,10 @@ class HomeFragment : Fragment() {
         AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
 
         initPullToRefresh()
+
+        viewModel.errorEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
 
         binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
         //TODO некорректно работает при нажатии на крест
@@ -105,6 +108,10 @@ class HomeFragment : Fragment() {
             addItemDecoration(decorator)
         }
 
+//        viewModel.progressBar.observe(viewLifecycleOwner) {
+//            binding.homeProgressBar.isVisible = it
+//        }
+
         //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
         binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -144,9 +151,10 @@ class HomeFragment : Fragment() {
 
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
-//            filmsAdapter.items.clear()
             viewModel.getFilms()
-            binding.homeRefresh.isRefreshing = false
+            viewModel.inProgress.observe(viewLifecycleOwner) {
+                binding.homeRefresh.isRefreshing = it
+            }
         }
     }
 }
