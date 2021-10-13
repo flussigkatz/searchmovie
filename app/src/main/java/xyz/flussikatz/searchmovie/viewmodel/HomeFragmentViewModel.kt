@@ -65,16 +65,15 @@ class HomeFragmentViewModel : ViewModel() {
         var res = ""
 
         for (i in arr.indices) {
-            if (arr[i].get(0).toString().equals("0")) {
-                arr[i] = arr[i].get(1).toString()
+            if (arr[i][0].toString().equals("0")) {
+                arr[i] = arr[i][1].toString()
             }
         }
 
-        if (time < ONE_MIN) {
-            res = "${arr[1]} ${getText(R.string.sec)}"
-        } else {
-            res = "${arr[0]} ${getText(R.string.min)} ${arr[1]} ${getText(R.string.sec)}"
+        if (time >= ONE_MIN) {
+            res = "${arr[0]} ${getText(R.string.min)} "
         }
+        res += "${arr[1]} ${getText(R.string.sec)} "
 
         return res
     }

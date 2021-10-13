@@ -55,15 +55,6 @@
         tools:listitem="@layout/film_item" />
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <ProgressBar
-        android:id="@+id/home_progress_bar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:visibility="invisible"
-        android:indeterminateTint="@color/app_color_1"
-        android:layout_gravity="center"
-        />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/home_bottom_toolbar"
         style="@style/BottomToolBar"
