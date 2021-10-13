@@ -15,4 +15,8 @@
     <string name="upload_time_interval_massage"> прошло c момента последнего обновления данных. Зачем чаще? </string>
     <string name="min">мин.</string>
     <string name="sec">сек.</string>
+    <string name="open">Открыть</string>
+    <string name="downladed_to_galery">Сохранено в галерею.</string>
+    <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение.</string>
+
 </resources>

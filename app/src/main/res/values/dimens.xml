@@ -5,8 +5,8 @@
     <dimen name="details_favorite_check_box_size">30dp</dimen>
     <dimen name="details_poster_heigth">500dp</dimen>
     <dimen name="details_fab_margin">20dp</dimen>
-    <dimen name="details_step_back_margin">20dp</dimen>
     <dimen name="details_description_margin">5dp</dimen>
+    <dimen name="details_progress_bar_size">50dp</dimen>
 
 <!--    film_item-->
     <dimen name="film_item_favorite_check_box_margin">2dp</dimen>

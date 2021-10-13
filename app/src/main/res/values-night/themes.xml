@@ -22,9 +22,9 @@
         <item name="android:background">@drawable/backgrond_gardient_dark</item>
     </style>
 
-    <style name="DetailsTheme" parent="Theme.SearchMovie">
-        <item name="android:textColor">#C1C1C1</item>
-        <item name="android:background">@color/black</item>
+    <style name="Theme.SearchMovie.DarkTextTheme">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="HomeAppBar" parent="Theme.SearchMovie">
@@ -33,7 +33,7 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="DetailsAppBar" parent="Theme.SearchMovie">
+    <style name="Theme.SearchMovie.DetailsAppBar">
         <item name="android:textColor">@color/white</item>
     </style>
 

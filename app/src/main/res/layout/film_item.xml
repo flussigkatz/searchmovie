@@ -25,7 +25,6 @@
             android:layout_width="@dimen/film_item_rating_donut_size"
             android:layout_height="@dimen/film_item_rating_donut_size"
             android:layout_gravity="bottom|start"
-            android:clickable="true"
             android:translationZ="@dimen/film_item_rating_donut_translation_z"
             app:scaleSize="45"
             app:stroke="10" />
@@ -67,7 +66,7 @@
 
                 <TextView
                     android:id="@+id/title"
-                    style="@style/DetailsTheme"
+                    style="@style/Theme.SearchMovie.DarkTextTheme"
                     android:layout_width="@dimen/film_item_textview_title_width"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/film_item_textview_title_padding"
@@ -80,7 +79,7 @@
 
                 <TextView
                     android:id="@+id/description"
-                    style="@style/DetailsTheme"
+                    style="@style/Theme.SearchMovie.DarkTextTheme"
                     android:layout_width="@dimen/film_item_textview_description_width"
                     android:layout_height="@dimen/film_item_textview_description_height"
                     android:padding="@dimen/film_item_textview_description_padding"

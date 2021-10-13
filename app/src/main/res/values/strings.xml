@@ -14,5 +14,8 @@
     <string name="upload_time_interval_massage"> have passed since the last data update. Why more often? .</string>
     <string name="min">min.</string>
     <string name="sec">sec.</string>
+    <string name="open">Open</string>
+    <string name="downladed_to_galery">Saved to the gallery.</string>
+    <string name="permission_storage">No permission. Please grant permission</string>
 
 </resources>
