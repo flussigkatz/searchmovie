@@ -32,12 +32,12 @@ class Interactor(
                     response: Response<TmdbResultsDto>
                 ) {
                     val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    var onEnd = false
+                    var isEnd = false
                     Executors.newSingleThreadExecutor().execute {
-                       while (!onEnd) {
+                       while (!isEnd) {
                            if (repo.clearDB() >= 0) {
                                repo.putToDB(list)
-                               onEnd = true
+                               isEnd = true
                            }
                        }
                     }
