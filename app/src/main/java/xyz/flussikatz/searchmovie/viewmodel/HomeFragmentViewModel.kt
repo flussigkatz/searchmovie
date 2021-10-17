@@ -54,11 +54,11 @@ class HomeFragmentViewModel : ViewModel() {
         }
     }
 
-    fun progressBarState(state: Boolean) {
+    private fun progressBarState(state: Boolean) {
         inProgress.postValue(state)
     }
 
-    fun timeFormatter(time: Long): String {
+    private fun timeFormatter(time: Long): String {
         val min = DateFormat.format("mm", time)
         val sec = DateFormat.format("ss", time)
         val arr = arrayOf(min, sec).map {
@@ -76,7 +76,7 @@ class HomeFragmentViewModel : ViewModel() {
         return res
     }
 
-    fun getText(resId: Int): String {
+    private fun getText(resId: Int): String {
         return App.instance.getText(resId).toString()
     }
 
