@@ -59,16 +59,14 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
     fun timeFormatter(time: Long): String {
-        var min = DateFormat.format("mm", time)
-        var sec = DateFormat.format("ss", time)
-        var arr = arrayOf(min, sec)
-        var res = ""
-
-        for (i in arr.indices) {
-            if (arr[i][0].toString().equals("0")) {
-                arr[i] = arr[i][1].toString()
-            }
+        val min = DateFormat.format("mm", time)
+        val sec = DateFormat.format("ss", time)
+        val arr = arrayOf(min, sec).map {
+            if (it[0].toString().equals("0")) {
+                it[1].toString()
+            } else it
         }
+        var res = ""
 
         if (time >= ONE_MIN) {
             res = "${arr[0]} ${getText(R.string.min)} "
