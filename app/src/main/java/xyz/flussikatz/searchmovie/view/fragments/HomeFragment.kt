@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.rootFragmentHome
@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
             filmsAdapter.addItems(it)
         })
 
-        AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
+        AnimationHelper.revealAnimation(binding.rootFragmentHome)
 
         initPullToRefresh()
 
