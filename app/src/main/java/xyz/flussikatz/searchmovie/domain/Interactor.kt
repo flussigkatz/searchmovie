@@ -1,6 +1,7 @@
 package xyz.flussikatz.searchmovie.domain
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,13 +13,16 @@ import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.Converter
-import java.util.concurrent.Executors
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class Interactor(
     private val repo: MainRepository,
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider
-    ) {
+) {
+    val scope = CoroutineScope(EmptyCoroutineContext)
 
     fun getFilmsFromApi(page: Int, callback: ApiCallback) {
         retrofitService.getFilms(
@@ -32,14 +36,9 @@ class Interactor(
                     response: Response<TmdbResultsDto>
                 ) {
                     val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    var isEnd = false
-                    Executors.newSingleThreadExecutor().execute {
-                       while (!isEnd) {
-                           if (repo.clearDB() >= 0) {
-                               repo.putToDB(list)
-                               isEnd = true
-                           }
-                       }
+                    scope.launch {
+                        clearDB()
+                        repo.putToDB(list)
                     }
                     callback.onSuccess()
                 }
@@ -69,5 +68,18 @@ class Interactor(
 
     fun getFilmsFromDB(): LiveData<List<Film>> {
         return repo.getAllFromDB()
+    }
+
+    fun clearScope() {
+        scope.cancel()
+    }
+
+    private suspend fun clearDB() {
+        return suspendCoroutine {
+            do {
+                repo.clearDB()
+            } while (repo.clearDB() != 0)
+            it.resume(Unit)
+        }
     }
 }

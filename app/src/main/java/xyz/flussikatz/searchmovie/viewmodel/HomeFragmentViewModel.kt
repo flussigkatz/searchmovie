@@ -80,6 +80,11 @@ class HomeFragmentViewModel : ViewModel() {
         return App.instance.getText(resId).toString()
     }
 
+    override fun onCleared() {
+        interactor.clearScope()
+        super.onCleared()
+    }
+
 
     companion object {
         private const val TIME_INTERVAL = 600000L
