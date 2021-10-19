@@ -78,8 +78,7 @@ class MainActivity : AppCompatActivity() {
             preferences.setPlaySplashScreenState(false)
         } else {
             viewHomeFragment.visibility = View.INVISIBLE
-            binding.splashScreen.visibility = View.INVISIBLE
-            AnimationHelper.revealAnimation(viewHomeFragment, this)
+            binding.splashScreen.visibility = View.GONE
         }
 
     }

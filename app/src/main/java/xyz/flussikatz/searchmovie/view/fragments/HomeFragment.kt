@@ -10,6 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
@@ -36,7 +39,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.rootFragmentHome
@@ -49,7 +52,7 @@ class HomeFragment : Fragment() {
             filmsAdapter.addItems(it)
         })
 
-        AnimationHelper.revealAnimation(binding.rootFragmentHome, requireActivity())
+        AnimationHelper.revealAnimation(binding.rootFragmentHome)
 
         initPullToRefresh()
 
@@ -147,9 +150,16 @@ class HomeFragment : Fragment() {
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
             viewModel.getFilms()
-            viewModel.inProgress.observe(viewLifecycleOwner) {
-                binding.homeRefresh.isRefreshing = it
+            viewModel.getCoroutinesScope().launch {
+                for (element in viewModel.loadInProgressChannel) {
+                    withContext(Dispatchers.Main) {
+                        binding.homeRefresh.isRefreshing = element
+                    }
+                }
             }
+            /*viewModel.inProgress.observe(viewLifecycleOwner) {
+                binding.homeRefresh.isRefreshing = it
+            }*/
         }
     }
 }

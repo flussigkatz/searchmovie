@@ -23,5 +23,6 @@ class SettingsFragmentViewModel : ViewModel() {
     fun putCategoryProperty(category: String) {
         interactor.saveDefaultCategoryToPreferences(category)
         getCategoryProperty()
+        interactor.dropLoadFromApiTimeIntervalFromPreferences()
     }
 }

@@ -44,13 +44,13 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film = arguments?.get("film") as Film
+        val film = arguments?.get(KEY_FILM) as Film
         binding.film = film
 
         AnimationHelper.revealAnimation(binding.rootFragmentDetails, requireActivity())
 
         Picasso.get()
-            .load(ApiConstants.IMAGES_URL + "w500" + film.posterId)
+            .load(ApiConstants.IMAGES_URL + ApiConstants.IMAGE_FORMAT_W500 + film.posterId)
             .fit()
             .centerCrop()
             .placeholder(R.drawable.wait)
@@ -166,7 +166,11 @@ class DetailsFragment : Fragment() {
         MainScope().launch {
             binding.detailsProgressBar.isVisible = true
             val job = scope.async {
-                viewModel.loadFilmPoster(ApiConstants.IMAGES_URL + "original" + film.posterId)
+                viewModel.loadFilmPoster(
+                    ApiConstants.IMAGES_URL +
+                            ApiConstants.IMAGE_FORMAT_ORIGINAL +
+                            film.posterId
+                )
             }
             val bitmap = job.await()
             if (bitmap != null) {
@@ -193,5 +197,9 @@ class DetailsFragment : Fragment() {
             }
             binding.detailsProgressBar.isVisible = false
         }
+    }
+
+    companion object {
+        private const val KEY_FILM = "film"
     }
 }
