@@ -2,57 +2,67 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_fragment_settings"
+    style="@style/MainBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    style="@style/MainBackground"
     android:visibility="invisible"
-    android:id="@+id/root_fragment_settings"
     tools:context=".view.fragments.SettingsFragment">
 
-    <RadioGroup
-        android:id="@+id/settings_radio_group"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:backgroundTint="@color/black_alpha_60"
+        android:layout_margin="10dp"
+        android:elevation="0dp"
+        app:cardCornerRadius="10dp">
 
-        <TextView
+        <RadioGroup
+            android:id="@+id/settings_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/white"
-            android:layout_margin="8dp"
-            android:text="@string/radio_group_header"/>
+            android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/radio_popular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/radio_popular"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/radio_group_header"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white" />
 
-        <RadioButton
-            android:id="@+id/radio_top_rated"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/radio_top_rated"/>
+            <RadioButton
+                android:id="@+id/radio_popular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_popular"
+                android:textColor="@color/white" />
 
-        <RadioButton
-            android:id="@+id/radio_upcoming"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/radio_upcoming"/>
+            <RadioButton
+                android:id="@+id/radio_top_rated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_top_rated"
+                android:textColor="@color/white" />
 
-        <RadioButton
-            android:id="@+id/radio_in_cinemas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/radio_now_playing"/>
+            <RadioButton
+                android:id="@+id/radio_upcoming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_upcoming"
+                android:textColor="@color/white" />
 
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/radio_in_cinemas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_now_playing"
+                android:textColor="@color/white" />
+
+        </RadioGroup>
+
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/settings_bottom_toolbar"

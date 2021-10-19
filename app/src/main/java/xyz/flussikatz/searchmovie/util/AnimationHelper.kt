@@ -31,7 +31,6 @@ object AnimationHelper {
 
             override fun onAnimationEnd(animation: Animator?) {
                 scope.cancel()
-                super.onAnimationEnd(animation)
             }
         }
         scope.launch {
@@ -96,8 +95,7 @@ object AnimationHelper {
     fun coverAnimation(view: View, activity: Activity, resId: Int) {
 
         Executors.newSingleThreadExecutor().execute {
-            var isAnimate = false
-            while (!isAnimate) {
+            do {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
                         val x: Int = view.width.div(2)
@@ -113,7 +111,6 @@ object AnimationHelper {
                         )
                         anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
-                        isAnimate = true
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
                                 view.visibility = View.INVISIBLE
@@ -123,15 +120,14 @@ object AnimationHelper {
                     }
                     return@execute
                 }
-            }
+            } while (!view.isAttachedToWindow)
         }
     }
 
     fun coverAnimation(view: View, activity: Activity, resId: Int, bundle: Bundle) {
 
         Executors.newSingleThreadExecutor().execute {
-            var isAnimate = false
-            while (!isAnimate) {
+            do {
                 if (view.isAttachedToWindow) {
                     activity.runOnUiThread {
                         val x: Int = view.width.div(2)
@@ -147,7 +143,6 @@ object AnimationHelper {
                         )
                         anim.duration = CIRCULAR_ANIMATION_DURATION
                         anim.start()
-                        isAnimate = true
                         anim.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
                                 view.visibility = View.INVISIBLE
@@ -157,7 +152,7 @@ object AnimationHelper {
                     }
                     return@execute
                 }
-            }
+            } while (!view.isAttachedToWindow)
         }
     }
 }

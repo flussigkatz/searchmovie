@@ -13,16 +13,15 @@ import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.Converter
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class Interactor(
     private val repo: MainRepository,
     private val retrofitService: TmdbApi,
-    private val preferences: PreferenceProvider
+    private val preferences: PreferenceProvider,
+    private val coroutinesScope: CoroutineScope
 ) {
-    val scope = CoroutineScope(EmptyCoroutineContext)
 
     fun getFilmsFromApi(page: Int, callback: ApiCallback) {
         retrofitService.getFilms(
@@ -36,7 +35,7 @@ class Interactor(
                     response: Response<TmdbResultsDto>
                 ) {
                     val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    scope.launch {
+                    coroutinesScope.launch {
                         clearDB()
                         repo.putToDB(list)
                     }
@@ -62,16 +61,24 @@ class Interactor(
         preferences.saveLoadFromApiTimeInterval(time)
     }
 
-    fun getLoadFromApiTimeIntervalToPreferences(): Long {
+    fun getLoadFromApiTimeIntervalFromPreferences(): Long {
         return preferences.getLoadFromApiTimeInterval()
+    }
+
+    fun dropLoadFromApiTimeIntervalFromPreferences() {
+        preferences.saveLoadFromApiTimeInterval(0)
     }
 
     fun getFilmsFromDB(): LiveData<List<Film>> {
         return repo.getAllFromDB()
     }
 
-    fun clearScope() {
-        scope.cancel()
+    fun getCoroutinesScope(): CoroutineScope {
+        return coroutinesScope
+    }
+
+    fun onTerminate() {
+        coroutinesScope.cancel()
     }
 
     private suspend fun clearDB() {
