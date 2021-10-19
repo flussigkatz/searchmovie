@@ -13,11 +13,6 @@ class App : Application() {
 
     lateinit var dagger: AppComponent
 
-    @Inject
-    private lateinit var interactor: Interactor
-
-    //TODO Need override onTerminate?
-    
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -31,10 +26,6 @@ class App : Application() {
 
     }
 
-    override fun onTerminate() {
-        interactor.onTerminate()
-        super.onTerminate()
-    }
     companion object {
         lateinit var instance: App
         private set
