@@ -4,12 +4,13 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.domain.Interactor
 import javax.inject.Singleton
-import kotlin.coroutines.EmptyCoroutineContext
 
 @Module
 class DomainModule(val context: Context) {
@@ -23,7 +24,15 @@ class DomainModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideCoroutinesScope() = CoroutineScope(EmptyCoroutineContext)
+    fun provideScope() = CoroutineScope(Dispatchers.IO)
+
+    @Provides
+    @Singleton
+    fun provideChannelRefreshState() = Channel<Boolean>(Channel.CONFLATED)
+
+    @Provides
+    @Singleton
+    fun provideChannelEventMessage() = Channel<String>(Channel.BUFFERED)
 
     @Provides
     @Singleton
@@ -31,11 +40,16 @@ class DomainModule(val context: Context) {
         repository: MainRepository,
         tmdbApi: TmdbApi,
         preferenceProvider: PreferenceProvider,
-        coroutinesScope: CoroutineScope
+        scope: CoroutineScope,
+        channelRefreshState: Channel<Boolean>,
+        channelEventMessage: Channel<String>
     ) = Interactor(
         repo = repository,
         retrofitService = tmdbApi,
         preferences = preferenceProvider,
-        coroutinesScope = coroutinesScope
+        scope = scope,
+        channelRefreshState = channelRefreshState,
+        channelEventMessage = channelEventMessage
+
     )
 }
