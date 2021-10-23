@@ -1,6 +1,6 @@
 package xyz.flussikatz.searchmovie.data
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import xyz.flussikatz.searchmovie.data.dao.FilmDao
 import xyz.flussikatz.searchmovie.data.entity.Film
 
@@ -12,7 +12,7 @@ class MainRepository(private val filmDao: FilmDao) {
             filmDao.insertAll(films)
     }
 
-    fun getAllFromDB(): LiveData<List<Film>>{
+    fun getAllFromDB(): Flow<List<Film>>{
         return filmDao.getCashedFilms()
     }
 

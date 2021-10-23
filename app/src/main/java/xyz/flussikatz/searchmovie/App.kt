@@ -22,8 +22,6 @@ class App : Application() {
             .databaseModule(DatabaseModule())
             .domainModule(DomainModule(this))
             .build()
-
-
     }
 
     companion object {

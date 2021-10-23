@@ -1,15 +1,14 @@
 package xyz.flussikatz.searchmovie.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import xyz.flussikatz.searchmovie.data.entity.Film
 
 @Dao
 interface FilmDao {
     @Query("SELECT * FROM cashed_films")
-    fun getCashedFilms(): LiveData<List<Film>>
+    fun getCashedFilms(): Flow<List<Film>>
 
-    //TODO How to get their LiveData List without null
     @Query("SELECT * FROM cashed_films")
     fun getCashedFilmsToList(): List<Film>
 
