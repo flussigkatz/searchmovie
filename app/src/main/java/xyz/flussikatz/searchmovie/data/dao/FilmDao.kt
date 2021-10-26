@@ -1,13 +1,14 @@
 package xyz.flussikatz.searchmovie.data.dao
 
 import androidx.room.*
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 import xyz.flussikatz.searchmovie.data.entity.Film
 
 @Dao
 interface FilmDao {
     @Query("SELECT * FROM cashed_films")
-    fun getCashedFilms(): Flow<List<Film>>
+    fun getCashedFilms(): Observable<List<Film>>
 
     @Query("SELECT * FROM cashed_films")
     fun getCashedFilmsToList(): List<Film>

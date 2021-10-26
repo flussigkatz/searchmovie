@@ -9,6 +9,8 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import xyz.flussikatz.searchmovie.*
@@ -47,16 +49,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        scope = CoroutineScope(Dispatchers.IO).also {
-            it.launch {
-                viewModel.filmListData.collect {
-                    withContext(Dispatchers.Main) {
-                        filmsAdapter.addItems(it)
-                        filmDataBase = it
-                    }
-                }
+        viewModel.filmListData
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                filmsAdapter.addItems(it)
+                filmDataBase = it
             }
-        }
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome)
 
@@ -155,24 +154,18 @@ class HomeFragment : Fragment() {
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
             viewModel.getFilms()
-            scope.launch {
-                for (element in viewModel.channelRefreshState) {
-                    withContext(Dispatchers.Main) {
-                        binding.homeRefresh.isRefreshing = element
-                    }
-                }
-            }
+            viewModel.refreshState
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { binding.homeRefresh.isRefreshing = it }
         }
     }
 
     private fun initEventMessage() {
-        scope.launch {
-            for (element in viewModel.channelEventMessage) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(context, element, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        viewModel.eventMessage
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
     }
 
     override fun onDestroy() {

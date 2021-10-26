@@ -3,6 +3,8 @@ package xyz.flussikatz.searchmovie.di.modules
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -28,11 +30,11 @@ class DomainModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideChannelRefreshState() = Channel<Boolean>(Channel.CONFLATED)
+    fun provideBehaviorSubjectRefreshState() = BehaviorSubject.create<Boolean>()
 
     @Provides
     @Singleton
-    fun provideChannelEventMessage() = Channel<String>(Channel.BUFFERED)
+    fun providePublishSubjectEventMessage() = PublishSubject.create<String>()
 
     @Provides
     @Singleton
@@ -41,15 +43,15 @@ class DomainModule(val context: Context) {
         tmdbApi: TmdbApi,
         preferenceProvider: PreferenceProvider,
         scope: CoroutineScope,
-        channelRefreshState: Channel<Boolean>,
-        channelEventMessage: Channel<String>
+        refreshState: BehaviorSubject<Boolean>,
+        eventMessage: PublishSubject<String>
     ) = Interactor(
         repo = repository,
         retrofitService = tmdbApi,
         preferences = preferenceProvider,
         scope = scope,
-        channelRefreshState = channelRefreshState,
-        channelEventMessage = channelEventMessage
+        refreshState = refreshState,
+        eventMessage = eventMessage
 
     )
 }

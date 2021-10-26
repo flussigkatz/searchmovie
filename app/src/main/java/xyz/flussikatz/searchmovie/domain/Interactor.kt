@@ -1,8 +1,10 @@
 package xyz.flussikatz.searchmovie.domain
 
 import android.text.format.DateFormat
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,14 +26,12 @@ class Interactor(
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider,
     private val scope: CoroutineScope,
-    private val channelRefreshState: Channel<Boolean>,
-    private val channelEventMessage: Channel<String>
+    private val refreshState: BehaviorSubject<Boolean>,
+    private val eventMessage: PublishSubject<String>
 ) {
 
     fun getFilmsFromApi(page: Int) {
-        val job = scope.launch {
-            channelRefreshState.send(true)
-        }
+            refreshState.onNext(true)
         val realTime = System.currentTimeMillis()
         val lastLoadTime = preferences.getLoadFromApiTimeInterval()
         if (lastLoadTime + TIME_INTERVAL < realTime) {
@@ -50,30 +50,23 @@ class Interactor(
                         scope.launch {
                             clearDB()
                             repo.putToDB(list)
-                            job.join()
-                            channelRefreshState.send(false)
+                            refreshState.onNext(false)
                             preferences.saveLoadFromApiTimeInterval(System.currentTimeMillis())
                         }
                     }
 
                     override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
-                        scope.launch {
-                            job.join()
-                            channelRefreshState.send(false)
-                            channelEventMessage.send(getText(R.string.error_upload_message))
-                        }
+                            refreshState.onNext(false)
+                            eventMessage.onNext(getText(R.string.error_upload_message))
                     }
 
                 })
         } else {
-            scope.launch {
-                job.join()
-                channelRefreshState.send(false)
+                refreshState.onNext(false)
                 val timeFormatted = timeFormatter(realTime - lastLoadTime)
-                channelEventMessage.send(
+                eventMessage.onNext(
                     timeFormatted + getText(R.string.upload_time_interval_massage)
                 )
-            }
 
         }
     }
@@ -90,16 +83,16 @@ class Interactor(
         preferences.saveLoadFromApiTimeInterval(0)
     }
 
-    fun getFilmsFromDB(): Flow<List<Film>> {
+    fun getFilmsFromDB(): Observable<List<Film>> {
         return repo.getAllFromDB()
     }
 
-    fun getChannelRefreshState(): Channel<Boolean> {
-        return channelRefreshState
+    fun getRefreshState(): BehaviorSubject<Boolean> {
+        return refreshState
     }
 
-    fun getChannelEventMessage(): Channel<String> {
-        return channelEventMessage
+    fun getEventMessage(): PublishSubject<String> {
+        return eventMessage
     }
 
     private suspend fun clearDB() {
