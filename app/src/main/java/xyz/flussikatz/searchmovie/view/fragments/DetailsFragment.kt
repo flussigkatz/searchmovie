@@ -160,6 +160,9 @@ class DetailsFragment : Fragment() {
 
     private fun performAsyncLoadOfPoster(film: Film) {
         if (!checkPermission()) {
+            Toast.makeText(
+                requireContext(), R.string.permission_storage, Toast.LENGTH_SHORT
+            ).show()
             requestPermission()
             return
         }
@@ -197,6 +200,11 @@ class DetailsFragment : Fragment() {
             }
             binding.detailsProgressBar.isVisible = false
         }
+    }
+
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
     }
 
     companion object {

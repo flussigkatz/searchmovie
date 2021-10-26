@@ -1,12 +1,17 @@
 package xyz.flussikatz.searchmovie.domain
 
-import androidx.lifecycle.LiveData
+import android.text.format.DateFormat
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import xyz.flussikatz.searchmovie.App
+import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.Api
-import xyz.flussikatz.searchmovie.data.ApiCallback
 import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
@@ -20,33 +25,50 @@ class Interactor(
     private val repo: MainRepository,
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider,
-    private val coroutinesScope: CoroutineScope
+    private val scope: CoroutineScope,
+    private val refreshState: BehaviorSubject<Boolean>,
+    private val eventMessage: PublishSubject<String>
 ) {
 
-    fun getFilmsFromApi(page: Int, callback: ApiCallback) {
-        retrofitService.getFilms(
-            getDefaultCategoryFromPreferences(),
-            Api.API_KEY,
-            "ru-RU",
-            page)
-            .enqueue(object : Callback<TmdbResultsDto> {
-                override fun onResponse(
-                    call: Call<TmdbResultsDto>,
-                    response: Response<TmdbResultsDto>
-                ) {
-                    val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                    coroutinesScope.launch {
-                        clearDB()
-                        repo.putToDB(list)
+    fun getFilmsFromApi(page: Int) {
+            refreshState.onNext(true)
+        val realTime = System.currentTimeMillis()
+        val lastLoadTime = preferences.getLoadFromApiTimeInterval()
+        if (lastLoadTime + TIME_INTERVAL < realTime) {
+            retrofitService.getFilms(
+                getDefaultCategoryFromPreferences(),
+                Api.API_KEY,
+                "ru-RU",
+                page)
+                .enqueue(object : Callback<TmdbResultsDto> {
+                    override fun onResponse(
+                        call: Call<TmdbResultsDto>,
+                        response: Response<TmdbResultsDto>
+                    ) {
+                        //TODO
+                        val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
+                        scope.launch {
+                            clearDB()
+                            repo.putToDB(list)
+                            refreshState.onNext(false)
+                            preferences.saveLoadFromApiTimeInterval(System.currentTimeMillis())
+                        }
                     }
-                    callback.onSuccess()
-                }
 
-                override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
-                    callback.onFailure()
-                }
+                    override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
+                            refreshState.onNext(false)
+                            eventMessage.onNext(getText(R.string.error_upload_message))
+                    }
 
-            })
+                })
+        } else {
+                refreshState.onNext(false)
+                val timeFormatted = timeFormatter(realTime - lastLoadTime)
+                eventMessage.onNext(
+                    timeFormatted + getText(R.string.upload_time_interval_massage)
+                )
+
+        }
     }
 
     fun saveDefaultCategoryToPreferences(category: String) {
@@ -57,28 +79,20 @@ class Interactor(
         return preferences.getDefaultCategory()
     }
 
-    fun saveLoadFromApiTimeIntervalToPreferences(time: Long) {
-        preferences.saveLoadFromApiTimeInterval(time)
-    }
-
-    fun getLoadFromApiTimeIntervalFromPreferences(): Long {
-        return preferences.getLoadFromApiTimeInterval()
-    }
-
     fun dropLoadFromApiTimeIntervalFromPreferences() {
         preferences.saveLoadFromApiTimeInterval(0)
     }
 
-    fun getFilmsFromDB(): LiveData<List<Film>> {
+    fun getFilmsFromDB(): Observable<List<Film>> {
         return repo.getAllFromDB()
     }
 
-    fun getCoroutinesScope(): CoroutineScope {
-        return coroutinesScope
+    fun getRefreshState(): BehaviorSubject<Boolean> {
+        return refreshState
     }
 
-    fun onTerminate() {
-        coroutinesScope.cancel()
+    fun getEventMessage(): PublishSubject<String> {
+        return eventMessage
     }
 
     private suspend fun clearDB() {
@@ -88,5 +102,32 @@ class Interactor(
             } while (repo.clearDB() != 0)
             it.resume(Unit)
         }
+    }
+
+    private fun timeFormatter(time: Long): String {
+        val min = DateFormat.format("mm", time)
+        val sec = DateFormat.format("ss", time)
+        val arr = arrayOf(min, sec).map {
+            if (it[0].toString().equals("0")) {
+                it[1].toString()
+            } else it
+        }
+        var res = ""
+
+        if (time >= ONE_MIN) {
+            res = "${arr[0]} ${getText(R.string.min)} "
+        }
+        res += "${arr[1]} ${getText(R.string.sec)} "
+
+        return res
+    }
+
+    private fun getText(resId: Int): String {
+        return App.instance.getText(resId).toString()
+    }
+
+    companion object {
+        private const val TIME_INTERVAL = 600000L
+        private const val ONE_MIN = 60000L
     }
 }

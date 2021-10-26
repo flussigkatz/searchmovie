@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
@@ -27,6 +27,7 @@ import kotlin.collections.ArrayList
 class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var scope: CoroutineScope
     private val viewModel: HomeFragmentViewModel by activityViewModels()
     private var filmDataBase = listOf<Film>()
         set(value) {
@@ -47,18 +48,21 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>> {
-            filmDataBase = it
-            filmsAdapter.addItems(it)
-        })
+
+        viewModel.filmListData
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                filmsAdapter.addItems(it)
+                filmDataBase = it
+            }
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome)
 
         initPullToRefresh()
 
-        viewModel.errorEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
+        initEventMessage()
+
 
         binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
         //TODO некорректно работает при нажатии на крест
@@ -150,16 +154,23 @@ class HomeFragment : Fragment() {
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
             viewModel.getFilms()
-            viewModel.getCoroutinesScope().launch {
-                for (element in viewModel.loadInProgressChannel) {
-                    withContext(Dispatchers.Main) {
-                        binding.homeRefresh.isRefreshing = element
-                    }
-                }
-            }
-            /*viewModel.inProgress.observe(viewLifecycleOwner) {
-                binding.homeRefresh.isRefreshing = it
-            }*/
+            viewModel.refreshState
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { binding.homeRefresh.isRefreshing = it }
         }
     }
+
+    private fun initEventMessage() {
+        viewModel.eventMessage
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+    }
+
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
+    }
+
 }
