@@ -2,10 +2,10 @@ package xyz.flussikatz.searchmovie.domain
 
 import android.text.format.DateFormat
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,9 +17,7 @@ import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.data.entity.Film
-import xyz.flussikatz.searchmovie.util.Converter
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import xyz.flussikatz.searchmovie.data.entity.TmdbFilm
 
 class Interactor(
     private val repo: MainRepository,
@@ -27,11 +25,11 @@ class Interactor(
     private val preferences: PreferenceProvider,
     private val scope: CoroutineScope,
     private val refreshState: BehaviorSubject<Boolean>,
-    private val eventMessage: PublishSubject<String>
+    private val eventMessage: PublishSubject<String>,
 ) {
 
     fun getFilmsFromApi(page: Int) {
-            refreshState.onNext(true)
+        refreshState.onNext(true)
         val realTime = System.currentTimeMillis()
         val lastLoadTime = preferences.getLoadFromApiTimeInterval()
         if (lastLoadTime + TIME_INTERVAL < realTime) {
@@ -43,30 +41,52 @@ class Interactor(
                 .enqueue(object : Callback<TmdbResultsDto> {
                     override fun onResponse(
                         call: Call<TmdbResultsDto>,
-                        response: Response<TmdbResultsDto>
+                        response: Response<TmdbResultsDto>,
                     ) {
-                        //TODO
-                        val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                        scope.launch {
-                            clearDB()
-                            repo.putToDB(list)
+                        val responseObservable = Observable.create<List<TmdbFilm>> {
+                            it.onNext(response.body()?.tmdbFilms)
+                            it.onComplete()
+                        }
+                        responseObservable.doOnSubscribe {
+                            do {
+                                repo.clearDB()
+                            } while (repo.clearDB() != 0)
+                        }.doOnComplete {
                             refreshState.onNext(false)
                             preferences.saveLoadFromApiTimeInterval(System.currentTimeMillis())
-                        }
+                        }.doOnError {
+                            it.printStackTrace()
+                        }.subscribeOn(Schedulers.io()).map {
+                            val result = mutableListOf<Film>()
+                            it.forEach {
+                                result.add(
+                                    Film(
+                                        id = it.id,
+                                        title = it.title,
+                                        posterId = it.posterPath,
+                                        description = it.overview,
+                                        rating = (it.voteAverage * 10).toInt()
+                                    )
+                                )
+                            }
+                            result
+                        }.subscribe {
+                                repo.putToDB(it)
+                            }
                     }
 
                     override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
-                            refreshState.onNext(false)
-                            eventMessage.onNext(getText(R.string.error_upload_message))
+                        refreshState.onNext(false)
+                        eventMessage.onNext(getText(R.string.error_upload_message))
                     }
 
                 })
         } else {
-                refreshState.onNext(false)
-                val timeFormatted = timeFormatter(realTime - lastLoadTime)
-                eventMessage.onNext(
-                    timeFormatted + getText(R.string.upload_time_interval_massage)
-                )
+            refreshState.onNext(false)
+            val timeFormatted = timeFormatter(realTime - lastLoadTime)
+            eventMessage.onNext(
+                timeFormatted + getText(R.string.upload_time_interval_massage)
+            )
 
         }
     }
@@ -93,15 +113,6 @@ class Interactor(
 
     fun getEventMessage(): PublishSubject<String> {
         return eventMessage
-    }
-
-    private suspend fun clearDB() {
-        return suspendCoroutine {
-            do {
-                repo.clearDB()
-            } while (repo.clearDB() != 0)
-            it.resume(Unit)
-        }
     }
 
     private fun timeFormatter(time: Long): String {

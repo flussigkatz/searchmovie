@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -17,6 +18,8 @@ import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.AnimationHelper
+import xyz.flussikatz.searchmovie.util.AutoDisposable
+import xyz.flussikatz.searchmovie.util.addTo
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
@@ -27,8 +30,8 @@ import kotlin.collections.ArrayList
 class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var scope: CoroutineScope
     private val viewModel: HomeFragmentViewModel by activityViewModels()
+    private val autoDisposable = AutoDisposable()
     private var filmDataBase = listOf<Film>()
         set(value) {
             if (field == value) return
@@ -49,13 +52,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        autoDisposable.bindTo(lifecycle)
+
         viewModel.filmListData
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 filmsAdapter.addItems(it)
                 filmDataBase = it
-            }
+            }.addTo(autoDisposable)
 
         AnimationHelper.revealAnimation(binding.rootFragmentHome)
 
@@ -65,7 +70,10 @@ class HomeFragment : Fragment() {
 
 
         binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
-        //TODO некорректно работает при нажатии на крест
+        binding.homeSearchView.setOnCloseListener {
+            binding.homeSearchView.clearFocus()
+            true
+        }
 
         binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -158,6 +166,7 @@ class HomeFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { binding.homeRefresh.isRefreshing = it }
+                .addTo(autoDisposable)
         }
     }
 
@@ -166,11 +175,6 @@ class HomeFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+            .addTo(autoDisposable)
     }
-
-    override fun onDestroy() {
-        scope.cancel()
-        super.onDestroy()
-    }
-
 }
