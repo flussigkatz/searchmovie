@@ -18,6 +18,8 @@ import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
 import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.data.entity.TmdbFilm
+import xyz.flussikatz.searchmovie.util.Converter
+import java.util.*
 
 class Interactor(
     private val repo: MainRepository,
@@ -28,15 +30,20 @@ class Interactor(
     private val eventMessage: PublishSubject<String>,
 ) {
 
+    //TODO: Dispose observable
+
     fun getFilmsFromApi(page: Int) {
         refreshState.onNext(true)
+        val lang = Locale.getDefault().run {
+            "$language-$country"
+        }
         val realTime = System.currentTimeMillis()
         val lastLoadTime = preferences.getLoadFromApiTimeInterval()
         if (lastLoadTime + TIME_INTERVAL < realTime) {
             retrofitService.getFilms(
                 getDefaultCategoryFromPreferences(),
                 Api.API_KEY,
-                "ru-RU",
+                lang,
                 page)
                 .enqueue(object : Callback<TmdbResultsDto> {
                     override fun onResponse(
@@ -44,7 +51,11 @@ class Interactor(
                         response: Response<TmdbResultsDto>,
                     ) {
                         val responseObservable = Observable.create<List<TmdbFilm>> {
-                            it.onNext(response.body()?.tmdbFilms)
+                            if (response.body() == null) {
+                                error("Retrofit response is null")
+                            } else {
+                                it.onNext(response.body()!!.tmdbFilms)
+                            }
                             it.onComplete()
                         }
                         responseObservable.doOnSubscribe {
@@ -57,22 +68,10 @@ class Interactor(
                         }.doOnError {
                             it.printStackTrace()
                         }.subscribeOn(Schedulers.io()).map {
-                            val result = mutableListOf<Film>()
-                            it.forEach {
-                                result.add(
-                                    Film(
-                                        id = it.id,
-                                        title = it.title,
-                                        posterId = it.posterPath,
-                                        description = it.overview,
-                                        rating = (it.voteAverage * 10).toInt()
-                                    )
-                                )
-                            }
-                            result
+                            Converter.convertApiListToDtoList(it)
                         }.subscribe {
-                                repo.putToDB(it)
-                            }
+                            repo.putToDB(it)
+                        }
                     }
 
                     override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
@@ -88,6 +87,24 @@ class Interactor(
                 timeFormatted + getText(R.string.upload_time_interval_massage)
             )
 
+        }
+    }
+
+
+    fun getSearchedFilmsFromApi(
+        search_query: String,
+        page: Int,
+    ): Observable<List<Film>> {
+        val lang = Locale.getDefault().run {
+            "$language-$country"
+        }
+        return retrofitService.getSearchedFilms(
+            Api.API_KEY,
+            "$lang",
+            search_query,
+            page
+        ).map {
+            Converter.convertApiListToDtoList(it.tmdbFilms)
         }
     }
 
