@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.domain.Interactor
+import xyz.flussikatz.searchmovie.util.AutoDisposable
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
@@ -29,4 +30,9 @@ class HomeFragmentViewModel : ViewModel() {
     fun getFilms() {
         interactor.getFilmsFromApi(1)
     }
+
+    fun getSearchedFilms(search_query: String): Observable<List<Film>> {
+        return interactor.getSearchedFilmsFromApi(search_query, 1)
+    }
+
 }

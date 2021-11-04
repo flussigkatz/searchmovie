@@ -14,7 +14,7 @@ object Converter {
                     posterId = it.posterPath,
                     description = it.overview,
                     rating = (it.voteAverage * 10).toInt()
-                    )
+                )
             )
         }
 

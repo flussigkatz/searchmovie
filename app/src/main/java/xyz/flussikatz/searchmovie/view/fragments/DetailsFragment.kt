@@ -19,6 +19,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.*
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.R
@@ -26,6 +28,7 @@ import xyz.flussikatz.searchmovie.data.ApiConstants
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussikatz.searchmovie.viewmodel.DetailsFragmentViewModel
+import java.util.*
 
 
 class DetailsFragment : Fragment() {
@@ -48,6 +51,8 @@ class DetailsFragment : Fragment() {
         binding.film = film
 
         AnimationHelper.revealAnimation(binding.rootFragmentDetails, requireActivity())
+
+        initProgressBarState()
 
         Picasso.get()
             .load(ApiConstants.IMAGES_URL + ApiConstants.IMAGE_FORMAT_W500 + film.posterId)
@@ -167,7 +172,7 @@ class DetailsFragment : Fragment() {
             return
         }
         MainScope().launch {
-            binding.detailsProgressBar.isVisible = true
+            viewModel.progressBarState.onNext(true)
             val job = scope.async {
                 viewModel.loadFilmPoster(
                     ApiConstants.IMAGES_URL +
@@ -198,7 +203,13 @@ class DetailsFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            binding.detailsProgressBar.isVisible = false
+            viewModel.progressBarState.onNext(false)
+        }
+    }
+
+    private fun initProgressBarState() {
+        viewModel.progressBarState.subscribe {
+            binding.detailsProgressBar.isVisible = it
         }
     }
 
