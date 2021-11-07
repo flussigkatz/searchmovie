@@ -19,6 +19,12 @@
 
     <style name="MainBackground" parent="Theme.SearchMovie">
         <item name="android:background">@drawable/backgrond_gardient</item>
+        <item name="android:backgroundTintMode">src_atop</item>
+        <item name="android:backgroundTint">@color/black_alpha_20</item>
+    </style>
+
+    <style name="FragmentBackground" parent="Theme.SearchMovie">
+        <item name="android:background">@drawable/backgrond_gardient</item>
     </style>
 
     <style name="Theme.SearchMovie.DarkTextTheme">

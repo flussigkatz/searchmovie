@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import xyz.flussikatz.searchmovie.R
@@ -28,7 +29,8 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnimationHelper.revealAnimation(binding.rootFragmentSettings, requireActivity())
+
+        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
         viewModel.categoryPropertyLifeData.observe(viewLifecycleOwner, Observer<String> {
             when (it) {

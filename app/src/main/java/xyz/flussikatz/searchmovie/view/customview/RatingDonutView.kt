@@ -8,7 +8,6 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.databinding.BindingAdapter
 import xyz.flussikatz.searchmovie.R
-import xyz.flussikatz.searchmovie.util.AnimationHelper
 
 private const val RATING_DONUT_ANIMATION = 400L
 

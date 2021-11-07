@@ -5,7 +5,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +24,6 @@ class Interactor(
     private val repo: MainRepository,
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider,
-    private val scope: CoroutineScope,
     private val refreshState: BehaviorSubject<Boolean>,
     private val eventMessage: PublishSubject<String>,
 ) {
@@ -95,16 +93,18 @@ class Interactor(
         search_query: String,
         page: Int,
     ): Observable<List<Film>> {
-        val lang = Locale.getDefault().run {
+        val lang = Locale.getDefault().run{
             "$language-$country"
         }
         return retrofitService.getSearchedFilms(
             Api.API_KEY,
-            "$lang",
+            lang,
             search_query,
             page
         ).map {
             Converter.convertApiListToDtoList(it.tmdbFilms)
+        }.doOnError {
+            eventMessage.onNext(getText(R.string.error_upload_message))
         }
     }
 

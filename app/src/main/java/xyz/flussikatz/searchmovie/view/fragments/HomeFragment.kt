@@ -1,23 +1,18 @@
 package xyz.flussikatz.searchmovie.view.fragments
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
-import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
@@ -27,9 +22,7 @@ import xyz.flussikatz.searchmovie.util.addTo
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
-import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
@@ -62,8 +55,7 @@ class HomeFragment : Fragment() {
                 filmsAdapter.addItems(it)
             }.addTo(autoDisposable)
 
-
-        AnimationHelper.revealAnimation(binding.rootFragmentHome)
+        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
         initPullToRefresh()
 
@@ -170,7 +162,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    sub.onNext(newText)
+                    sub.onNext(newText!!)
                     return false
                 }
 
@@ -180,7 +172,7 @@ class HomeFragment : Fragment() {
             .debounce(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .filter {
-                if (it.isBlank()) filmsAdapter.addItems(filmDataBase)
+                if (it.isNullOrBlank()) filmsAdapter.addItems(filmDataBase)
                 it.isNotEmpty()
             }.observeOn(Schedulers.io())
             .flatMap {
@@ -188,7 +180,6 @@ class HomeFragment : Fragment() {
             }.observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onError = {
-                    Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
                     println(it.localizedMessage)
                 },
                 onNext = {

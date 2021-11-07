@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnAttach
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
@@ -39,7 +40,7 @@ class DetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.rootFragmentDetails
 
@@ -47,12 +48,13 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film = arguments?.get(KEY_FILM) as Film
-        binding.film = film
 
-        AnimationHelper.revealAnimation(binding.rootFragmentDetails, requireActivity())
+        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
         initProgressBarState()
+
+        val film = arguments?.get(KEY_FILM) as Film
+        binding.film = film
 
         Picasso.get()
             .load(ApiConstants.IMAGES_URL + ApiConstants.IMAGE_FORMAT_W500 + film.posterId)

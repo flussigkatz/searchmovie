@@ -26,10 +26,6 @@ class DomainModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideScope() = CoroutineScope(Dispatchers.IO)
-
-    @Provides
-    @Singleton
     fun provideBehaviorSubjectRefreshState() = BehaviorSubject.create<Boolean>()
 
     @Provides
@@ -42,14 +38,12 @@ class DomainModule(val context: Context) {
         repository: MainRepository,
         tmdbApi: TmdbApi,
         preferenceProvider: PreferenceProvider,
-        scope: CoroutineScope,
         refreshState: BehaviorSubject<Boolean>,
         eventMessage: PublishSubject<String>
     ) = Interactor(
         repo = repository,
         retrofitService = tmdbApi,
         preferences = preferenceProvider,
-        scope = scope,
         refreshState = refreshState,
         eventMessage = eventMessage
 
