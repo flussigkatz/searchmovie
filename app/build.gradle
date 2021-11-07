@@ -3,8 +3,9 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
-
 }
+
+apply from: "$project.rootDir/dependencies.gradle"
 
 android {
     compileSdkVersion 30
@@ -51,8 +52,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //Core-ktx
-    def core_ktx_version = "1.6.0"
-    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation core_ktx
 
     //Legacy
     def legacy_support_version = "1.0.0"
@@ -92,24 +92,20 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
     //Retrofit
-    def retrofit_version = "2.9.0"
-    def converter_gson_version = "2.6.0"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$converter_gson_version"
-
+    implementation retrofit
+    implementation converter_gson
+    implementation rxjava3_retrofit_adapter
 
     //okhttp3
-    def okhttp3_version = "4.9.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    implementation okhttp3
 
     //Picasso
     def picasso_version = "2.71828"
     implementation "com.squareup.picasso:picasso:$picasso_version"
 
     //Dagger2
-    def dagger2_version = "2.38.1"
-    implementation "com.google.dagger:dagger:$dagger2_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    implementation dagger2
+    kapt dagger2_compiler
 
     //Room
     def room_version = "2.3.0"
@@ -128,8 +124,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$corutines_version"
 
     //RxJava
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.2'
-    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
-    implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
+    implementation rxandroid
+    implementation rxjava
+    implementation rxkotlin
 }
