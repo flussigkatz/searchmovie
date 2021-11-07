@@ -1,8 +1,8 @@
-package xyz.flussikatz.searchmovie.data.dao
+package xyz.flussigkatz.core_api.db
 
 import androidx.room.*
 import io.reactivex.rxjava3.core.Observable
-import xyz.flussikatz.searchmovie.data.entity.Film
+import xyz.flussigkatz.core_api.entity.Film
 
 @Dao
 interface FilmDao {

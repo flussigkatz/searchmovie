@@ -1,15 +1,15 @@
-package xyz.flussikatz.searchmovie.data
+package xyz.flussigkatz.core_impl
 
 import io.reactivex.rxjava3.core.Observable
-import xyz.flussikatz.searchmovie.data.dao.FilmDao
-import xyz.flussikatz.searchmovie.data.entity.Film
+import xyz.flussigkatz.core_api.db.FilmDao
+import xyz.flussigkatz.core_api.entity.Film
 
 
 class MainRepository(private val filmDao: FilmDao) {
 
 
     fun putToDB(films: List<Film>) {
-            filmDao.insertAll(films)
+        filmDao.insertAll(films)
     }
 
     fun getAllFromDB(): Observable<List<Film>>{
