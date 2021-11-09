@@ -91,14 +91,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
-    //Retrofit
-    implementation retrofit
-    implementation converter_gson
-    implementation rxjava3_retrofit_adapter
-
-    //okhttp3
-    implementation okhttp3
-
     //Picasso
     def picasso_version = "2.71828"
     implementation "com.squareup.picasso:picasso:$picasso_version"
@@ -126,4 +118,7 @@ dependencies {
     implementation rxandroid
     implementation rxjava
     implementation rxkotlin
+
+    implementation project(':core:core_api')
+    implementation project(':remote_module')
 }

@@ -20,16 +20,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.*
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.R
-import xyz.flussikatz.searchmovie.data.ApiConstants
+import xyz.flussikatz.searchmovie.data.ApiConstantsApp
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussikatz.searchmovie.viewmodel.DetailsFragmentViewModel
-import java.util.*
 
 
 class DetailsFragment : Fragment() {
@@ -57,7 +54,7 @@ class DetailsFragment : Fragment() {
         binding.film = film
 
         Picasso.get()
-            .load(ApiConstants.IMAGES_URL + ApiConstants.IMAGE_FORMAT_W500 + film.posterId)
+            .load(ApiConstantsApp.IMAGES_URL + ApiConstantsApp.IMAGE_FORMAT_W500 + film.posterId)
             .fit()
             .centerCrop()
             .placeholder(R.drawable.wait)
@@ -177,8 +174,8 @@ class DetailsFragment : Fragment() {
             viewModel.progressBarState.onNext(true)
             val job = scope.async {
                 viewModel.loadFilmPoster(
-                    ApiConstants.IMAGES_URL +
-                            ApiConstants.IMAGE_FORMAT_ORIGINAL +
+                    ApiConstantsApp.IMAGES_URL +
+                            ApiConstantsApp.IMAGE_FORMAT_ORIGINAL +
                             film.posterId
                 )
             }

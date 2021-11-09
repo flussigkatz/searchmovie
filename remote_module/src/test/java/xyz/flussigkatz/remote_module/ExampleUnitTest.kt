@@ -1,4 +1,4 @@
-package xyz.flussigkatz.seachmovie
+package xyz.flussigkatz.remote_module
 
 import org.junit.Test
 

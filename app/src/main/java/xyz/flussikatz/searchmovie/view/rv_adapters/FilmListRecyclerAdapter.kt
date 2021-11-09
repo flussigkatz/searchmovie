@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import xyz.flussikatz.searchmovie.domain.FilmDiff
+import xyz.flussikatz.searchmovie.util.FilmDiff
 import xyz.flussikatz.searchmovie.databinding.FilmItemBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.view.rv_viewholder.FilmViewHolder

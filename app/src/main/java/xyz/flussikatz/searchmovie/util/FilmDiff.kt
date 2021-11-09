@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.domain
+package xyz.flussikatz.searchmovie.util
 
 import androidx.recyclerview.widget.DiffUtil
 import xyz.flussikatz.searchmovie.data.entity.Film

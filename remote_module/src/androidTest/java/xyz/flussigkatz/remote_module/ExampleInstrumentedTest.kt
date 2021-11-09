@@ -1,4 +1,4 @@
-package xyz.flussigkatz.seachmovie
+package xyz.flussigkatz.remote_module
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

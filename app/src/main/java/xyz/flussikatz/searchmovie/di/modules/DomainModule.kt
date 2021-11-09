@@ -5,12 +5,9 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
+import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
-import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.domain.Interactor
 import javax.inject.Singleton
 

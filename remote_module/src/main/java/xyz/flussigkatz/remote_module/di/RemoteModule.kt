@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.di.modules
+package xyz.flussigkatz.remote_module.di
 
 import dagger.Module
 import dagger.Provides
@@ -7,9 +7,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import xyz.flussikatz.searchmovie.BuildConfig
-import xyz.flussikatz.searchmovie.data.ApiConstants
-import xyz.flussikatz.searchmovie.data.TmdbApi
+import xyz.flussigkatz.remote_module.ApiConstantsRemote
+import xyz.flussigkatz.remote_module.BuildConfig
+import xyz.flussigkatz.remote_module.TmdbApi
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -30,7 +30,7 @@ class RemoteModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(ApiConstants.BASE_URL)
+        .baseUrl(ApiConstantsRemote.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .client(okHttpClient)
