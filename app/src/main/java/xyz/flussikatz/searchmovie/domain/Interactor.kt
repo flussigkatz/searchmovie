@@ -5,19 +5,13 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.Api
 import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
-import xyz.flussikatz.searchmovie.data.entity.TmdbResultsDto
-import xyz.flussikatz.searchmovie.data.TmdbApi
 import xyz.flussikatz.searchmovie.data.entity.Film
-import xyz.flussikatz.searchmovie.data.entity.TmdbFilm
 import xyz.flussikatz.searchmovie.util.Converter
 import java.util.*
 
@@ -25,7 +19,6 @@ class Interactor(
     private val repo: MainRepository,
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider,
-    private val scope: CoroutineScope,
     private val refreshState: BehaviorSubject<Boolean>,
     private val eventMessage: PublishSubject<String>,
 ) {
@@ -33,64 +26,40 @@ class Interactor(
     //TODO: Dispose observable
 
     fun getFilmsFromApi(page: Int) {
-        refreshState.onNext(true)
         val lang = Locale.getDefault().run {
             "$language-$country"
         }
-        val realTime = System.currentTimeMillis()
-        val lastLoadTime = preferences.getLoadFromApiTimeInterval()
-        if (lastLoadTime + TIME_INTERVAL < realTime) {
+        if (checkUploadInterval()){
             retrofitService.getFilms(
                 getDefaultCategoryFromPreferences(),
                 Api.API_KEY,
                 lang,
-                page)
-                .enqueue(object : Callback<TmdbResultsDto> {
-                    override fun onResponse(
-                        call: Call<TmdbResultsDto>,
-                        response: Response<TmdbResultsDto>,
-                    ) {
-                        val responseObservable = Observable.create<List<TmdbFilm>> {
-                            if (response.body() == null) {
-                                error("Retrofit response is null")
-                            } else {
-                                it.onNext(response.body()!!.tmdbFilms)
-                            }
-                            it.onComplete()
-                        }
-                        responseObservable.doOnSubscribe {
-                            do {
-                                repo.clearDB()
-                            } while (repo.clearDB() != 0)
-                        }.doOnComplete {
-                            refreshState.onNext(false)
-                            preferences.saveLoadFromApiTimeInterval(System.currentTimeMillis())
-                        }.doOnError {
-                            it.printStackTrace()
-                        }.subscribeOn(Schedulers.io()).map {
-                            Converter.convertApiListToDtoList(it)
-                        }.subscribe {
-                            repo.putToDB(it)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
-                        refreshState.onNext(false)
-                        eventMessage.onNext(getText(R.string.error_upload_message))
-                    }
-
-                })
+                page).map {
+                Converter.convertApiListToDtoList(it.tmdbFilms)
+            }.doOnSubscribe {
+                refreshState.onNext(true)
+                do {
+                    repo.clearDB()
+                } while (repo.clearDB() != 0)
+            }.doOnComplete {
+                refreshState.onNext(false)
+                preferences.saveLoadFromApiTimeInterval(System.currentTimeMillis())
+            }.doOnError {
+                refreshState.onNext(false)
+                eventMessage.onNext(getText(R.string.error_upload_message))
+            }.subscribeOn(Schedulers.io())
+                .subscribe {
+                    repo.putToDB(it)
+                }
         } else {
             refreshState.onNext(false)
-            val timeFormatted = timeFormatter(realTime - lastLoadTime)
             eventMessage.onNext(
-                timeFormatted + getText(R.string.upload_time_interval_massage)
+                timeFormatter() + getText(R.string.upload_time_interval_massage)
             )
-
         }
     }
 
-
+    //TODO: При введении "вен" ошибка
     fun getSearchedFilmsFromApi(
         search_query: String,
         page: Int,
@@ -100,11 +69,13 @@ class Interactor(
         }
         return retrofitService.getSearchedFilms(
             Api.API_KEY,
-            "$lang",
+            lang,
             search_query,
             page
         ).map {
             Converter.convertApiListToDtoList(it.tmdbFilms)
+        }.doOnError {
+            eventMessage.onNext(getText(R.string.error_upload_message))
         }
     }
 
@@ -132,7 +103,20 @@ class Interactor(
         return eventMessage
     }
 
-    private fun timeFormatter(time: Long): String {
+    fun checkUploadInterval(): Boolean {
+        var res = false
+        val realTime = System.currentTimeMillis()
+        val lastLoadTime = preferences.getLoadFromApiTimeInterval()
+        if (lastLoadTime + TIME_INTERVAL < realTime) {
+            res = true
+        }
+        return res
+    }
+
+    private fun timeFormatter(): String {
+        val realTime = System.currentTimeMillis()
+        val lastLoadTime = preferences.getLoadFromApiTimeInterval()
+        val time = realTime - lastLoadTime
         val min = DateFormat.format("mm", time)
         val sec = DateFormat.format("ss", time)
         val arr = arrayOf(min, sec).map {

@@ -14,5 +14,7 @@
     <color name="yellow">#FFEB3B</color>
     <color name="black_alpha_90">#E6000000</color>
     <color name="black_alpha_60">#99000000</color>
+    <color name="black_alpha_40">#66000000</color>
+    <color name="black_alpha_20">#33000000</color>
     <color name="black_alpha_10">#1A000000</color>
 </resources>

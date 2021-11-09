@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.doOnAttach
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.databinding.FragmentHistoryBinding
@@ -16,7 +17,7 @@ class HistoryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
         return binding.rootFragmentHistory
     }
@@ -24,7 +25,7 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnimationHelper.revealAnimation(binding.rootFragmentHistory, requireActivity())
+        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
 
         binding.historyBottomToolbar.setOnNavigationItemSelectedListener {

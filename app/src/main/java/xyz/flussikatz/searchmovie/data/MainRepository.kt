@@ -1,7 +1,6 @@
 package xyz.flussikatz.searchmovie.data
 
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.flow.Flow
 import xyz.flussikatz.searchmovie.data.dao.FilmDao
 import xyz.flussikatz.searchmovie.data.entity.Film
 

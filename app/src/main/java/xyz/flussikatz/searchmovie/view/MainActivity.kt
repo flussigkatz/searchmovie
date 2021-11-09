@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
+import kotlinx.coroutines.cancel
 import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
@@ -98,6 +99,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onDestroy() {
+        AnimationHelper.cancelAnimScope()
+        super.onDestroy()
     }
 
     companion object {

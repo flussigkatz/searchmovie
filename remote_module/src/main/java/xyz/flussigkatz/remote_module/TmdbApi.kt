@@ -1,4 +1,4 @@
-package xyz.flussikatz.searchmovie.data
+package xyz.flussigkatz.remote_module
 
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
@@ -14,7 +14,7 @@ interface TmdbApi {
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("page") page: Int,
-    ): Call<TmdbResultsDto>
+    ): Observable<TmdbResultsDto>
 
     @GET("search/movie")
     fun getSearchedFilms(

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,13 +33,16 @@ class MarkedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMarkedBinding.inflate(inflater, container, false)
         return binding.rootFragmentMarked
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.doOnAttach { AnimationHelper.revealAnimation(view) }
+
         viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>> {
             filmsDataBase = it
         })
@@ -69,8 +73,6 @@ class MarkedFragment : Fragment() {
             addItemDecoration(decorator)
 
         }
-
-        AnimationHelper.revealAnimation(binding.rootFragmentMarked, requireActivity())
 
         binding.markedBottomToolbar.setOnNavigationItemSelectedListener {
             when (it.itemId) {

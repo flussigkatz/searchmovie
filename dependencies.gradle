@@ -1,0 +1,26 @@
+ext {
+    core_ktx = "androidx.core:core-ktx:1.6.0"
+
+    dagger2_version = '2.38.1'
+    dagger2 = "com.google.dagger:dagger:$dagger2_version"
+    dagger2_compiler = "com.google.dagger:dagger-compiler:$dagger2_version"
+
+    retrofit =  "com.squareup.retrofit2:retrofit:2.9.0"
+    converter_gson =  "com.squareup.retrofit2:converter-gson:2.6.0"
+    rxjava3_retrofit_adapter =  'com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0'
+
+    rxandroid = 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    rxjava = 'io.reactivex.rxjava3:rxjava:3.1.2'
+    rxkotlin =  'io.reactivex.rxjava3:rxkotlin:3.0.1'
+
+    okhttp3 =  "com.squareup.okhttp3:logging-interceptor:4.9.0"
+
+    room_version = "2.3.0"
+    room_runtime = "androidx.room:room-runtime:$room_version"
+    room_ktx = "androidx.room:room-ktx:$room_version"
+    room_rxjava3 = "androidx.room:room-rxjava3:$room_version"
+    room_compiler = "androidx.room:room-compiler:$room_version"
+
+
+
+}
