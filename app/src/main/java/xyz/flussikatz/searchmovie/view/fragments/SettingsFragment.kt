@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -21,7 +22,7 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
         return binding.root
@@ -34,19 +35,49 @@ class SettingsFragment : Fragment() {
 
         viewModel.categoryPropertyLifeData.observe(viewLifecycleOwner, Observer<String> {
             when (it) {
-                POPULAR_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_popular)
-                TOP_RATED_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_top_rated)
-                UPCOMING_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_upcoming)
-                NOW_PLAYING_CATEGORY -> binding.settingsRadioGroup.check(R.id.radio_in_cinemas)
+                POPULAR_CATEGORY ->
+                    binding.settingsRadioGroupCategory.check(R.id.radio_popular)
+                TOP_RATED_CATEGORY ->
+                    binding.settingsRadioGroupCategory.check(R.id.radio_top_rated)
+                UPCOMING_CATEGORY ->
+                    binding.settingsRadioGroupCategory.check(R.id.radio_upcoming)
+                NOW_PLAYING_CATEGORY ->
+                    binding.settingsRadioGroupCategory.check(R.id.radio_in_cinemas)
             }
         })
 
-        binding.settingsRadioGroup.setOnCheckedChangeListener { group, chekedId ->
+        viewModel.themePropertyLifeData.observe(viewLifecycleOwner, Observer<Int> {
+            when (it) {
+                AppCompatDelegate.MODE_NIGHT_NO ->
+                    binding.settingsRadioGroupTheme.check(R.id.radio_light)
+                AppCompatDelegate.MODE_NIGHT_YES ->
+                    binding.settingsRadioGroupTheme.check(R.id.radio_dark)
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM ->
+                    binding.settingsRadioGroupTheme.check(R.id.radio_system)
+                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY ->
+                    binding.settingsRadioGroupTheme.check(R.id.radio_battery)
+            }
+        })
+
+        binding.settingsRadioGroupCategory.setOnCheckedChangeListener { group, chekedId ->
             when (chekedId) {
                 R.id.radio_popular -> viewModel.putCategoryProperty(POPULAR_CATEGORY)
                 R.id.radio_top_rated -> viewModel.putCategoryProperty(TOP_RATED_CATEGORY)
                 R.id.radio_upcoming -> viewModel.putCategoryProperty(UPCOMING_CATEGORY)
                 R.id.radio_in_cinemas -> viewModel.putCategoryProperty(NOW_PLAYING_CATEGORY)
+            }
+        }
+
+        binding.settingsRadioGroupTheme.setOnCheckedChangeListener { group, chekedId ->
+            when (chekedId) {
+                R.id.radio_light ->
+                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_NO)
+                R.id.radio_dark ->
+                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_YES)
+                R.id.radio_system ->
+                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                R.id.radio_battery ->
+                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
             }
         }
 

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var preferences: PreferenceProvider
     private lateinit var binding: ActivityMainBinding
     private val receiver = Receiver()
+
     init {
         App.instance.dagger.inject(this)
     }
@@ -89,8 +91,6 @@ class MainActivity : AppCompatActivity() {
             lottieAnimationView.playAnimation()
             preferences.setPlaySplashScreenState(false)
         }
-
-
     }
 
 
@@ -115,9 +115,13 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    inner class Receiver: BroadcastReceiver() {
+    inner class Receiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Toast.makeText(context, intent?.action, Toast.LENGTH_SHORT).show()
+
+                if (intent?.action == Intent.ACTION_BATTERY_LOW) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
         }
     }
 

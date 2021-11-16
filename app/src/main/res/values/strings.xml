@@ -4,11 +4,16 @@
     <string name="marked">Marked</string>
     <string name="history">History</string>
     <string name="settings">Settings</string>
-    <string name="radio_group_header">A selection on the home screen</string>
+    <string name="category_radio_group_header">A selection on the home screen</string>
     <string name="radio_popular">Popular</string>
     <string name="radio_top_rated">Top</string>
     <string name="radio_upcoming">Upcoming</string>
     <string name="radio_now_playing">Now playing</string>
+    <string name="theme_radio_group_header">Theme selection</string>
+    <string name="radio_light">Light</string>
+    <string name="radio_dark">Dark</string>
+    <string name="radio_system">System follow</string>
+    <string name="radio_battery">Battery auto</string>
     <string name="exit_message">Back again to exit</string>
     <string name="error_upload_message">Error upload. Check internet connction.</string>
     <string name="upload_time_interval_massage"> have passed since the last data update. Why more often? .</string>

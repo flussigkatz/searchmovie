@@ -10,10 +10,12 @@ class SettingsFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
     val categoryPropertyLifeData: MutableLiveData<String> = MutableLiveData()
+    val themePropertyLifeData: MutableLiveData<Int> = MutableLiveData()
 
     init {
         App.instance.dagger.inject(this)
         getCategoryProperty()
+        getThemeProperty()
     }
 
     private fun getCategoryProperty() {
@@ -23,6 +25,14 @@ class SettingsFragmentViewModel : ViewModel() {
     fun putCategoryProperty(category: String) {
         interactor.saveDefaultCategoryToPreferences(category)
         getCategoryProperty()
-        interactor.dropLoadFromApiTimeIntervalFromPreferences()
+    }
+
+    fun getThemeProperty() {
+        themePropertyLifeData.value = interactor.getDefaultThemeFromPreferences()
+    }
+
+    fun putThemeProperty(theme: Int) {
+        interactor.setDefaultTheme(theme)
+        getThemeProperty()
     }
 }
