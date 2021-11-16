@@ -1,6 +1,7 @@
 package xyz.flussikatz.searchmovie.domain
 
 import android.text.format.DateFormat
+import androidx.appcompat.app.AppCompatDelegate
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -87,8 +88,13 @@ class Interactor(
         return preferences.getDefaultCategory()
     }
 
-    fun dropLoadFromApiTimeIntervalFromPreferences() {
-        preferences.saveLoadFromApiTimeInterval(0)
+    fun setDefaultTheme(theme: Int) {
+        preferences.saveDefaultTheme(theme)
+        App.instance.initTheme(theme)
+    }
+
+    fun getDefaultThemeFromPreferences(): Int {
+        return preferences.getDefaultTheme()
     }
 
     fun getFilmsFromDB(): Observable<List<Film>> {

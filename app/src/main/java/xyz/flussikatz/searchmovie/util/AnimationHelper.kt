@@ -50,13 +50,13 @@ object AnimationHelper {
         }
     }
 
-    fun coverAnimation(view: View, activity: Activity, resId: Int, bundle: Bundle? = null) {
-        val x: Int = view.width.div(2)
-        val y: Int = view.height.div(2)
-        val startRadius = hypot(view.width.toDouble(), view.height.toDouble())
+    fun coverAnimation(coverView: View, activity: Activity, resId: Int, bundle: Bundle? = null) {
+        val x: Int = coverView.width.div(2)
+        val y: Int = coverView.height.div(2)
+        val startRadius = hypot(coverView.width.toDouble(), coverView.height.toDouble())
         val endRadius = 0
         val anim = ViewAnimationUtils.createCircularReveal(
-            view,
+            coverView,
             x,
             y,
             startRadius.toFloat(),
@@ -64,8 +64,28 @@ object AnimationHelper {
         )
         anim.duration = CIRCULAR_ANIMATION_DURATION
         anim.doOnEnd {
-            view.visibility = View.INVISIBLE
+            coverView.visibility = View.INVISIBLE
             (activity as MainActivity).navController.navigate(resId, bundle)
+        }
+        anim.start()
+    }
+
+    fun lottieCoverAnimation(coverView: View, revealView: View) {
+        val x: Int = coverView.width.div(2)
+        val y: Int = coverView.height.div(2)
+        val startRadius = hypot(coverView.width.toDouble(), coverView.height.toDouble())
+        val endRadius = 0
+        val anim = ViewAnimationUtils.createCircularReveal(
+            coverView,
+            x,
+            y,
+            startRadius.toFloat(),
+            endRadius.toFloat()
+        )
+        anim.duration = CIRCULAR_ANIMATION_DURATION
+        anim.doOnEnd {
+            coverView.visibility = View.INVISIBLE
+            revealAnimation(revealView)
         }
         anim.start()
     }

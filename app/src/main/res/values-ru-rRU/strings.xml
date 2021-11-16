@@ -5,11 +5,16 @@
     <string name="marked">Отмеченные</string>
     <string name="history">История</string>
     <string name="settings">Настройки</string>
-    <string name="radio_group_header">Подборка на главном экране</string>
+    <string name="category_radio_group_header">Подборка на главном экране</string>
     <string name="radio_popular">Популярные</string>
     <string name="radio_top_rated">Рейтинговые</string>
     <string name="radio_upcoming">Скоро</string>
     <string name="radio_now_playing">В кинотеатрах</string>
+    <string name="theme_radio_group_header">Выбор темы</string>
+    <string name="radio_light">Светлая</string>
+    <string name="radio_dark">Тёмная</string>
+    <string name="radio_system">Системная</string>
+    <string name="radio_battery">Экономия заряда</string>
     <string name="exit_message">Ещё раз назад для выхода</string>
     <string name="error_upload_message">Ошибка загрузки. Проверьте интернет соединение.</string>
     <string name="upload_time_interval_massage"> прошло c момента последнего обновления данных. Зачем чаще? </string>

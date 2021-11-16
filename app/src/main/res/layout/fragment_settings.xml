@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_fragment_settings"
@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     android:visibility="invisible"
     tools:context=".view.fragments.SettingsFragment">
 
@@ -19,7 +20,7 @@
         app:cardCornerRadius="10dp">
 
         <RadioGroup
-            android:id="@+id/settings_radio_group"
+            android:id="@+id/settings_radio_group_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -28,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/radio_group_header"
+                android:text="@string/category_radio_group_header"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/white" />
 
@@ -64,6 +65,61 @@
 
     </androidx.cardview.widget.CardView>
 
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black_alpha_60"
+        android:layout_margin="10dp"
+        android:elevation="0dp"
+        app:cardCornerRadius="10dp">
+
+        <RadioGroup
+            android:id="@+id/settings_radio_group_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/theme_radio_group_header"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white" />
+
+            <RadioButton
+                android:id="@+id/radio_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_light"
+                android:textColor="@color/white" />
+
+            <RadioButton
+                android:id="@+id/radio_dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_dark"
+                android:textColor="@color/white" />
+
+            <RadioButton
+                android:id="@+id/radio_system"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_system"
+                android:textColor="@color/white" />
+
+            <RadioButton
+                android:id="@+id/radio_battery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_battery"
+                android:textColor="@color/white" />
+
+        </RadioGroup>
+
+    </androidx.cardview.widget.CardView>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/settings_bottom_toolbar"
         style="@style/BottomToolBar"
@@ -73,4 +129,4 @@
         app:labelVisibilityMode="labeled"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:menu="@menu/bottom_app_bar" />
-</FrameLayout>
+</LinearLayout>
