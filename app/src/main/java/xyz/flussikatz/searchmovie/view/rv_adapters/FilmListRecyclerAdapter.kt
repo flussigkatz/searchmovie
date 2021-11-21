@@ -26,7 +26,7 @@ class FilmListRecyclerAdapter(
         holder.binding.film = items[position]
 
         holder.binding.favoriteCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            checkedListener.checkedChange(holder.adapterPosition, isChecked)
+            checkedListener.checkedChange(holder.bindingAdapterPosition, isChecked)
         }
 
         holder.binding.filmItemCardview.setOnClickListener {

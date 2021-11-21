@@ -1,14 +1,20 @@
 package xyz.flussikatz.searchmovie.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.rxjava3.core.Observable
+import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.data.entity.Film
+import xyz.flussikatz.searchmovie.domain.Interactor
+import javax.inject.Inject
 
 class MarkedFragmentViewModel : ViewModel() {
-    val filmListLiveData = MutableLiveData<List<Film>>()
+    @Inject
+    lateinit var interactor: Interactor
+    val favoriteFilmListData: Observable<List<Film>>
+
 
     init {
-//        val films = interactor.getFilmsDB().filter { it.fav_state }
-//        filmListLiveData.postValue(films)
+        App.instance.dagger.inject(this)
+        favoriteFilmListData = interactor.getFavoriteFilmsFromApi(1)
     }
 }

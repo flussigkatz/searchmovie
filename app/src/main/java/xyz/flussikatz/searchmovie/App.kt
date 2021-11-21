@@ -11,8 +11,8 @@ import xyz.flussikatz.searchmovie.di.modules.DomainModule
 import javax.inject.Inject
 
 class App : Application() {
-    @Inject
-    private lateinit var preferences: PreferenceProvider
+//    @Inject
+//    private lateinit var preferences: PreferenceProvider
 
     lateinit var dagger: AppComponent
 
@@ -26,9 +26,9 @@ class App : Application() {
             .domainModule(DomainModule(this))
             .build()
 
-        dagger.inject(this)
+//        dagger.inject(this)
 
-        initTheme(preferences.getDefaultTheme())
+//        initTheme(preferences.getDefaultTheme())
     }
 
     fun initTheme(theme: Int) {

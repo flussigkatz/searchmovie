@@ -10,6 +10,7 @@ import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussikatz.searchmovie.App
 import xyz.flussikatz.searchmovie.R
 import xyz.flussikatz.searchmovie.data.Api
+import xyz.flussikatz.searchmovie.data.ApiConstantsApp
 import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.Film
@@ -30,7 +31,7 @@ class Interactor(
         val lang = Locale.getDefault().run {
             "$language-$country"
         }
-        if (checkUploadInterval()){
+        if (checkUploadInterval()) {
             retrofitService.getFilms(
                 getDefaultCategoryFromPreferences(),
                 Api.API_KEY,
@@ -61,10 +62,7 @@ class Interactor(
     }
 
     //TODO: При введении "вен" ошибка
-    fun getSearchedFilmsFromApi(
-        search_query: String,
-        page: Int,
-    ): Observable<List<Film>> {
+    fun getSearchedFilmsFromApi(search_query: String, page: Int): Observable<List<Film>> {
         val lang = Locale.getDefault().run {
             "$language-$country"
         }
@@ -72,6 +70,24 @@ class Interactor(
             Api.API_KEY,
             lang,
             search_query,
+            page
+        ).map {
+            Converter.convertApiListToDtoList(it.tmdbFilms)
+        }.doOnError {
+            eventMessage.onNext(getText(R.string.error_upload_message))
+        }
+    }
+
+    fun getFavoriteFilmsFromApi(page: Int): Observable<List<Film>> {
+        val lang = Locale.getDefault().run {
+            "$language-$country"
+        }
+        return retrofitService.getFavoriteFilms(
+            Api.ACCOUNT_ID,
+            Api.API_KEY,
+            Api.SESSION_ID,
+            lang,
+            ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC,
             page
         ).map {
             Converter.convertApiListToDtoList(it.tmdbFilms)
@@ -99,6 +115,14 @@ class Interactor(
 
     fun getFilmsFromDB(): Observable<List<Film>> {
         return repo.getAllFromDB()
+    }
+
+//    fun getFavoriteFilmsFromDB(): Observable<List<Film>> {
+//        return repo.getFavoriteFromDB()
+//    }
+
+    fun setFavoriteMark(id: Int) {
+        //TODO: create setFavoriteMark
     }
 
     fun getRefreshState(): BehaviorSubject<Boolean> {

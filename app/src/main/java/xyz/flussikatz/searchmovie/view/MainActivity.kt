@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var preferences: PreferenceProvider
     private lateinit var binding: ActivityMainBinding
-    private val receiver = Receiver()
+//    private val receiver = Receiver()
 
     init {
         App.instance.dagger.inject(this)
@@ -47,14 +47,14 @@ class MainActivity : AppCompatActivity() {
         val viewHomeFragment = this@MainActivity
             .findViewById<CoordinatorLayout>(R.id.root_fragment_home)
 
-        val filter = IntentFilter().also {
-            it.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-            it.addAction(Intent.ACTION_BATTERY_LOW)
-            it.addAction(Intent.ACTION_POWER_CONNECTED)
-            it.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        }
-
-        registerReceiver(receiver, filter)
+//        val filter = IntentFilter().also {
+//            it.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+//            it.addAction(Intent.ACTION_BATTERY_LOW)
+//            it.addAction(Intent.ACTION_POWER_CONNECTED)
+//            it.addAction(Intent.ACTION_POWER_DISCONNECTED)
+//        }
+//
+//        registerReceiver(receiver, filter)
 
         //TODO: Dal with navigation backstack
         navController = Navigation.findNavController(
@@ -111,19 +111,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         AnimationHelper.cancelAnimScope()
-        unregisterReceiver(receiver)
+//        unregisterReceiver(receiver)
         super.onDestroy()
     }
 
-    inner class Receiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Toast.makeText(context, intent?.action, Toast.LENGTH_SHORT).show()
-
-                if (intent?.action == Intent.ACTION_BATTERY_LOW) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
-    }
+//    inner class Receiver : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            Toast.makeText(context, intent?.action, Toast.LENGTH_SHORT).show()
+//
+//                if (intent?.action == Intent.ACTION_BATTERY_LOW) {
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//            }
+//        }
+//    }
 
     companion object {
         const val TIME_INTERVAL = 2000L

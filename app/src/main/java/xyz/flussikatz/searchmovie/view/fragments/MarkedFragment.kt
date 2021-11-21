@@ -10,10 +10,14 @@ import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.AnimationHelper
+import xyz.flussikatz.searchmovie.util.AutoDisposable
+import xyz.flussikatz.searchmovie.util.addTo
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 import xyz.flussikatz.searchmovie.viewmodel.MarkedFragmentViewModel
@@ -22,12 +26,8 @@ class MarkedFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private lateinit var binding: FragmentMarkedBinding
     private val viewModel:MarkedFragmentViewModel by activityViewModels()
-    private var filmsDataBase = listOf<Film>()
-        set(value) {
-            if (field == value) return
-            field = value
-            filmsAdapter.addItems(field)
-        }
+    private val autoDisposable = AutoDisposable()
+    private var filmDataBase = listOf<Film>()
 
 
     override fun onCreateView(
@@ -43,9 +43,15 @@ class MarkedFragment : Fragment() {
 
         view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
-        viewModel.filmListLiveData.observe(viewLifecycleOwner, Observer<List<Film>> {
-            filmsDataBase = it
-        })
+        autoDisposable.bindTo(lifecycle)
+
+        viewModel.favoriteFilmListData
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                filmDataBase = it
+                filmsAdapter.addItems(it)
+            }.addTo(autoDisposable)
 
         binding.markedRecycler.apply {
             filmsAdapter =
