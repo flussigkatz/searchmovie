@@ -3,10 +3,14 @@ package xyz.flussikatz.searchmovie.view
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var preferences: PreferenceProvider
     private lateinit var binding: ActivityMainBinding
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var notification: Notification.Builder
 //    private val receiver = Receiver()
 
     init {
@@ -44,8 +50,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
-        val viewHomeFragment = this@MainActivity
-            .findViewById<CoordinatorLayout>(R.id.root_fragment_home)
+        initNotification()
+
+        notificationManager.notify(0, notification.build())
 
 //        val filter = IntentFilter().also {
 //            it.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
@@ -65,6 +72,8 @@ class MainActivity : AppCompatActivity() {
         val lottieAnimationView: LottieAnimationView = binding.splashScreen
         lottieAnimationView.speed = LOTTIE_ANIMATION_SPEED
         lottieAnimationView.addAnimatorListener(object : AnimatorListenerAdapter() {
+            val viewHomeFragment = this@MainActivity
+                .findViewById<CoordinatorLayout>(R.id.root_fragment_home)
             override fun onAnimationStart(animation: Animator?) {
                 viewHomeFragment.visibility = View.INVISIBLE
             }
@@ -124,6 +133,26 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }
 //    }
+
+    fun initNotification() {
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "Notification_Channel_1"
+            val channelName = "BORING KILLER"
+            val descriptionText = "Remember watch movie from marked list"
+            val inmportance = NotificationManager.IMPORTANCE_DEFAULT
+            val nChannel = NotificationChannel(channelId, channelName, inmportance)
+            nChannel.description = descriptionText
+            notificationManager.createNotificationChannel(nChannel)
+            notification = Notification.Builder(this, channelId)
+        } else {
+            notification = Notification.Builder(this)
+        }
+        notification.setContentTitle("Title")
+            .setContentText("Text")
+            .setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+    }
 
     companion object {
         const val TIME_INTERVAL = 2000L

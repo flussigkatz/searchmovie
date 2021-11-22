@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    fragment_details-->
+    <!--    fragment_details-->
     <dimen name="details_favorite_check_box_margin">20dp</dimen>
     <dimen name="details_favorite_check_box_size">30dp</dimen>
     <dimen name="details_poster_heigth">500dp</dimen>
@@ -8,7 +8,7 @@
     <dimen name="details_description_margin">5dp</dimen>
     <dimen name="details_progress_bar_size">50dp</dimen>
 
-<!--    film_item-->
+    <!--    film_item-->
     <dimen name="film_item_favorite_check_box_margin">2dp</dimen>
     <dimen name="film_item_favorite_check_box_size">30dp</dimen>
     <dimen name="film_item_root_width">150dp</dimen>
@@ -23,9 +23,15 @@
     <dimen name="film_item_textview_title_padding">8dp</dimen>
     <dimen name="film_item_imageview_poster_width">110dp</dimen>
 
-<!--    fragment_home-->
+    <!--    fragment_home-->
     <dimen name="home_search_view_height">60dp</dimen>
     <dimen name="home_search_view_margin_start">10dp</dimen>
     <dimen name="home_search_view_margin_top">5dp</dimen>
     <dimen name="home_search_view_margin_end">10dp</dimen>
+
+    <!--    fragment_marked-->
+    <dimen name="marked_search_view_height">60dp</dimen>
+    <dimen name="marked_search_view_margin_start">10dp</dimen>
+    <dimen name="marked_search_view_margin_top">5dp</dimen>
+    <dimen name="marked_search_view_margin_end">10dp</dimen>
 </resources>

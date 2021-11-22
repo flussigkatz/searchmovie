@@ -117,13 +117,9 @@ class Interactor(
         return repo.getAllFromDB()
     }
 
-//    fun getFavoriteFilmsFromDB(): Observable<List<Film>> {
-//        return repo.getFavoriteFromDB()
+//    fun setFavoriteMark(id: Int) {
+    //TODO: create setFavoriteMark
 //    }
-
-    fun setFavoriteMark(id: Int) {
-        //TODO: create setFavoriteMark
-    }
 
     fun getRefreshState(): BehaviorSubject<Boolean> {
         return refreshState

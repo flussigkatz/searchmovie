@@ -13,7 +13,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/home_appbar"
-        style="@style/HomeAppBar"
+        style="@style/AppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
@@ -22,8 +22,8 @@
             android:id="@+id/home_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:collapsedTitleTextAppearance="@style/HomeAppBar"
-            app:expandedTitleTextAppearance="@style/HomeAppBar"
+            app:collapsedTitleTextAppearance="@style/AppBar"
+            app:expandedTitleTextAppearance="@style/AppBar"
             app:layout_scrollFlags="scroll|snap|enterAlways"
             app:toolbarId="@+id/home_toolbar">
 

@@ -16,9 +16,9 @@ import xyz.flussikatz.searchmovie.data.ApiConstantsApp
 @Entity(tableName = "cashed_films", indices = [Index(value = ["title"], unique = true)])
 data class Film(
     @PrimaryKey val id: Int = 0,
-    @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "poster_path") val posterId: String,
-    @ColumnInfo(name = "overview") val description: String,
+    @ColumnInfo(name = "title") val title: String = "Empty",
+    @ColumnInfo(name = "poster_path") val posterId: String = "Empty",
+    @ColumnInfo(name = "overview") val description: String = "Empty",
     @ColumnInfo(name = "vote_average") var rating: Int = 0,
     var fav_state: Boolean = false
 ) : Parcelable {
