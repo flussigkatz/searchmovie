@@ -24,4 +24,14 @@ interface TmdbApi {
         @Query("page") page: Int
     ): Observable<TmdbResultsDto>
 
+    @GET("account/{account_id}/favorite/movies")
+    fun getFavoriteFilms(
+        @Path("account_id") account_id: String,
+        @Query("api_key") api_key: String,
+        @Query("session_id") session_id: String,
+        @Query("language") language: String,
+        @Query("sort_by") sort_by: String,
+        @Query("page") page: Int
+    ): Observable<TmdbResultsDto>
+
 }

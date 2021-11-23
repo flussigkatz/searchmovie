@@ -77,11 +77,11 @@ class DetailsFragment : Fragment() {
         }
 
 
-        binding.detailsBottomToolbar.setOnNavigationItemSelectedListener {
+        binding.detailsBottomToolbar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentDetails,
+                        view,
                         requireActivity(),
                         R.id.action_global_homeFragment
                     )
@@ -89,7 +89,7 @@ class DetailsFragment : Fragment() {
                 }
                 R.id.history -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentDetails,
+                        view,
                         requireActivity(),
                         R.id.action_global_historyFragment
                     )
@@ -97,9 +97,17 @@ class DetailsFragment : Fragment() {
                 }
                 R.id.marked -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentDetails,
+                        view,
                         requireActivity(),
                         R.id.action_global_markedFragment
+                    )
+                    true
+                }
+                R.id.settings -> {
+                    AnimationHelper.coverAnimation(
+                        view,
+                        requireActivity(),
+                        R.id.action_global_settingsFragment
                     )
                     true
                 }

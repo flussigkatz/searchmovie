@@ -81,12 +81,11 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
-        binding.settingsBottomToolbar.setOnNavigationItemSelectedListener {
+        binding.settingsBottomToolbar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentSettings,
+                        view,
                         requireActivity(),
                         R.id.action_global_homeFragment
                     )
@@ -94,7 +93,7 @@ class SettingsFragment : Fragment() {
                 }
                 R.id.history -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentSettings,
+                        view,
                         requireActivity(),
                         R.id.action_global_historyFragment
                     )
@@ -102,7 +101,7 @@ class SettingsFragment : Fragment() {
                 }
                 R.id.marked -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentSettings,
+                        view,
                         requireActivity(),
                         R.id.action_global_markedFragment
                     )

@@ -88,8 +88,7 @@ class HomeFragment : Fragment() {
             addItemDecoration(decorator)
         }
 
-        //TODO разобраться с устаревшим методом setOnNavigationItemSelectedListener
-        binding.homeBottomToolbar.setOnNavigationItemSelectedListener {
+        binding.homeBottomToolbar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
@@ -97,7 +96,7 @@ class HomeFragment : Fragment() {
                 }
                 R.id.history -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentHome,
+                        view,
                         requireActivity(),
                         R.id.action_global_historyFragment
                     )
@@ -105,7 +104,7 @@ class HomeFragment : Fragment() {
                 }
                 R.id.marked -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentHome,
+                        view,
                         requireActivity(),
                         R.id.action_global_markedFragment
                     )
@@ -113,7 +112,7 @@ class HomeFragment : Fragment() {
                 }
                 R.id.settings -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentHome,
+                        view,
                         requireActivity(),
                         R.id.action_global_settingsFragment
                     )
@@ -145,7 +144,7 @@ class HomeFragment : Fragment() {
             .addTo(autoDisposable)
     }
 
-    fun initSearchView() {
+    private fun initSearchView() {
 //        binding.homeSearchView.isIconifiedByDefault = false
 //        binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false
 //            println("!!!cache")

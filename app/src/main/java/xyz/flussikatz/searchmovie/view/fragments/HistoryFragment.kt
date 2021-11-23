@@ -28,11 +28,11 @@ class HistoryFragment : Fragment() {
         view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
 
-        binding.historyBottomToolbar.setOnNavigationItemSelectedListener {
+        binding.historyBottomToolbar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home_page -> {
                     AnimationHelper.coverAnimation(
-                        binding.root,
+                        view,
                         requireActivity(),
                         R.id.action_global_homeFragment
                     )
@@ -44,9 +44,17 @@ class HistoryFragment : Fragment() {
                 }
                 R.id.marked -> {
                     AnimationHelper.coverAnimation(
-                        binding.rootFragmentHistory,
+                        view,
                         requireActivity(),
                         R.id.action_global_markedFragment
+                    )
+                    true
+                }
+                R.id.settings -> {
+                    AnimationHelper.coverAnimation(
+                        view,
+                        requireActivity(),
+                        R.id.action_global_settingsFragment
                     )
                     true
                 }

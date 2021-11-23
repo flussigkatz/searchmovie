@@ -8,6 +8,7 @@ import xyz.flussikatz.searchmovie.di.modules.DomainModule
 import xyz.flussikatz.searchmovie.view.MainActivity
 import xyz.flussikatz.searchmovie.viewmodel.DetailsFragmentViewModel
 import xyz.flussikatz.searchmovie.viewmodel.HomeFragmentViewModel
+import xyz.flussikatz.searchmovie.viewmodel.MarkedFragmentViewModel
 import xyz.flussikatz.searchmovie.viewmodel.SettingsFragmentViewModel
 import javax.inject.Singleton
 
@@ -18,11 +19,13 @@ import javax.inject.Singleton
 )
 
 interface AppComponent {
-    fun inject(app: App)
+//    fun inject(app: App)
 
     fun inject(mainActivity: MainActivity)
 
     fun inject(homeFragmentViewModel: HomeFragmentViewModel)
+
+    fun inject(markedFragmentViewModel: MarkedFragmentViewModel)
 
     fun inject(settingsFragmentViewModel: SettingsFragmentViewModel)
 
