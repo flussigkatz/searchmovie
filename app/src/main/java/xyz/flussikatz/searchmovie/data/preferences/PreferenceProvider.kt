@@ -51,10 +51,33 @@ class PreferenceProvider(context: Context) {
     }
 
     fun setPlaySplashScreenState(state: Boolean) {
-        preference.edit() { putBoolean(KEY_PLAY_SPLASH_SCREEN, state)}
+        preference.edit() { putBoolean(KEY_PLAY_SPLASH_SCREEN, state) }
     }
 
     fun getPlaySplashScreenState() = preference.getBoolean(KEY_PLAY_SPLASH_SCREEN, true)
+
+    fun setBoringKillerNotificationTimeInterval() {
+        preference.edit() {
+            putLong(
+                KEY_BORING_KILLER_NOTIFICATION_TIME_INTERVAL,
+                System.currentTimeMillis() + DEFAULT_BORING_KILLER_NOTIFICATION_TIME_INTERVAL
+            )
+        }
+    }
+
+    fun getBoringKillerNotificationTimeInterval(): Long {
+        return preference.getLong(
+            KEY_BORING_KILLER_NOTIFICATION_TIME_INTERVAL,
+            System.currentTimeMillis()
+        )
+    }
+
+    fun setBoringKillerNotificationState(state: Boolean) {
+        preference.edit() { putBoolean(KEY_BORING_KILLER_NOTIFICATION_STATE, state) }
+    }
+    fun getBoringKillerNotificationState(): Boolean {
+        return preference.getBoolean(KEY_BORING_KILLER_NOTIFICATION_STATE, true)
+    }
 
     companion object {
         private const val KEY_FIRST_LAUNCH = "first_launch"
@@ -64,6 +87,10 @@ class PreferenceProvider(context: Context) {
         private const val DEFAULT_CATEGORY = "popular"
         private const val KEY_LOAD_FROM_API_TIME_INTERVAL = "load_from_api_time_interval"
         private const val DEFAULT_LOAD_FROM_API_TIME_INTERVAL = 0L
+        private const val KEY_BORING_KILLER_NOTIFICATION_STATE = "boring_killer_notification_state"
+        private const val KEY_BORING_KILLER_NOTIFICATION_TIME_INTERVAL =
+            "boring_killer_time_interval"
+        private const val DEFAULT_BORING_KILLER_NOTIFICATION_TIME_INTERVAL = 86400000L
 
 
     }

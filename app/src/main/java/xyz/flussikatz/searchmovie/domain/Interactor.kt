@@ -1,7 +1,6 @@
 package xyz.flussikatz.searchmovie.domain
 
 import android.text.format.DateFormat
-import androidx.appcompat.app.AppCompatDelegate
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -14,6 +13,7 @@ import xyz.flussikatz.searchmovie.data.ApiConstantsApp
 import xyz.flussikatz.searchmovie.data.MainRepository
 import xyz.flussikatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussikatz.searchmovie.data.entity.Film
+import xyz.flussikatz.searchmovie.data.entity.MarkedFilm
 import xyz.flussikatz.searchmovie.util.Converter
 import java.util.*
 
@@ -37,7 +37,7 @@ class Interactor(
                 Api.API_KEY,
                 lang,
                 page).map {
-                Converter.convertApiListToDtoList(it.tmdbFilms)
+                Converter.convertToFilmFromApi(it.tmdbFilms)
             }.doOnSubscribe {
                 refreshState.onNext(true)
                 do {
@@ -51,7 +51,7 @@ class Interactor(
                 eventMessage.onNext(getText(R.string.error_upload_message))
             }.subscribeOn(Schedulers.io())
                 .subscribe {
-                    repo.putToDB(it)
+                    repo.putFilmToDB(it)
                 }
         } else {
             refreshState.onNext(false)
@@ -72,17 +72,34 @@ class Interactor(
             search_query,
             page
         ).map {
-            Converter.convertApiListToDtoList(it.tmdbFilms)
+            Converter.convertToFilmFromApi(it.tmdbFilms)
         }.doOnError {
             eventMessage.onNext(getText(R.string.error_upload_message))
         }
     }
 
-    fun getFavoriteFilmsFromApi(page: Int): Observable<List<Film>> {
+//    fun getFavoriteFilmsFromApi(page: Int): Observable<List<Film>> {
+//        val lang = Locale.getDefault().run {
+//            "$language-$country"
+//        }
+//        return retrofitService.getFavoriteFilms(
+//            Api.ACCOUNT_ID,
+//            Api.API_KEY,
+//            Api.SESSION_ID,
+//            lang,
+//            ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC,
+//            page
+//        ).map {
+//            Converter.convertToFilmFromApi(it.tmdbFilms)
+//        }.doOnError {
+//            eventMessage.onNext(getText(R.string.error_upload_message))
+//        }
+//    }
+    fun getMarkedFilmsFromApi(page: Int) {
         val lang = Locale.getDefault().run {
             "$language-$country"
         }
-        return retrofitService.getFavoriteFilms(
+        retrofitService.getFavoriteFilms(
             Api.ACCOUNT_ID,
             Api.API_KEY,
             Api.SESSION_ID,
@@ -90,10 +107,18 @@ class Interactor(
             ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC,
             page
         ).map {
-            Converter.convertApiListToDtoList(it.tmdbFilms)
+            Converter.convertToMarkedFilmFromApi(it.tmdbFilms)
+        }.doOnSubscribe {
+            refreshState.onNext(true)
+        }.doOnComplete {
+            refreshState.onNext(false)
         }.doOnError {
+            refreshState.onNext(false)
             eventMessage.onNext(getText(R.string.error_upload_message))
-        }
+        }.subscribeOn(Schedulers.io())
+            .subscribe {
+                repo.putMarkedFilmToDB(it)
+            }
     }
 
     fun saveDefaultCategoryToPreferences(category: String) {
@@ -114,7 +139,10 @@ class Interactor(
     }
 
     fun getFilmsFromDB(): Observable<List<Film>> {
-        return repo.getAllFromDB()
+        return repo.getAllFilmsFromDB()
+    }
+    fun getMarkedFilmsFromDB(): Observable<List<MarkedFilm>> {
+        return repo.getAllMarkedFilmsFromDB()
     }
 
 //    fun setFavoriteMark(id: Int) {

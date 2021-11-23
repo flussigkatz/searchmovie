@@ -21,6 +21,7 @@ import xyz.flussikatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.util.AutoDisposable
+import xyz.flussikatz.searchmovie.util.Converter
 import xyz.flussikatz.searchmovie.util.addTo
 import xyz.flussikatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussikatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
@@ -50,9 +51,10 @@ class MarkedFragment : Fragment() {
 
         autoDisposable.bindTo(lifecycle)
 
-        viewModel.favoriteFilmListData
+        viewModel.markedFilmListData
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .map { Converter.convertToFilm(it) }
             .subscribe {
                 filmDataBase = it
                 filmsAdapter.addItems(it)
@@ -104,6 +106,12 @@ class MarkedFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
+                    println("!!!")
+                    filmDataBase.forEach{
+                        println("-------------------")
+                        println(it.title)
+                        println(it.fav_state)
+                    }
                     Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
                     true
                 }

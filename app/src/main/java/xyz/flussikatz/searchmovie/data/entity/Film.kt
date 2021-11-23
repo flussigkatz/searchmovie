@@ -20,7 +20,7 @@ data class Film(
     @ColumnInfo(name = "poster_path") val posterId: String = "Empty",
     @ColumnInfo(name = "overview") val description: String = "Empty",
     @ColumnInfo(name = "vote_average") var rating: Int = 0,
-    var fav_state: Boolean = false
+    @ColumnInfo(name = "marked") var fav_state: Boolean = false
 ) : Parcelable {
 
     companion object {
