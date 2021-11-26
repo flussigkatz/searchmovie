@@ -20,6 +20,11 @@ class MainRepository(private val filmDao: FilmDao) {
     fun getAllFilmsFromDB(): Observable<List<Film>>{
         return filmDao.getCashedFilms()
     }
+
+    fun getAllMarkedFilmsDBToList(): Observable<List<MarkedFilm>>{
+        return Observable.just(filmDao.getCashedMarkedFilmsToList())
+    }
+
     fun getAllMarkedFilmsFromDB(): Observable<List<MarkedFilm>>{
         return filmDao.getCashedMarkedFilms()
     }
@@ -29,7 +34,8 @@ class MainRepository(private val filmDao: FilmDao) {
         return filmDao.deleteFilms(films)
     }
 
-    /*fun deleteMarkedFilmFromDB(): Int {
-
-    }*/
+    fun deleteMarkedFilmFromDB(id: Int) {
+        val film = filmDao.getCashedOneMarkedFilm(id)
+        filmDao.deleteOneFilm(film)
+    }
 }

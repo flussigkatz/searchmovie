@@ -10,14 +10,17 @@ interface FilmDao {
     @Query("SELECT * FROM cashed_films")
     fun getCashedFilms(): Observable<List<Film>>
 
+    @Query("SELECT * FROM cashed_films")
+    fun getCashedFilmsToList(): List<Film>
+
     @Query("SELECT * FROM marked_films")
     fun getCashedMarkedFilms(): Observable<List<MarkedFilm>>
 
-    @Query("SELECT * FROM marked_films WHERE id LIKE :id")
-    fun getOneCashedMarkedFilms(id: Int): MarkedFilm
+    @Query("SELECT * FROM marked_films")
+    fun getCashedMarkedFilmsToList(): List<MarkedFilm>
 
-    @Query("SELECT * FROM cashed_films")
-    fun getCashedFilmsToList(): List<Film>
+    @Query("SELECT * FROM marked_films WHERE id LIKE :id")
+    fun getCashedOneMarkedFilm(id: Int): MarkedFilm
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllFilms(list: List<Film>)
@@ -27,4 +30,7 @@ interface FilmDao {
 
     @Delete
     fun deleteFilms(films: List<Film>): Int
+
+    @Delete
+    fun deleteOneFilm(film: MarkedFilm)
 }

@@ -11,14 +11,17 @@ import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.checkbox.MaterialCheckBox
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.*
 import xyz.flussikatz.searchmovie.*
 import xyz.flussikatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussikatz.searchmovie.data.entity.Film
+import xyz.flussikatz.searchmovie.data.entity.MarkedFilm
 import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.util.AutoDisposable
 import xyz.flussikatz.searchmovie.util.Converter
@@ -33,7 +36,8 @@ class MarkedFragment : Fragment() {
     private lateinit var binding: FragmentMarkedBinding
     private val viewModel:MarkedFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
-    private var filmDataBase = listOf<Film>()
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private var filmDataBase = mutableListOf<Film>()
 
 
     override fun onCreateView(
@@ -51,12 +55,14 @@ class MarkedFragment : Fragment() {
 
         autoDisposable.bindTo(lifecycle)
 
+        initPullToRefresh()
+
         viewModel.markedFilmListData
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { Converter.convertToFilm(it) }
             .subscribe {
-                filmDataBase = it
+                filmDataBase.addAll(it)
                 filmsAdapter.addItems(it)
             }.addTo(autoDisposable)
 
@@ -73,11 +79,15 @@ class MarkedFragment : Fragment() {
                             bundle
                         )
                     }
-                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
-                    override fun checkedChange(position: Int, state: Boolean) {
-                        filmsAdapter.items[position].fav_state = state
+                }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
+                    override fun click(film: Film, view: View) {
+                        film.fav_state = (view as MaterialCheckBox).isChecked
                         val list = filmsAdapter.items.filter { it.fav_state } as ArrayList<Film>
                         filmsAdapter.updateData(list)
+                        scope.launch {
+                            delay(500)
+                            viewModel.deleteMarkedFilmFromDB(film.id)
+                        }
                     }
                 })
             adapter = filmsAdapter
@@ -106,12 +116,6 @@ class MarkedFragment : Fragment() {
                     true
                 }
                 R.id.marked -> {
-                    println("!!!")
-                    filmDataBase.forEach{
-                        println("-------------------")
-                        println(it.title)
-                        println(it.fav_state)
-                    }
                     Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
                     true
                 }
@@ -126,6 +130,23 @@ class MarkedFragment : Fragment() {
                 else -> false
             }
         }
+    }
+
+    private fun initPullToRefresh() {
+        binding.markedRefresh.setOnRefreshListener {
+            binding.markedSearchView.clearFocus()
+            viewModel.getMarkedFilms()
+            viewModel.refreshState
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { binding.markedRefresh.isRefreshing = it }
+                .addTo(autoDisposable)
+        }
+    }
+
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
     }
 
     /*private fun initSearchView() {

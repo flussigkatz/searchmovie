@@ -50,7 +50,7 @@ class DetailsFragment : Fragment() {
 
         initProgressBarState()
 
-        val film = arguments?.get(KEY_FILM) as Film
+        val film = arguments?.get(DETAILS_FILM_KEY) as Film
         binding.film = film
 
         Picasso.get()
@@ -226,6 +226,6 @@ class DetailsFragment : Fragment() {
     }
 
     companion object {
-        private const val KEY_FILM = "film"
+        const val DETAILS_FILM_KEY = "details_film"
     }
 }

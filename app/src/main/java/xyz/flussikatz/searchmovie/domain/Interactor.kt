@@ -78,23 +78,6 @@ class Interactor(
         }
     }
 
-//    fun getFavoriteFilmsFromApi(page: Int): Observable<List<Film>> {
-//        val lang = Locale.getDefault().run {
-//            "$language-$country"
-//        }
-//        return retrofitService.getFavoriteFilms(
-//            Api.ACCOUNT_ID,
-//            Api.API_KEY,
-//            Api.SESSION_ID,
-//            lang,
-//            ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC,
-//            page
-//        ).map {
-//            Converter.convertToFilmFromApi(it.tmdbFilms)
-//        }.doOnError {
-//            eventMessage.onNext(getText(R.string.error_upload_message))
-//        }
-//    }
     fun getMarkedFilmsFromApi(page: Int) {
         val lang = Locale.getDefault().run {
             "$language-$country"
@@ -121,6 +104,10 @@ class Interactor(
             }
     }
 
+    fun deleteMarkedFilmFromDB(id: Int) {
+        repo.deleteMarkedFilmFromDB(id)
+    }
+
     fun saveDefaultCategoryToPreferences(category: String) {
         preferences.saveDefaultCategory(category)
     }
@@ -143,6 +130,10 @@ class Interactor(
     }
     fun getMarkedFilmsFromDB(): Observable<List<MarkedFilm>> {
         return repo.getAllMarkedFilmsFromDB()
+    }
+
+    fun getMarkedFilmsFromDBToList(): Observable<List<MarkedFilm>> {
+        return repo.getAllMarkedFilmsDBToList()
     }
 
 //    fun setFavoriteMark(id: Int) {
