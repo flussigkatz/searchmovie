@@ -103,7 +103,9 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val bundle = intent.getBundleExtra(BORING_KILLER_NOTIFICATION_FILM_KEY)
-        if (bundle != null) { navController.navigate(R.id.action_global_detailsFragment, bundle) }
+        if (bundle != null) {
+            navController.navigate(R.id.action_global_detailsFragment, bundle)
+        }
     }
 
     override fun onDestroy() {
@@ -145,8 +147,8 @@ class MainActivity : AppCompatActivity() {
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "Notification_Channel_1"
-            val channelName = "BORING KILLER"
-            val descriptionText = "Remember watch movie from marked list"
+            val channelName = getString(R.string.boring_killer_channel_name)
+            val descriptionText = getString(R.string.boring_killer_channel_description_text)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val nChannel = NotificationChannel(channelId, channelName, importance)
             nChannel.description = descriptionText
@@ -176,12 +178,12 @@ class MainActivity : AppCompatActivity() {
                     intentBoringKillerInit.putExtra(BORING_KILLER_NOTIFICATION_FILM_KEY, bundle)
                     val pendingIntentInit = PendingIntent.getBroadcast(
                         this@MainActivity,
-                        0,
+                        PENDINGINTENT_INIT_REQUEST_CODE,
                         intentBoringKillerInit,
                         PendingIntent.FLAG_UPDATE_CURRENT
                     )
-                    notification.setContentTitle("Boring?")
-                        .setContentText("Watch ${markedFilm.title}!")
+                    notification.setContentTitle(getString(R.string.boring_killer_title))
+                        .setContentText(getString(R.string.boring_killer_text) + markedFilm.title)
                         .setContentIntent(pendingIntentInit)
                         .setAutoCancel(true)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -190,26 +192,26 @@ class MainActivity : AppCompatActivity() {
                         intentBoringKillerOff.action = BORING_KILLER_NOTIFICATION_KEY_OFF
                         val pendingIntentOff = PendingIntent.getBroadcast(
                             this@MainActivity,
-                            0,
+                            PENDINGINTENT_OFF_REQUEST_CODE,
                             intentBoringKillerOff,
                             PendingIntent.FLAG_UPDATE_CURRENT
                         )
                         val actionBoringNotificationOff = Notification.Action.Builder(
                             null,
-                            "Off this notification",
+                            getString(R.string.boring_killer_button_text),
                             pendingIntentOff
                         ).build()
                         notification.addAction(actionBoringNotificationOff)
                     }
                     while (!stopCallback) {
                     delay(BORING_KILLER_NOTIFICATION_DELAY)
-                    if (RANDOM_CONST == (0..9).random()) {
-                        notificationManager.notify(
-                            BORING_KILLER_NOTIFICATION_ID,
-                            notification.build()
-                        )
-                    stopCallback = true
-                    }
+                        if (RANDOM_CONST == (0..9).random()) {
+                            notificationManager.notify(
+                                BORING_KILLER_NOTIFICATION_ID,
+                                notification.build()
+                            )
+                            stopCallback = true
+                        }
                     }
                 }
             }
@@ -255,15 +257,15 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-        inner class Receiver : BroadcastReceiver() {
+    inner class Receiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            when(intent?.action) {
+            when (intent?.action) {
                 BORING_KILLER_NOTIFICATION_FILM_KEY -> {
                     val activityStartIntent = Intent(context, MainActivity::class.java)
                     val bundle = intent.getBundleExtra(
                         BORING_KILLER_NOTIFICATION_FILM_KEY)
                     this@MainActivity.intent.putExtra(BORING_KILLER_NOTIFICATION_FILM_KEY, bundle)
-                    when(this@MainActivity.lifecycle.currentState) {
+                    when (this@MainActivity.lifecycle.currentState) {
                         Lifecycle.State.RESUMED -> startDetailsMarkedFilm()
                         else -> startActivity(activityStartIntent)
                     }
@@ -281,8 +283,11 @@ class MainActivity : AppCompatActivity() {
         private const val LOTTIE_ANIMATION_SPEED = 0.7F
         private const val RANDOM_CONST = 6
         private const val HOME_FRAGMENT_LABEL = "fragment_home"
-        private const val BORING_KILLER_NOTIFICATION_FILM_KEY = "boring_killer_notification_film_key"
+        private const val BORING_KILLER_NOTIFICATION_FILM_KEY =
+            "boring_killer_notification_film_key"
         private const val BORING_KILLER_NOTIFICATION_KEY_OFF = "boring_killer_notification_off"
+        private const val PENDINGINTENT_OFF_REQUEST_CODE = 0
+        private const val PENDINGINTENT_INIT_REQUEST_CODE = 1
         private const val BORING_KILLER_NOTIFICATION_ID = 456
         private const val BORING_KILLER_NOTIFICATION_DELAY = 60000L
         private const val TIME_INTERVAL = 2000L

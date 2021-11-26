@@ -23,5 +23,11 @@
     <string name="open">Открыть</string>
     <string name="downladed_to_galery">Сохранено в галерею.</string>
     <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение.</string>
+    <string name="boring_killer_title">"Скучно?"</string>
+    <string name="boring_killer_text">"Посмотри "</string>
+    <string name="boring_killer_button_text">"Больше не показывать"</string>
+    <string name="boring_killer_channel_name">"УБИЙЦА СКУКИ"</string>
+    <string name="boring_killer_channel_description_text">"Не забудьте посмотреть фильм из списка отмеченных"</string>
+
 
 </resources>

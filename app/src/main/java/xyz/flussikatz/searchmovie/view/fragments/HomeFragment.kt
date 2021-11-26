@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
                         val bundle = Bundle()
-                        bundle.putParcelable("film", film)
+                        bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
                         AnimationHelper.coverAnimation(
                             binding.rootFragmentHome,
                             requireActivity(),
