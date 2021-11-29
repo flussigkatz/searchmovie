@@ -25,8 +25,6 @@
     <string name="boring_killer_title">"Boring?"</string>
     <string name="boring_killer_text">"Watch "</string>
     <string name="boring_killer_button_text">"Do not show again"</string>
-    <string name="boring_killer_channel_name">"BORING KILLER"</string>
-    <string name="boring_killer_channel_description_text">"Don't forget to watch a movie from the marked list"</string>
 
 
 </resources>

@@ -3,15 +3,11 @@ package xyz.flussikatz.searchmovie.view
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -31,7 +27,8 @@ import xyz.flussikatz.searchmovie.util.AnimationHelper
 import xyz.flussikatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussikatz.searchmovie.domain.Interactor
 import xyz.flussikatz.searchmovie.util.Converter
-import xyz.flussikatz.searchmovie.view.fragments.DetailsFragment
+import xyz.flussikatz.searchmovie.view.notification.NotificationConstants
+import xyz.flussikatz.searchmovie.view.notification.NotificationHelper
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -44,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var interactor: Interactor
     private lateinit var binding: ActivityMainBinding
     private lateinit var notificationManager: NotificationManager
-    private lateinit var notification: Notification.Builder
+    private val notification = NotificationHelper.notification
     private val scope = CoroutineScope(Dispatchers.IO)
     private val receiver = Receiver()
 
@@ -60,13 +57,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
-        initNotification()
-
         initBoringNotification()
 
         val filter = IntentFilter().also {
-            it.addAction(BORING_KILLER_NOTIFICATION_FILM_KEY)
-            it.addAction(BORING_KILLER_NOTIFICATION_KEY_OFF)
+            it.addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)
+            it.addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_KEY_OFF)
         }
 
         registerReceiver(receiver, filter)
@@ -102,7 +97,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val bundle = intent.getBundleExtra(BORING_KILLER_NOTIFICATION_FILM_KEY)
+        val bundle = intent.getBundleExtra(
+            NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY
+        )
         if (bundle != null) {
             navController.navigate(R.id.action_global_detailsFragment, bundle)
         }
@@ -143,71 +140,20 @@ class MainActivity : AppCompatActivity() {
         lottieAnimationView.playAnimation()
     }
 
-    fun initNotification() {
-        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "Notification_Channel_1"
-            val channelName = getString(R.string.boring_killer_channel_name)
-            val descriptionText = getString(R.string.boring_killer_channel_description_text)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val nChannel = NotificationChannel(channelId, channelName, importance)
-            nChannel.description = descriptionText
-            notificationManager.createNotificationChannel(nChannel)
-            notification = Notification.Builder(this, channelId)
-                .setTimeoutAfter(60000)
-        } else {
-            @Suppress("DEPRECATION")
-            notification = Notification.Builder(this)
-        }
-    }
-
     fun initBoringNotification() {
         if (checkBoringKillerState()) {
+            notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             scope.launch {
                 var stopCallback = false
                 val def = async { getMarkedFilm() }
-                val markedFilm = def.await()
-                if (markedFilm != null) {
-                    val bundle = Bundle()
-                    val intentBoringKillerInit = Intent()
-                    intentBoringKillerInit.action = BORING_KILLER_NOTIFICATION_FILM_KEY
-                    bundle.putParcelable(
-                        DetailsFragment.DETAILS_FILM_KEY,
-                        markedFilm
-                    )
-                    intentBoringKillerInit.putExtra(BORING_KILLER_NOTIFICATION_FILM_KEY, bundle)
-                    val pendingIntentInit = PendingIntent.getBroadcast(
-                        this@MainActivity,
-                        PENDINGINTENT_INIT_REQUEST_CODE,
-                        intentBoringKillerInit,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                    notification.setContentTitle(getString(R.string.boring_killer_title))
-                        .setContentText(getString(R.string.boring_killer_text) + markedFilm.title)
-                        .setContentIntent(pendingIntentInit)
-                        .setAutoCancel(true)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        val intentBoringKillerOff = Intent()
-                        intentBoringKillerOff.action = BORING_KILLER_NOTIFICATION_KEY_OFF
-                        val pendingIntentOff = PendingIntent.getBroadcast(
-                            this@MainActivity,
-                            PENDINGINTENT_OFF_REQUEST_CODE,
-                            intentBoringKillerOff,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                        )
-                        val actionBoringNotificationOff = Notification.Action.Builder(
-                            null,
-                            getString(R.string.boring_killer_button_text),
-                            pendingIntentOff
-                        ).build()
-                        notification.addAction(actionBoringNotificationOff)
-                    }
+                val film = def.await()
+                if (film != null) {
+                    NotificationHelper.createBoringKillerNotification(this@MainActivity, film)
                     while (!stopCallback) {
-                    delay(BORING_KILLER_NOTIFICATION_DELAY)
-                        if (RANDOM_CONST == (0..9).random()) {
+                        delay(NotificationConstants.BORING_KILLER_NOTIFICATION_DELAY)
+                        if (NotificationConstants.RANDOM_CONST == (0..9).random()) {
                             notificationManager.notify(
-                                BORING_KILLER_NOTIFICATION_ID,
+                                NotificationConstants.BORING_KILLER_NOTIFICATION_ID,
                                 notification.build()
                             )
                             stopCallback = true
@@ -240,7 +186,7 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(
             R.id.action_global_detailsFragment,
             intent?.getBundleExtra(
-                BORING_KILLER_NOTIFICATION_FILM_KEY
+                NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY
             )
         )
     }
@@ -260,20 +206,21 @@ class MainActivity : AppCompatActivity() {
     inner class Receiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
-                BORING_KILLER_NOTIFICATION_FILM_KEY -> {
+                NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY -> {
                     val activityStartIntent = Intent(context, MainActivity::class.java)
                     val bundle = intent.getBundleExtra(
-                        BORING_KILLER_NOTIFICATION_FILM_KEY)
-                    this@MainActivity.intent.putExtra(BORING_KILLER_NOTIFICATION_FILM_KEY, bundle)
+                        NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)
+                    this@MainActivity.intent.putExtra(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY,
+                        bundle)
                     when (this@MainActivity.lifecycle.currentState) {
                         Lifecycle.State.RESUMED -> startDetailsMarkedFilm()
                         else -> startActivity(activityStartIntent)
                     }
                     preferences.setBoringKillerNotificationTimeInterval()
                 }
-                BORING_KILLER_NOTIFICATION_KEY_OFF -> {
+                NotificationConstants.BORING_KILLER_NOTIFICATION_KEY_OFF -> {
                     preferences.setBoringKillerNotificationState(false)
-                    notificationManager.cancel(BORING_KILLER_NOTIFICATION_ID)
+                    notificationManager.cancel(NotificationConstants.BORING_KILLER_NOTIFICATION_ID)
                 }
             }
         }
@@ -281,15 +228,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val LOTTIE_ANIMATION_SPEED = 0.7F
-        private const val RANDOM_CONST = 6
         private const val HOME_FRAGMENT_LABEL = "fragment_home"
-        private const val BORING_KILLER_NOTIFICATION_FILM_KEY =
-            "boring_killer_notification_film_key"
-        private const val BORING_KILLER_NOTIFICATION_KEY_OFF = "boring_killer_notification_off"
-        private const val PENDINGINTENT_OFF_REQUEST_CODE = 0
-        private const val PENDINGINTENT_INIT_REQUEST_CODE = 1
-        private const val BORING_KILLER_NOTIFICATION_ID = 456
-        private const val BORING_KILLER_NOTIFICATION_DELAY = 60000L
         private const val TIME_INTERVAL = 2000L
     }
 
