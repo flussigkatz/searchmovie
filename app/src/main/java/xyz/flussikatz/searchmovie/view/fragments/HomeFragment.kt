@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.checkbox.MaterialCheckBox
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
@@ -30,7 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
-    private var filmDataBase = listOf<Film>()
+    private var filmDataBase = mutableListOf<Film>()
 
 
     override fun onCreateView(
@@ -51,7 +52,7 @@ class HomeFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                filmDataBase = it
+                filmDataBase.addAll(it)
                 filmsAdapter.addItems(it)
             }.addTo(autoDisposable)
 
@@ -69,7 +70,7 @@ class HomeFragment : Fragment() {
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
                         val bundle = Bundle()
-                        bundle.putParcelable("film", film)
+                        bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
                         AnimationHelper.coverAnimation(
                             binding.rootFragmentHome,
                             requireActivity(),
@@ -77,9 +78,10 @@ class HomeFragment : Fragment() {
                             bundle
                         )
                     }
-                }, object : FilmListRecyclerAdapter.OnCheckedChangeListener {
-                    override fun checkedChange(position: Int, state: Boolean) {
-                        filmsAdapter.items[position].fav_state = state
+                }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
+                    override fun click(film: Film, view: View) {
+//                        filmsAdapter.items[position].fav_state = state
+                        film.fav_state = (view as MaterialCheckBox).isChecked
                     }
                 })
             adapter = filmsAdapter
@@ -153,7 +155,7 @@ class HomeFragment : Fragment() {
 //            binding.homeSearchView.clearFocus()
 //            true
 //        }
-        //TODO: Deal with isIconified
+        //TODO: Deal with isIconified and filmDataBase
         Observable.create(ObservableOnSubscribe<String> { sub ->
             binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -171,7 +173,10 @@ class HomeFragment : Fragment() {
             .debounce(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .filter {
-                if (it.isNullOrBlank()) filmsAdapter.addItems(filmDataBase)
+                if (it.isNullOrBlank()) {
+                    filmsAdapter.addItems(filmDataBase)
+                    filmDataBase.clear()
+                }
                 it.isNotEmpty()
             }.observeOn(Schedulers.io())
             .flatMap {

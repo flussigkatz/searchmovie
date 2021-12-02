@@ -22,5 +22,9 @@
     <string name="open">Open</string>
     <string name="downladed_to_galery">Saved to the gallery.</string>
     <string name="permission_storage">No permission. Please grant permission</string>
+    <string name="boring_killer_title">"Boring?"</string>
+    <string name="boring_killer_text">"Watch "</string>
+    <string name="boring_killer_button_text">"Do not show again"</string>
+
 
 </resources>

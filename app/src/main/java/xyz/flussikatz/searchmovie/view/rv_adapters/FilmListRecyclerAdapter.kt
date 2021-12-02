@@ -1,6 +1,7 @@
 package xyz.flussikatz.searchmovie.view.rv_adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +12,7 @@ import xyz.flussikatz.searchmovie.view.rv_viewholder.FilmViewHolder
 
 class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
-    private val checkedListener: OnCheckedChangeListener
+    private val checkboxClickListener: OnCheckboxClickListener
 ) : RecyclerView.Adapter<FilmViewHolder>() {
     var items = ArrayList<Film>()
 
@@ -25,8 +26,8 @@ class FilmListRecyclerAdapter(
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
         holder.binding.film = items[position]
 
-        holder.binding.favoriteCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            checkedListener.checkedChange(holder.bindingAdapterPosition, isChecked)
+        holder.binding.favoriteCheckBox.setOnClickListener {
+            checkboxClickListener.click(items[position], it)
         }
 
         holder.binding.filmItemCardview.setOnClickListener {
@@ -54,7 +55,7 @@ class FilmListRecyclerAdapter(
         fun click(film: Film)
     }
 
-    interface OnCheckedChangeListener {
-        fun checkedChange(position: Int, state: Boolean)
+    interface OnCheckboxClickListener {
+        fun click(film: Film, view: View)
     }
 }

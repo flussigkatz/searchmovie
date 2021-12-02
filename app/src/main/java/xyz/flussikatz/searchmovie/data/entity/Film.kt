@@ -28,7 +28,7 @@ data class Film(
         @JvmStatic
         fun setImage(view: ImageView, image: String) {
             Picasso.get()
-                .load(ApiConstantsApp.IMAGES_URL + "w154" + image)
+                .load(ApiConstantsApp.IMAGES_URL + ApiConstantsApp.IMAGE_FORMAT_W154 + image)
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.wait)

@@ -31,7 +31,7 @@ object Converter {
                     title = it.title,
                     posterId = it.posterId,
                     description = it.description,
-                    rating = (it.rating * 10),
+                    rating = it.rating,
                     fav_state = it.fav_state
                 )
             )
