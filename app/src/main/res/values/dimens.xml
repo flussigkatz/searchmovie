@@ -34,4 +34,7 @@
     <dimen name="marked_search_view_margin_start">10dp</dimen>
     <dimen name="marked_search_view_margin_top">5dp</dimen>
     <dimen name="marked_search_view_margin_end">10dp</dimen>
+
+    <!--    fragment_settings-->
+    <dimen name="title_margin">8dp</dimen>
 </resources>

@@ -26,6 +26,7 @@
     <string name="boring_killer_title">"Скучно?"</string>
     <string name="boring_killer_text">"Посмотри "</string>
     <string name="boring_killer_button_text">"Больше не показывать"</string>
+    <string name="settings_splash_screen_title">"Анимация запуска"</string>
 
 
 </resources>

@@ -11,11 +11,13 @@ class SettingsFragmentViewModel : ViewModel() {
     lateinit var interactor: Interactor
     val categoryPropertyLifeData: MutableLiveData<String> = MutableLiveData()
     val themePropertyLifeData: MutableLiveData<Int> = MutableLiveData()
+    val splashScreenPropertyLifeData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         App.instance.dagger.inject(this)
         getCategoryProperty()
         getThemeProperty()
+        getSplashScreenProperty()
     }
 
     private fun getCategoryProperty() {
@@ -34,5 +36,14 @@ class SettingsFragmentViewModel : ViewModel() {
     fun putThemeProperty(theme: Int) {
         interactor.setDefaultTheme(theme)
         getThemeProperty()
+    }
+
+    fun getSplashScreenProperty() {
+        splashScreenPropertyLifeData.value = interactor.getSplashScreenStateFromPreferences()
+    }
+
+    fun putSplashScreenProperty(state: Boolean) {
+        interactor.setSplashScreenState(state)
+        getSplashScreenProperty()
     }
 }

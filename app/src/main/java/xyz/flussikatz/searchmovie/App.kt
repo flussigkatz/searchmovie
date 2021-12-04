@@ -35,7 +35,8 @@ class App : Application() {
     }
 
     fun initTheme(theme: Int) {
-        AppCompatDelegate.setDefaultNightMode(theme)
+//        AppCompatDelegate.setDefaultNightMode(theme)
+        //TODO: create init theme
     }
 
     companion object {

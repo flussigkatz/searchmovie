@@ -125,6 +125,14 @@ class Interactor(
         return preferences.getDefaultTheme()
     }
 
+    fun setSplashScreenState(state: Boolean) {
+        preferences.setPlaySplashScreenState(state)
+    }
+
+    fun getSplashScreenStateFromPreferences(): Boolean {
+        return preferences.getPlaySplashScreenState()
+    }
+
     fun getFilmsFromDB(): Observable<List<Film>> {
         return repo.getAllFilmsFromDB()
     }
