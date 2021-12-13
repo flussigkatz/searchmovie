@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
-//        initBoringNotification()
+        initBoringNotification()
 
 
         val filter = IntentFilter().also {

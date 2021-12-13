@@ -45,6 +45,40 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    flavorDimensions "api"
+
+    productFlavors {
+        api21 {
+            dimension "api"
+            minSdkVersion 21
+        }
+        api23 {
+            dimension "api"
+            minSdkVersion 23
+        }
+        api26 {
+            dimension "api"
+            minSdkVersion 26
+        }
+    }
+    sourceSets {
+        api21 {
+            java {
+                srcDirs 'src\\api21\\java'
+            }
+        }
+        api26 {
+            java {
+                srcDirs 'src\\api26\\java'
+            }
+        }
+        api23 {
+            java {
+                srcDirs 'src\\api23\\java'
+            }
+        }
+    }
 }
 
 dependencies {

@@ -17,7 +17,6 @@ object NotificationHelper {
 
     fun initNotification(context: Context) {
         val notificationManager = NotificationManagerCompat.from(context)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelName = "BORING_KILLER"
             val descriptionText = "Don't forget to watch a movie from the marked list"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -32,10 +31,6 @@ object NotificationHelper {
                 context,
                 NotificationConstants.NOTIFICATION_CHANNEL_ID
             )
-        } else {
-            @Suppress("DEPRECATION")
-            notification = Notification.Builder(context)
-        }
     }
 
     fun createBoringKillerNotification(context: Context, bundle: Bundle) {
@@ -61,7 +56,6 @@ object NotificationHelper {
                 .setContentIntent(pendingIntentInit)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val intentBoringKillerOff = Intent()
                 intentBoringKillerOff.action =
                     NotificationConstants.BORING_KILLER_NOTIFICATION_OFF_KEY
@@ -77,7 +71,6 @@ object NotificationHelper {
                     pendingIntentOff
                 ).build()
                 notification.addAction(actionBoringNotificationOff)
-            }
             notificationManager.notify(
                 NotificationConstants.BORING_KILLER_NOTIFICATION_ID,
                 notification.build()
