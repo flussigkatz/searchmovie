@@ -25,6 +25,7 @@
     <string name="boring_killer_title">"Boring?"</string>
     <string name="boring_killer_text">"Watch "</string>
     <string name="boring_killer_button_text">"Do not show again"</string>
+    <string name="settings_splash_screen_title">"Launch animation"</string>
 
 
 </resources>

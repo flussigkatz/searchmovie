@@ -21,6 +21,8 @@ class MainRepository(private val filmDao: FilmDao) {
         return filmDao.getCashedFilms()
     }
 
+
+    //TODO: Error if null
     fun getAllMarkedFilmsDBToList(): Observable<List<MarkedFilm>>{
         return Observable.just(filmDao.getCashedMarkedFilmsToList())
     }

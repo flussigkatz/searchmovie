@@ -7,8 +7,6 @@ import xyz.flussikatz.searchmovie.view.notification.NotificationConstants
 import xyz.flussikatz.searchmovie.view.notification.NotificationHelper
 
 
-
-
 class SearchMovieReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

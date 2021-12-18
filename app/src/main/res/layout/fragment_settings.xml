@@ -33,9 +33,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/title_margin"
                 android:text="@string/category_radio_group_header"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:layout_gravity="center|start"
                 android:textColor="@color/white" />
 
             <RadioButton
@@ -88,9 +89,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/title_margin"
                 android:text="@string/theme_radio_group_header"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:layout_gravity="center|start"
                 android:textColor="@color/white" />
 
             <RadioButton
@@ -124,6 +126,32 @@
         </RadioGroup>
 
     </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/black_alpha_60"
+            android:layout_margin="10dp"
+            android:elevation="0dp"
+            app:cardCornerRadius="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white"
+                android:text="@string/settings_splash_screen_title"
+                android:layout_margin="@dimen/title_margin"
+                android:layout_gravity="center|start"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/settings_splash_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:trackTint="@color/white_alpha_20"
+                android:layout_gravity="end"/>
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

@@ -59,7 +59,11 @@ class SettingsFragment : Fragment() {
             }
         })
 
-        binding.settingsRadioGroupCategory.setOnCheckedChangeListener { group, chekedId ->
+        viewModel.splashScreenPropertyLifeData.observe(viewLifecycleOwner, Observer<Boolean> {
+            binding.settingsSplashScreen.isChecked = it
+        })
+
+        binding.settingsRadioGroupCategory.setOnCheckedChangeListener { _, chekedId ->
             when (chekedId) {
                 R.id.radio_popular -> viewModel.putCategoryProperty(POPULAR_CATEGORY)
                 R.id.radio_top_rated -> viewModel.putCategoryProperty(TOP_RATED_CATEGORY)
@@ -68,7 +72,7 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        binding.settingsRadioGroupTheme.setOnCheckedChangeListener { group, chekedId ->
+        binding.settingsRadioGroupTheme.setOnCheckedChangeListener { _, chekedId ->
             when (chekedId) {
                 R.id.radio_light ->
                     viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_NO)
@@ -113,6 +117,10 @@ class SettingsFragment : Fragment() {
                 }
                 else -> false
             }
+        }
+
+        binding.settingsSplashScreen.setOnCheckedChangeListener { _, chekedId ->
+            viewModel.putSplashScreenProperty(chekedId)
         }
     }
 
