@@ -7,6 +7,10 @@ plugins {
 
 apply from: "$project.rootDir/dependencies.gradle"
 
+apply plugin: 'com.android.application'
+
+apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -87,6 +91,7 @@ dependencies {
 
     //Core-ktx
     implementation core_ktx
+    implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
 
     //Legacy
     def legacy_support_version = "1.0.0"
@@ -145,4 +150,8 @@ dependencies {
 
     implementation project(':core:core_api')
     implementation project(':remote_module')
+
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

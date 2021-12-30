@@ -2,6 +2,7 @@ package xyz.flussigkatz.searchmovie.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
@@ -13,7 +14,7 @@ class SettingsFragmentViewModel : ViewModel() {
     val splashScreenPropertyLifeData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        xyz.flussigkatz.searchmovie.App.instance.dagger.inject(this)
+        App.instance.dagger.inject(this)
         getCategoryProperty()
         getThemeProperty()
         getSplashScreenProperty()

@@ -1,12 +1,16 @@
 package xyz.flussigkatz.searchmovie.domain
 
 import android.text.format.DateFormat
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID
+import xyz.flussigkatz.searchmovie.data.Api.API_KEY
+import xyz.flussigkatz.searchmovie.data.Api.SESSION_ID
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussigkatz.searchmovie.data.entity.Film
@@ -31,7 +35,7 @@ class Interactor(
         if (checkUploadInterval()) {
             retrofitService.getFilms(
                 getDefaultCategoryFromPreferences(),
-                xyz.flussigkatz.searchmovie.data.Api.API_KEY,
+                API_KEY,
                 lang,
                 page).map {
                 Converter.convertToFilmFromApi(it.tmdbFilms)
@@ -57,6 +61,18 @@ class Interactor(
             )
         }
     }
+    fun getSpecificFilmFromApi(id: String): Observable<Film> {
+        val lang = Locale.getDefault().run {
+            "$language-$country"
+        }
+        return retrofitService.getSpecificFilm(id, API_KEY, lang)
+            .filter {it != null}
+            .map { Converter.convertToFilmFromApi(it) }
+            .doOnError {
+                println(it.message)
+            }.observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+    }
 
     //TODO: При введении "вен" ошибка
     fun getSearchedFilmsFromApi(search_query: String, page: Int): Observable<List<Film>> {
@@ -64,7 +80,7 @@ class Interactor(
             "$language-$country"
         }
         return retrofitService.getSearchedFilms(
-            xyz.flussigkatz.searchmovie.data.Api.API_KEY,
+            API_KEY,
             lang,
             search_query,
             page
@@ -80,9 +96,9 @@ class Interactor(
             "$language-$country"
         }
         retrofitService.getFavoriteFilms(
-            xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID,
-            xyz.flussigkatz.searchmovie.data.Api.API_KEY,
-            xyz.flussigkatz.searchmovie.data.Api.SESSION_ID,
+            ACCOUNT_ID,
+            API_KEY,
+            SESSION_ID,
             lang,
             xyz.flussigkatz.searchmovie.data.ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC,
             page
@@ -137,7 +153,7 @@ class Interactor(
         return repo.getAllMarkedFilmsFromDB()
     }
 
-    fun getMarkedFilmsFromDBToList(): Observable<List<MarkedFilm>> {
+    fun getMarkedFilmsFromDBToList(): Observable<List<MarkedFilm>>? {
         return repo.getAllMarkedFilmsDBToList()
     }
 

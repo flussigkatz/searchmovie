@@ -23,6 +23,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W500
 import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.DetailsFragmentViewModel
@@ -53,7 +55,7 @@ class DetailsFragment : Fragment() {
         binding.film = film
 
         Picasso.get()
-            .load(xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL + xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W500 + film.posterId)
+            .load(IMAGES_URL + IMAGE_FORMAT_W500 + film.posterId)
             .fit()
             .centerCrop()
             .placeholder(R.drawable.wait)

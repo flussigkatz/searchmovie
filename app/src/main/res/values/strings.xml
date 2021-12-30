@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SearchMovie</string>
     <string name="home_page">Home page</string>
@@ -26,6 +27,8 @@
     <string name="boring_killer_text">"Watch "</string>
     <string name="boring_killer_button_text">"Do not show again"</string>
     <string name="settings_splash_screen_title">"Launch animation"</string>
+    <string name="bottom_sheet_text_collapsed">"Pull me"</string>
+    <string name="bottom_sheet_text_expanded">"Watched?"</string>
 
 
 </resources>

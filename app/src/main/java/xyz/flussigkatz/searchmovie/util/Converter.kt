@@ -1,5 +1,6 @@
 package xyz.flussigkatz.searchmovie.util
 
+import xyz.flussigkatz.remote_module.entity.TmdbSpecificFilmDto
 import xyz.flussigkatz.searchmovie.data.entity.TmdbFilm
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.data.entity.MarkedFilm
@@ -20,6 +21,18 @@ object Converter {
             )
         }
         return result
+    }
+    fun convertToFilmFromApi(film: TmdbSpecificFilmDto): Film {
+            val result = Film(
+                id = film.id,
+                title = film.title,
+                posterId = film.posterPath,
+                description = film.overview,
+                rating = (film.voteAverage * 10).toInt(),
+                fav_state = false
+            )
+           return result
+
     }
 
     fun convertToFilm(list: List<MarkedFilm>): List<Film> {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class HomeFragmentViewModel : ViewModel() {
     lateinit var interactor: Interactor
 
     init {
-        xyz.flussigkatz.searchmovie.App.instance.dagger.inject(this)
+        App.instance.dagger.inject(this)
         filmListData = interactor.getFilmsFromDB()
         refreshState = interactor.getRefreshState()
         eventMessage = interactor.getEventMessage()

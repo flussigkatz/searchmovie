@@ -3,6 +3,7 @@ package xyz.flussigkatz.searchmovie.viewmodel
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.entity.MarkedFilm
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
@@ -16,7 +17,7 @@ class MarkedFragmentViewModel : ViewModel() {
 
 
     init {
-        xyz.flussigkatz.searchmovie.App.instance.dagger.inject(this)
+        App.instance.dagger.inject(this)
         getMarkedFilms()
         markedFilmListData = interactor.getMarkedFilmsFromDB()
         refreshState = interactor.getRefreshState()

@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import xyz.flussigkatz.remote_module.entity.TmdbSpecificFilmDto
 import xyz.flussigkatz.searchmovie.data.entity.TmdbResultsDto
 
 interface TmdbApi {
@@ -14,6 +15,13 @@ interface TmdbApi {
         @Query("language") language: String,
         @Query("page") page: Int,
     ): Observable<TmdbResultsDto>
+
+    @GET("movie/{id}")
+    fun getSpecificFilm(
+        @Path("id") id: String,
+        @Query("api_key") api_key: String,
+        @Query("language") language: String,
+    ): Observable<TmdbSpecificFilmDto>
 
     @GET("search/movie")
     fun getSearchedFilms(

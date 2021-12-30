@@ -9,21 +9,28 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.*
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp
 import xyz.flussigkatz.searchmovie.data.entity.Film
-import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
-import xyz.flussigkatz.searchmovie.util.Converter
-import xyz.flussigkatz.searchmovie.util.SplashScreenHelper
+import xyz.flussigkatz.searchmovie.util.*
 import xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants
 import javax.inject.Inject
@@ -35,9 +42,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManagerCompat
     private val scope = CoroutineScope(Dispatchers.IO)
     private val receiver = Receiver()
+    private var film: Film? = null
+    private val autoDisposable = AutoDisposable()
+    private val bottomSheetState = BehaviorSubject.create<Int>()
+    lateinit var bottomSheetPoster: BottomSheetBehavior<LinearLayout>
 
     init {
-        xyz.flussigkatz.searchmovie.App.instance.dagger.inject(this)
+        App.instance.dagger.inject(this)
     }
 
     lateinit var navController: NavController
@@ -48,8 +59,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
+        autoDisposable.bindTo(lifecycle)
+
         initBoringNotification()
 
+        bottomSheetPoster = BottomSheetBehavior.from(binding.mainBottomSheetPoster)
+        bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
+        initRecommendationFromRemoteConfig()
 
         val filter = IntentFilter().also {
             it.addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)
@@ -106,24 +122,75 @@ class MainActivity : AppCompatActivity() {
         var film: Film? = null
         notificationManager = NotificationManagerCompat.from(this)
         scope.launch {
-            interactor.getMarkedFilmsFromDBToList()
-                .subscribeOn(Schedulers.io())
-                .doOnComplete {
-                    if (film != null) {
-                        setWatchFilmReminder(this@MainActivity, film!!)
-                    } else {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "No one marked film",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-                }.map { Converter.convertToFilm(it) }
-                .subscribe {
-                    film = it.get((0..it.size - 1).random())
+            val markedFilm = interactor.getMarkedFilmsFromDBToList()
+            markedFilm?.subscribeOn(Schedulers.io())?.doOnComplete {
+                if (film != null) {
+                    setWatchFilmReminder(this@MainActivity, film!!)
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "No one marked film",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
+            }?.map { Converter.convertToFilm(it) }?.subscribe {
+                film = it.get((0..it.size - 1).random())
+            }
         }
+    }
+
+    fun initRecommendationFromRemoteConfig() {
+        val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+        val firebaseRemoteConfigSettings = FirebaseRemoteConfigSettings.Builder().build()
+        mFirebaseRemoteConfig.setConfigSettingsAsync(firebaseRemoteConfigSettings)
+        mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this) {
+            if (it.isSuccessful) {
+                mFirebaseRemoteConfig.activate()
+                val filmId = mFirebaseRemoteConfig.getString("film")
+                if (!filmId.isBlank()) {
+                    interactor.getSpecificFilmFromApi(filmId)
+                        .subscribe {
+                            film = it
+                            bottomSheetPoster.state = BottomSheetBehavior.STATE_COLLAPSED
+                            scope.launch {
+                                while (bottomSheetPoster.state != BottomSheetBehavior.STATE_HIDDEN) {
+                                    val state = bottomSheetPoster.state
+                                    when (state) {
+                                        BottomSheetBehavior.STATE_COLLAPSED -> bottomSheetState.onNext(state)
+                                        BottomSheetBehavior.STATE_EXPANDED -> bottomSheetState.onNext(state)
+                                    }
+                                }
+                            }
+                            Picasso.get()
+                                .load(ApiConstantsApp.IMAGES_URL + ApiConstantsApp.IMAGE_FORMAT_W500 + it.posterId)
+                                .fit()
+                                .centerCrop()
+                                .placeholder(R.drawable.wait)
+                                .error(R.drawable.err)
+                                .into(binding.bottomSheetImage)
+                        }
+                    bottomSheetState.subscribe{
+                        when(it) {
+                            BottomSheetBehavior.STATE_COLLAPSED ->
+                                binding.bottomSheetText.text = getText(R.string.bottom_sheet_text_collapsed)
+                            BottomSheetBehavior.STATE_EXPANDED ->
+                                binding.bottomSheetText.text = getText(R.string.bottom_sheet_text_expanded)
+                        }
+                    }.addTo(autoDisposable)
+                }
+            }
+        }
+    }
+
+    fun clickOnImage(v: View) {
+        if (film != null) {
+            val bundle = Bundle()
+            bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+            navController.navigate(R.id.action_global_detailsFragment, bundle)
+            bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
     }
 
     private fun startDetailsMarkedFilm(intent: Intent?) {
@@ -137,7 +204,10 @@ class MainActivity : AppCompatActivity() {
 
     fun setWatchFilmReminder(context: Context, film: Film) {
         val bundle = Bundle()
-        val intentBoringKillerAlarm = Intent(context, xyz.flussigkatz.searchmovie.SearchMovieReceiver::class.java)
+        val intentBoringKillerAlarm = Intent(
+            context,
+            xyz.flussigkatz.searchmovie.SearchMovieReceiver::class.java
+        )
         val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
         intentBoringKillerAlarm.action = NotificationConstants.BORING_KILLER_NOTIFICATION_ALARM
         bundle.putParcelable(
@@ -155,7 +225,7 @@ class MainActivity : AppCompatActivity() {
         )
         alarmManager.set(
             AlarmManager.RTC,
-            System.currentTimeMillis() + 10 * 1000,
+            System.currentTimeMillis() + 10,
             pendingIntentAlarm
         )
     }
