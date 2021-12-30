@@ -5,28 +5,28 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="xyz.flussikatz.searchmovie.view.fragments.DetailsFragment"
+        android:name="xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details"/>
     <fragment
         android:id="@+id/markedFragment"
-        android:name="xyz.flussikatz.searchmovie.view.fragments.MarkedFragment"
+        android:name="xyz.flussigkatz.searchmovie.view.fragments.MarkedFragment"
         android:label="fragment_marked"
         tools:layout="@layout/fragment_marked" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="xyz.flussikatz.searchmovie.view.fragments.HomeFragment"
+        android:name="xyz.flussigkatz.searchmovie.view.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/historyFragment"
-        android:name="xyz.flussikatz.searchmovie.view.fragments.HistoryFragment"
+        android:name="xyz.flussigkatz.searchmovie.view.fragments.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="xyz.flussikatz.searchmovie.view.fragments.SettingsFragment"
+        android:name="xyz.flussigkatz.searchmovie.view.fragments.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <action

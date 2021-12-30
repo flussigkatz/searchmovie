@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="xyz.flussikatz.searchmovie.data.entity.Film"/>
+        <import type="xyz.flussigkatz.searchmovie.data.entity.Film"/>
 
         <variable
             name="film"
-            type="xyz.flussikatz.searchmovie.data.entity.Film" />
+            type="xyz.flussigkatz.searchmovie.data.entity.Film" />
 
     </data>
 
@@ -19,7 +19,7 @@
         android:layout_height="@dimen/film_item_root_width">
 
 
-        <xyz.flussikatz.searchmovie.view.customview.RatingDonutView
+        <xyz.flussigkatz.searchmovie.view.customview.RatingDonutView
             android:id="@+id/rating_donut"
             rating="@{film.rating}"
             android:layout_width="@dimen/film_item_rating_donut_size"
