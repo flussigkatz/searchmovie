@@ -43,8 +43,6 @@ class MainActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.IO)
     private val receiver = Receiver()
     private var film: Film? = null
-    private val autoDisposable = AutoDisposable()
-    private val bottomSheetState = BehaviorSubject.create<Int>()
     lateinit var bottomSheetPoster: BottomSheetBehavior<LinearLayout>
 
     init {
@@ -58,8 +56,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
-
-        autoDisposable.bindTo(lifecycle)
 
         initBoringNotification()
 
@@ -149,19 +145,27 @@ class MainActivity : AppCompatActivity() {
                 mFirebaseRemoteConfig.activate()
                 val filmId = mFirebaseRemoteConfig.getString("film")
                 if (!filmId.isBlank()) {
+                    bottomSheetPoster.addBottomSheetCallback(object :
+                        BottomSheetBehavior.BottomSheetCallback() {
+                        override fun onStateChanged(bottomSheet: View, newState: Int) {
+                            when (newState) {
+                                BottomSheetBehavior.STATE_COLLAPSED ->
+                                    binding.bottomSheetText.text =
+                                        getText(R.string.bottom_sheet_text_collapsed)
+                                BottomSheetBehavior.STATE_EXPANDED ->
+                                    binding.bottomSheetText.text =
+                                        getText(R.string.bottom_sheet_text_expanded)
+                            }
+                        }
+
+                        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        }
+
+                    })
                     interactor.getSpecificFilmFromApi(filmId)
                         .subscribe {
                             film = it
                             bottomSheetPoster.state = BottomSheetBehavior.STATE_COLLAPSED
-                            scope.launch {
-                                while (bottomSheetPoster.state != BottomSheetBehavior.STATE_HIDDEN) {
-                                    val state = bottomSheetPoster.state
-                                    when (state) {
-                                        BottomSheetBehavior.STATE_COLLAPSED -> bottomSheetState.onNext(state)
-                                        BottomSheetBehavior.STATE_EXPANDED -> bottomSheetState.onNext(state)
-                                    }
-                                }
-                            }
                             Picasso.get()
                                 .load(ApiConstantsApp.IMAGES_URL + ApiConstantsApp.IMAGE_FORMAT_W500 + it.posterId)
                                 .fit()
@@ -170,14 +174,6 @@ class MainActivity : AppCompatActivity() {
                                 .error(R.drawable.err)
                                 .into(binding.bottomSheetImage)
                         }
-                    bottomSheetState.subscribe{
-                        when(it) {
-                            BottomSheetBehavior.STATE_COLLAPSED ->
-                                binding.bottomSheetText.text = getText(R.string.bottom_sheet_text_collapsed)
-                            BottomSheetBehavior.STATE_EXPANDED ->
-                                binding.bottomSheetText.text = getText(R.string.bottom_sheet_text_expanded)
-                        }
-                    }.addTo(autoDisposable)
                 }
             }
         }
