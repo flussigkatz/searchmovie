@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import xyz.flussigkatz.remote_module.TmdbApi
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID
 import xyz.flussigkatz.searchmovie.data.Api.API_KEY
@@ -201,7 +202,7 @@ class Interactor(
     }
 
     private fun getText(resId: Int): String {
-        return xyz.flussigkatz.searchmovie.App.instance.getText(resId).toString()
+        return App.instance.getText(resId).toString()
     }
 
     companion object {

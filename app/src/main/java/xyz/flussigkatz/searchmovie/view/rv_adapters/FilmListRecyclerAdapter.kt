@@ -12,7 +12,7 @@ import xyz.flussigkatz.searchmovie.view.rv_viewholder.FilmViewHolder
 
 class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
-    private val checkboxClickListener: OnCheckboxClickListener
+    private val checkboxClickListener: OnCheckboxClickListener,
 ) : RecyclerView.Adapter<FilmViewHolder>() {
     var items = ArrayList<Film>()
 
@@ -24,31 +24,37 @@ class FilmListRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-        holder.binding.film = items[position]
+        val film = findFilmById(items[position].id)
 
-        holder.binding.favoriteCheckBox.setOnClickListener {
-            checkboxClickListener.click(items[position], it)
-        }
+        if (film != null) {
+            holder.binding.film = film
 
-        holder.binding.filmItemCardview.setOnClickListener {
-            clickListener.click(items[position])
+            holder.binding.favoriteCheckBox.setOnClickListener {
+                checkboxClickListener.click(film, it)
+            }
+
+            holder.binding.filmItemCardview.setOnClickListener {
+                clickListener.click(film)
+            }
         }
 
     }
 
     override fun getItemCount() = items.size
 
-    fun addItems(list: List<Film>) {
-        items.clear()
-        items.addAll(list)
-        notifyDataSetChanged()
-    }
-
-
-    fun updateData(newList: ArrayList<Film>) {
-        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList))
+    fun updateData(newList: List<Film>) {
+        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList as ArrayList<Film>))
         items = newList
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun findFilmById(id: Int): Film? {
+        var res: Film? = null
+        items.forEach {
+            if (it.id == id) res = it
+            return@forEach
+        }
+        return res
     }
 
     interface OnItemClickListener {

@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 filmDataBase.addAll(it)
-                filmsAdapter.addItems(it)
+                filmsAdapter.updateData(it)
             }.addTo(autoDisposable)
 
         view.doOnAttach { AnimationHelper.revealAnimation(view) }
@@ -174,7 +174,7 @@ class HomeFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .filter {
                 if (it.isNullOrBlank()) {
-                    filmsAdapter.addItems(filmDataBase)
+                    filmsAdapter.updateData(filmDataBase)
                     filmDataBase.clear()
                 }
                 it.isNotEmpty()
@@ -187,7 +187,7 @@ class HomeFragment : Fragment() {
                     println(it.localizedMessage)
                 },
                 onNext = {
-                    filmsAdapter.addItems(it)
+                    filmsAdapter.updateData(it)
                 }
             ).addTo(autoDisposable)
     }

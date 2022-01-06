@@ -56,7 +56,7 @@ class MarkedFragment : Fragment() {
             .map { Converter.convertToFilm(it) }
             .subscribe {
                 filmDataBase.addAll(it)
-                filmsAdapter.addItems(it)
+                filmsAdapter.updateData(it)
             }.addTo(autoDisposable)
 
         binding.markedRecycler.apply {
@@ -74,11 +74,7 @@ class MarkedFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
                     override fun click(film: Film, view: View) {
-                        film.fav_state = (view as MaterialCheckBox).isChecked
-                        val list = filmsAdapter.items.filter { it.fav_state } as ArrayList<Film>
-                        filmsAdapter.updateData(list)
                         scope.launch {
-                            delay(500)
                             viewModel.deleteMarkedFilmFromDB(film.id)
                         }
                     }
