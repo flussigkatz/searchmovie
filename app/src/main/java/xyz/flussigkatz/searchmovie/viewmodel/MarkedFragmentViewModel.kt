@@ -13,14 +13,13 @@ class MarkedFragmentViewModel : ViewModel() {
     lateinit var interactor: Interactor
     val markedFilmListData: Observable<List<MarkedFilm>>
     val refreshState: BehaviorSubject<Boolean>
-//    val favoriteFilmListData: Observable<List<Film>>
 
 
     init {
         App.instance.dagger.inject(this)
-        getMarkedFilms()
         markedFilmListData = interactor.getMarkedFilmsFromDB()
         refreshState = interactor.getRefreshState()
+        getMarkedFilms()
     }
 
     fun getMarkedFilms() {

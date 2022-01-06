@@ -46,6 +46,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.doOnAttach { AnimationHelper.revealAnimation(view) }
+
         autoDisposable.bindTo(lifecycle)
 
         viewModel.filmListData
@@ -56,7 +58,6 @@ class HomeFragment : Fragment() {
                 filmsAdapter.updateData(it)
             }.addTo(autoDisposable)
 
-        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
         initPullToRefresh()
 
@@ -173,10 +174,6 @@ class HomeFragment : Fragment() {
             .debounce(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .filter {
-                if (it.isNullOrBlank()) {
-                    filmsAdapter.updateData(filmDataBase)
-                    filmDataBase.clear()
-                }
                 it.isNotEmpty()
             }.observeOn(Schedulers.io())
             .flatMap {
