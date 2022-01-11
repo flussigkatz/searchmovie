@@ -12,6 +12,21 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    Properties localProperties = new Properties()
+    if (project.rootProject.file('local.properties').canRead()) {
+        localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
+    }
+
+
+
+    signingConfigs {
+        config {
+            storeFile file(localProperties.getProperty("RELEASE_STORE_FILE"))
+            storePassword localProperties.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias localProperties.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword localProperties.getProperty("RELEASE_STORE_PASSWORD")
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -19,6 +34,7 @@ android {
         viewBinding true
         dataBinding true
     }
+
 
     defaultConfig {
         applicationId "xyz.flussigkatz.searchmovie"
@@ -29,11 +45,13 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        signingConfig signingConfigs.config
     }
 
     buildTypes {
