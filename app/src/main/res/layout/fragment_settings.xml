@@ -16,18 +16,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black_alpha_60"
-        android:layout_margin="10dp"
-        android:elevation="0dp"
-        app:cardCornerRadius="10dp">
+
 
         <RadioGroup
             android:id="@+id/settings_radio_group_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/black_alpha_40"
             android:orientation="vertical">
 
             <TextView
@@ -69,21 +65,13 @@
 
         </RadioGroup>
 
-    </androidx.cardview.widget.CardView>
-
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black_alpha_60"
-        android:layout_margin="10dp"
-        android:elevation="0dp"
-        app:cardCornerRadius="10dp">
 
         <RadioGroup
             android:id="@+id/settings_radio_group_theme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/black_alpha_40"
             android:orientation="vertical">
 
             <TextView
@@ -125,14 +113,12 @@
 
         </RadioGroup>
 
-    </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/black_alpha_60"
-            android:layout_margin="10dp"
-            android:elevation="0dp"
+            android:background="@color/black_alpha_40"
+            android:layout_marginTop="5dp"
             app:cardCornerRadius="10dp">
 
             <TextView
@@ -151,7 +137,7 @@
                 app:trackTint="@color/white_alpha_20"
                 android:layout_gravity="end"/>
 
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
     </LinearLayout>
 

@@ -30,17 +30,13 @@
             app:stroke="10" />
 
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/film_item_cardview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/film_item_cardview_margins"
-            android:layout_marginEnd="@dimen/film_item_cardview_margins"
-            app:cardCornerRadius="@dimen/film_item_cardview_corner_radius">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/film_item_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/film_item_container_margins"
+                android:layout_marginEnd="@dimen/film_item_container_margins">
 
                 <ImageView
                     android:id="@+id/poster"
@@ -91,7 +87,6 @@
                     tools:text="@{film.description}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
 
 
     </FrameLayout>

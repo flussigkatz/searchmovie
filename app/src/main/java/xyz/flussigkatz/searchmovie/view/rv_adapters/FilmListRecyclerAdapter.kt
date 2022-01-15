@@ -33,7 +33,7 @@ class FilmListRecyclerAdapter(
                 checkboxClickListener.click(film, it)
             }
 
-            holder.binding.filmItemCardview.setOnClickListener {
+            holder.binding.rootFilmItem.setOnClickListener {
                 clickListener.click(film)
             }
         }

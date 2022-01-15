@@ -12,6 +12,7 @@ import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID
 import xyz.flussigkatz.searchmovie.data.Api.API_KEY
 import xyz.flussigkatz.searchmovie.data.Api.SESSION_ID
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
 import xyz.flussigkatz.searchmovie.data.entity.Film
@@ -101,7 +102,7 @@ class Interactor(
             API_KEY,
             SESSION_ID,
             lang,
-            xyz.flussigkatz.searchmovie.data.ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC,
+            FAVORITE_SORT_BY_CREATED_AT_DESC,
             page
         ).map {
             Converter.convertToMarkedFilmFromApi(it.tmdbFilms)
@@ -132,7 +133,7 @@ class Interactor(
 
     fun setDefaultTheme(theme: Int) {
         preferences.saveDefaultTheme(theme)
-        xyz.flussigkatz.searchmovie.App.instance.initTheme(theme)
+        App.instance.initTheme(theme)
     }
 
     fun getDefaultThemeFromPreferences(): Int {

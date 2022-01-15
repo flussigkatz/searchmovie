@@ -26,7 +26,8 @@ import kotlinx.coroutines.*
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.SearchMovieReceiver
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W500
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
@@ -167,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                             film = it
                             bottomSheetPoster.state = BottomSheetBehavior.STATE_COLLAPSED
                             Picasso.get()
-                                .load(ApiConstantsApp.IMAGES_URL + ApiConstantsApp.IMAGE_FORMAT_W500 + it.posterId)
+                                .load(IMAGES_URL + IMAGE_FORMAT_W500 + it.posterId)
                                 .fit()
                                 .centerCrop()
                                 .placeholder(R.drawable.wait)

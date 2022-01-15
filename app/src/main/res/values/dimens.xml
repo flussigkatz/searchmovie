@@ -20,7 +20,7 @@
     <dimen name="film_item_root_width">150dp</dimen>
     <dimen name="film_item_rating_donut_size">40dp</dimen>
     <dimen name="film_item_rating_donut_translation_z">5dp</dimen>
-    <dimen name="film_item_cardview_margins">10dp</dimen>
+    <dimen name="film_item_container_margins">10dp</dimen>
     <dimen name="film_item_cardview_corner_radius">10dp</dimen>
     <dimen name="film_item_textview_description_padding">8dp</dimen>
     <dimen name="film_item_textview_description_width">0dp</dimen>
