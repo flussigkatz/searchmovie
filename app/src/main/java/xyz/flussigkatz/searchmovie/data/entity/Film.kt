@@ -10,6 +10,8 @@ import androidx.room.PrimaryKey
 import com.squareup.picasso.Picasso
 import kotlinx.parcelize.Parcelize
 import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W154
 
 @Parcelize
 @Entity(tableName = "cashed_films", indices = [Index(value = ["title"], unique = true)])
@@ -27,7 +29,7 @@ data class Film(
         @JvmStatic
         fun setImage(view: ImageView, image: String) {
             Picasso.get()
-                .load(xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL + xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W154 + image)
+                .load(IMAGES_URL + IMAGE_FORMAT_W154 + image)
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.wait)

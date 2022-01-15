@@ -5,9 +5,11 @@
 
     <data>
 
+        <import type="xyz.flussigkatz.searchmovie.data.entity.Film"/>
+
         <variable
             name="film"
-            type="xyz.flussigkatz.searchmovie.data.entity.Film" />
+            type="Film" />
 
     </data>
 

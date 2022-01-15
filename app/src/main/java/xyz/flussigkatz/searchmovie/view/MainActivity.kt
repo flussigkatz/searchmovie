@@ -22,10 +22,10 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.SearchMovieReceiver
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         val intentBoringKillerAlarm = Intent(
             context,
-            xyz.flussigkatz.searchmovie.SearchMovieReceiver::class.java
+            SearchMovieReceiver::class.java
         )
         val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
         intentBoringKillerAlarm.action = NotificationConstants.BORING_KILLER_NOTIFICATION_ALARM

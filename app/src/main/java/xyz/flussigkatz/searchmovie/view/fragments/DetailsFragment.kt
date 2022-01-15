@@ -24,6 +24,7 @@ import kotlinx.coroutines.*
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_ORIGINAL
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W500
 import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.databinding.FragmentDetailsBinding
@@ -183,9 +184,7 @@ class DetailsFragment : Fragment() {
             viewModel.progressBarState.onNext(true)
             val job = scope.async {
                 viewModel.loadFilmPoster(
-                    xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL +
-                            xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_ORIGINAL +
-                            film.posterId
+                    IMAGES_URL + IMAGE_FORMAT_ORIGINAL + film.posterId
                 )
             }
             val bitmap = job.await()
