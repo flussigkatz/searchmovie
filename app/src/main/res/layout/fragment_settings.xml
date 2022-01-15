@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@color/black_alpha_40"
+            android:background="@color/black_alpha_20"
             android:orientation="vertical">
 
             <TextView
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@color/black_alpha_40"
+            android:background="@color/black_alpha_20"
             android:orientation="vertical">
 
             <TextView
@@ -117,7 +117,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black_alpha_40"
+            android:background="@color/black_alpha_20"
             android:layout_marginTop="5dp"
             app:cardCornerRadius="10dp">
 

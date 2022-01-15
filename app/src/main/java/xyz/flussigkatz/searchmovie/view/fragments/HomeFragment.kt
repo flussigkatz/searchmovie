@@ -158,7 +158,8 @@ class HomeFragment : Fragment() {
 //        }
         //TODO: Deal with isIconified and filmDataBase
         Observable.create(ObservableOnSubscribe<String> { sub ->
-            binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            binding.homeSearchView.setOnQueryTextListener(
+                object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     return false
                 }

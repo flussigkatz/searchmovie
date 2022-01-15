@@ -27,14 +27,11 @@
             app:layout_scrollFlags="scroll|snap|enterAlways"
             app:toolbarId="@+id/marked_toolbar">
 
-            <SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/marked_search_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/marked_search_view_height"
-                android:layout_marginStart="@dimen/marked_search_view_margin_start"
-                android:layout_marginTop="@dimen/marked_search_view_margin_top"
-                android:layout_marginEnd="@dimen/marked_search_view_margin_end"
-                android:background="@drawable/search_view_shape"
+                android:layout_height="@dimen/home_search_view_height"
+                android:background="@color/black_alpha_20"
                 android:queryHint="Search" />
 
 
