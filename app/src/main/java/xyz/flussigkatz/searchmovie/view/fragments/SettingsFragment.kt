@@ -5,14 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.databinding.FragmentSettingsBinding
-import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.viewmodel.SettingsFragmentViewModel
 
 class SettingsFragment : Fragment() {
@@ -31,7 +28,6 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
         viewModel.categoryPropertyLifeData.observe(viewLifecycleOwner, Observer<String> {
             when (it) {
@@ -85,39 +81,6 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        binding.settingsBottomToolbar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home_page -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_homeFragment
-                    )
-                    true
-                }
-                R.id.history -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_historyFragment
-                    )
-                    true
-                }
-                R.id.marked -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_markedFragment
-                    )
-                    true
-                }
-                R.id.settings -> {
-                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
-        }
 
         binding.settingsSplashScreen.setOnCheckedChangeListener { _, chekedId ->
             viewModel.putSplashScreenProperty(chekedId)

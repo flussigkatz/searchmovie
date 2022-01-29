@@ -6,19 +6,8 @@
     style="@style/FragmentBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="invisible"
     tools:context=".view.fragments.HistoryFragment"
     tools:visibility="visible">
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/history_bottom_toolbar"
-        style="@style/BottomToolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        app:menu="@menu/bottom_app_bar" />
 
 
 </FrameLayout>

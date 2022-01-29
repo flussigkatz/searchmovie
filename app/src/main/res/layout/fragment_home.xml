@@ -6,7 +6,6 @@
     style="@style/FragmentBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="invisible"
     tools:context=".view.fragments.HomeFragment"
     tools:visibility="visible">
 
@@ -51,14 +50,4 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/film_item" />
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/home_bottom_toolbar"
-        style="@style/BottomToolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        app:menu="@menu/bottom_app_bar" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

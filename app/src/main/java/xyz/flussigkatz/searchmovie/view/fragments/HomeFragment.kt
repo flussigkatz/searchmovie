@@ -3,9 +3,7 @@ package xyz.flussigkatz.searchmovie.view.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.SearchView
 import android.widget.Toast
-import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -17,9 +15,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import xyz.flussigkatz.searchmovie.*
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.data.entity.Film
-import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.addTo
+import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussigkatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
@@ -46,8 +44,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.doOnAttach { AnimationHelper.revealAnimation(view) }
-
         autoDisposable.bindTo(lifecycle)
 
         viewModel.filmListData
@@ -72,11 +68,8 @@ class HomeFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-                        AnimationHelper.coverAnimation(
-                            binding.rootFragmentHome,
-                            requireActivity(),
-                            R.id.action_global_detailsFragment,
-                            bundle
+                        (requireActivity() as MainActivity).navController.navigate(
+                            R.id.action_homeFragment_to_detailsFragment, bundle
                         )
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
@@ -91,39 +84,6 @@ class HomeFragment : Fragment() {
             addItemDecoration(decorator)
         }
 
-        binding.homeBottomToolbar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home_page -> {
-                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.history -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_historyFragment
-                    )
-                    true
-                }
-                R.id.marked -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_markedFragment
-                    )
-                    true
-                }
-                R.id.settings -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_settingsFragment
-                    )
-                    true
-                }
-                else -> false
-            }
-        }
 
     }
 

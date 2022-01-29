@@ -58,10 +58,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
-        initBoringNotification()
+//        initBoringNotification()
 
-        bottomSheetPoster = BottomSheetBehavior.from(binding.mainBottomSheetPoster)
-        bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
         initRecommendationFromRemoteConfig()
 
         val filter = IntentFilter().also {
@@ -78,13 +76,19 @@ class MainActivity : AppCompatActivity() {
         )
 
         initSplashScreen()
+
+        binding.mainBottomToolbar.setOnItemSelectedListener {
+            val onScreenFragmentId = navController.backStack.last.destination.id
+            NavigationHelper.navigate(navController, it.itemId, onScreenFragmentId, this)
+            true
+        }
     }
 
 
     @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
-        val last = navController.backStack.last.destination.label
-        if (!HOME_FRAGMENT_LABEL.equals(last)) {
+        val onScreenFragmentId = navController.backStack.last.destination.id
+        if (R.id.homeFragment != onScreenFragmentId) {
             super.onBackPressed()
         } else {
             if (backPressedTime + TIME_INTERVAL > System.currentTimeMillis()) {
@@ -102,16 +106,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        AnimationHelper.cancelAnimScope()
+        SplashScreenHelper.cancelAnimScope()
         scope.cancel()
         unregisterReceiver(receiver)
         super.onDestroy()
     }
 
     private fun initSplashScreen() {
+        val viewHomeFragment = findViewById<CoordinatorLayout>(R.id.root_fragment_home)
         if (interactor.getSplashScreenStateFromPreferences()) {
-            val viewHomeFragment = findViewById<CoordinatorLayout>(R.id.root_fragment_home)
             SplashScreenHelper.initSplashScreen(binding.splashScreen, viewHomeFragment)
+        } else {
+            viewHomeFragment.visibility = View.INVISIBLE
+            SplashScreenHelper.revealAnimation(viewHomeFragment)
         }
     }
 
@@ -138,6 +145,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initRecommendationFromRemoteConfig() {
+        bottomSheetPoster = BottomSheetBehavior.from(binding.mainBottomSheetPoster)
+        bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
         val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val firebaseRemoteConfigSettings = FirebaseRemoteConfigSettings.Builder().build()
         mFirebaseRemoteConfig.setConfigSettingsAsync(firebaseRemoteConfigSettings)
@@ -174,20 +183,21 @@ class MainActivity : AppCompatActivity() {
                                 .placeholder(R.drawable.wait)
                                 .error(R.drawable.err)
                                 .into(binding.bottomSheetImage)
+                            binding.bottomSheetImage.setOnClickListener {
+                                val bundle = Bundle()
+                                bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                                val onScreenFragmentId = navController.backStack.last.destination.id
+                                NavigationHelper.navigateToDetailsFragment(
+                                    navController,
+                                    onScreenFragmentId,
+                                    bundle
+                                )
+                                bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
+                            }
                         }
                 }
             }
         }
-    }
-
-    fun clickOnImage(v: View) {
-        if (film != null) {
-            val bundle = Bundle()
-            bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-            navController.navigate(R.id.action_global_detailsFragment, bundle)
-            bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
     }
 
     private fun startDetailsMarkedFilm(intent: Intent?) {

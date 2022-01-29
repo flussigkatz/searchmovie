@@ -40,6 +40,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/main_bottom_sheet_poster_peek_height"
         android:clickable="true"
+        android:translationZ="10dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
         <TextView
             android:id="@+id/bottom_sheet_text"
@@ -54,10 +55,18 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_sheet_image_height"
             android:gravity="center"
-            android:onClick="clickOnImage"
+            android:clickable="true"
             android:scaleType="centerCrop"/>
     </LinearLayout>
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_bottom_toolbar"
+        style="@style/BottomToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_app_bar" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
