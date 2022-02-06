@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="settingsFragment" type="id"/>
+    <item name="detailsFragment" type="id"/>
+    <item name="markedFragment" type="id"/>
+    <item name="homeFragment" type="id"/>
+    <item name="historyFragment" type="id"/>
+</resources>

@@ -5,9 +5,11 @@
 
     <data>
 
+        <import type="xyz.flussigkatz.searchmovie.data.entity.Film"/>
+
         <variable
             name="film"
-            type="xyz.flussigkatz.searchmovie.data.entity.Film" />
+            type="Film" />
 
     </data>
 
@@ -15,7 +17,6 @@
         android:id="@+id/root_fragment_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
         tools:context=".view.fragments.DetailsFragment"
         tools:visibility="visible">
 
@@ -114,14 +115,5 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/details_bottom_toolbar"
-            style="@style/BottomToolBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:labelVisibilityMode="labeled"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-            app:menu="@menu/bottom_app_bar" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

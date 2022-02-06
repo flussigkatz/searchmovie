@@ -5,21 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.doOnAttach
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.checkbox.MaterialCheckBox
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
 import xyz.flussigkatz.searchmovie.*
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussigkatz.searchmovie.data.entity.Film
-import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.addTo
+import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussigkatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.MarkedFragmentViewModel
@@ -44,7 +41,6 @@ class MarkedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
         autoDisposable.bindTo(lifecycle)
 
@@ -56,7 +52,7 @@ class MarkedFragment : Fragment() {
             .map { Converter.convertToFilm(it) }
             .subscribe {
                 filmDataBase.addAll(it)
-                filmsAdapter.addItems(it)
+                filmsAdapter.updateData(it)
             }.addTo(autoDisposable)
 
         binding.markedRecycler.apply {
@@ -65,20 +61,13 @@ class MarkedFragment : Fragment() {
                     override fun click(film: Film) {
                         val bundle = Bundle()
                         bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-                        AnimationHelper.coverAnimation(
-                            binding.rootFragmentMarked,
-                            requireActivity(),
-                            R.id.action_global_detailsFragment,
-                            bundle
+                        (requireActivity() as MainActivity).navController.navigate(
+                            R.id.action_markedFragment_to_detailsFragment, bundle
                         )
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
                     override fun click(film: Film, view: View) {
-                        film.fav_state = (view as MaterialCheckBox).isChecked
-                        val list = filmsAdapter.items.filter { it.fav_state } as ArrayList<Film>
-                        filmsAdapter.updateData(list)
                         scope.launch {
-                            delay(500)
                             viewModel.deleteMarkedFilmFromDB(film.id)
                         }
                     }
@@ -88,40 +77,6 @@ class MarkedFragment : Fragment() {
             val decorator = TopSpasingItemDecoration(5)
             addItemDecoration(decorator)
 
-        }
-
-        binding.markedBottomToolbar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home_page -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_homeFragment
-                    )
-                    true
-                }
-                R.id.history -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_historyFragment
-                    )
-                    true
-                }
-                R.id.marked -> {
-                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.settings -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_settingsFragment
-                    )
-                    true
-                }
-                else -> false
-            }
         }
     }
 

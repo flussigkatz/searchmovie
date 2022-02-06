@@ -22,11 +22,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp
+import xyz.flussigkatz.searchmovie.SearchMovieReceiver
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W500
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
@@ -43,8 +44,6 @@ class MainActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.IO)
     private val receiver = Receiver()
     private var film: Film? = null
-    private val autoDisposable = AutoDisposable()
-    private val bottomSheetState = BehaviorSubject.create<Int>()
     lateinit var bottomSheetPoster: BottomSheetBehavior<LinearLayout>
 
     init {
@@ -59,12 +58,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
-        autoDisposable.bindTo(lifecycle)
 
-        initBoringNotification()
-
-        bottomSheetPoster = BottomSheetBehavior.from(binding.mainBottomSheetPoster)
-        bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
         initRecommendationFromRemoteConfig()
 
         val filter = IntentFilter().also {
@@ -81,13 +75,16 @@ class MainActivity : AppCompatActivity() {
         )
 
         initSplashScreen()
+        initNavigation()
+
+
     }
 
 
     @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
-        val last = navController.backStack.last.destination.label
-        if (!HOME_FRAGMENT_LABEL.equals(last)) {
+        val onScreenFragmentId = navController.backStack.last.destination.id
+        if (R.id.homeFragment != onScreenFragmentId) {
             super.onBackPressed()
         } else {
             if (backPressedTime + TIME_INTERVAL > System.currentTimeMillis()) {
@@ -105,16 +102,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        AnimationHelper.cancelAnimScope()
+        SplashScreenHelper.cancelAnimScope()
         scope.cancel()
         unregisterReceiver(receiver)
         super.onDestroy()
     }
 
     private fun initSplashScreen() {
+        val viewHomeFragment = findViewById<CoordinatorLayout>(R.id.root_fragment_home)
         if (interactor.getSplashScreenStateFromPreferences()) {
-            val viewHomeFragment = findViewById<CoordinatorLayout>(R.id.root_fragment_home)
             SplashScreenHelper.initSplashScreen(binding.splashScreen, viewHomeFragment)
+        } else {
+            viewHomeFragment.visibility = View.INVISIBLE
+            SplashScreenHelper.revealAnimation(viewHomeFragment)
+        }
+    }
+
+    fun initNavigation() {
+        binding.mainBottomToolbar.setOnItemSelectedListener {
+            val onScreenFragmentId = navController.backStack.last.destination.id
+            NavigationHelper.navigate(navController, it.itemId, onScreenFragmentId, this)
+            true
         }
     }
 
@@ -141,6 +149,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initRecommendationFromRemoteConfig() {
+        bottomSheetPoster = BottomSheetBehavior.from(binding.mainBottomSheetPoster)
+        bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
         val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val firebaseRemoteConfigSettings = FirebaseRemoteConfigSettings.Builder().build()
         mFirebaseRemoteConfig.setConfigSettingsAsync(firebaseRemoteConfigSettings)
@@ -149,48 +159,48 @@ class MainActivity : AppCompatActivity() {
                 mFirebaseRemoteConfig.activate()
                 val filmId = mFirebaseRemoteConfig.getString("film")
                 if (!filmId.isBlank()) {
+                    bottomSheetPoster.addBottomSheetCallback(object :
+                        BottomSheetBehavior.BottomSheetCallback() {
+                        override fun onStateChanged(bottomSheet: View, newState: Int) {
+                            when (newState) {
+                                BottomSheetBehavior.STATE_COLLAPSED ->
+                                    binding.bottomSheetText.text =
+                                        getText(R.string.bottom_sheet_text_collapsed)
+                                else -> binding.bottomSheetText.text =
+                                    getText(R.string.bottom_sheet_text_expanded)
+                            }
+                        }
+
+                        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        }
+
+                    })
                     interactor.getSpecificFilmFromApi(filmId)
                         .subscribe {
                             film = it
                             bottomSheetPoster.state = BottomSheetBehavior.STATE_COLLAPSED
-                            scope.launch {
-                                while (bottomSheetPoster.state != BottomSheetBehavior.STATE_HIDDEN) {
-                                    val state = bottomSheetPoster.state
-                                    when (state) {
-                                        BottomSheetBehavior.STATE_COLLAPSED -> bottomSheetState.onNext(state)
-                                        BottomSheetBehavior.STATE_EXPANDED -> bottomSheetState.onNext(state)
-                                    }
-                                }
-                            }
                             Picasso.get()
-                                .load(ApiConstantsApp.IMAGES_URL + ApiConstantsApp.IMAGE_FORMAT_W500 + it.posterId)
+                                .load(IMAGES_URL + IMAGE_FORMAT_W500 + it.posterId)
                                 .fit()
                                 .centerCrop()
-                                .placeholder(R.drawable.wait)
-                                .error(R.drawable.err)
+                                .placeholder(R.drawable.ic_default_picture)
+                                .error(R.drawable.ic_default_picture)
                                 .into(binding.bottomSheetImage)
+                            binding.bottomSheetImage.setOnClickListener {
+                                val bundle = Bundle()
+                                bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                                val onScreenFragmentId = navController.backStack.last.destination.id
+                                NavigationHelper.navigateToDetailsFragment(
+                                    navController,
+                                    onScreenFragmentId,
+                                    bundle
+                                )
+                                bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
+                            }
                         }
-                    bottomSheetState.subscribe{
-                        when(it) {
-                            BottomSheetBehavior.STATE_COLLAPSED ->
-                                binding.bottomSheetText.text = getText(R.string.bottom_sheet_text_collapsed)
-                            BottomSheetBehavior.STATE_EXPANDED ->
-                                binding.bottomSheetText.text = getText(R.string.bottom_sheet_text_expanded)
-                        }
-                    }.addTo(autoDisposable)
                 }
             }
         }
-    }
-
-    fun clickOnImage(v: View) {
-        if (film != null) {
-            val bundle = Bundle()
-            bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-            navController.navigate(R.id.action_global_detailsFragment, bundle)
-            bottomSheetPoster.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
     }
 
     private fun startDetailsMarkedFilm(intent: Intent?) {
@@ -206,7 +216,7 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         val intentBoringKillerAlarm = Intent(
             context,
-            xyz.flussigkatz.searchmovie.SearchMovieReceiver::class.java
+            SearchMovieReceiver::class.java
         )
         val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
         intentBoringKillerAlarm.action = NotificationConstants.BORING_KILLER_NOTIFICATION_ALARM
@@ -253,7 +263,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val HOME_FRAGMENT_LABEL = "fragment_home"
         private const val TIME_INTERVAL = 2000L
     }
 

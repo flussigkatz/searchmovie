@@ -2,11 +2,9 @@ package xyz.flussigkatz.searchmovie.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.io.IOException
-import java.lang.Exception
 import java.net.URL
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine

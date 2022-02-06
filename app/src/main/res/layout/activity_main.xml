@@ -9,17 +9,17 @@
     tools:context=".view.MainActivity">
 
 
-        <fragment
-            android:id="@+id/nav_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/navigation" />
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/navigation" />
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -27,8 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_gradient"
-        android:visibility="gone"
         android:translationZ="@dimen/splash_screen_translation_z"
+        android:visibility="gone"
         app:lottie_rawRes="@raw/welcome_anim" />
 
 
@@ -36,11 +36,13 @@
         android:id="@+id/main_bottom_sheet_poster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:orientation="vertical"
+        android:translationZ="10dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/main_bottom_sheet_poster_peek_height"
-        android:clickable="true"
         app:layout_behavior="@string/bottom_sheet_behavior">
+
         <TextView
             android:id="@+id/bottom_sheet_text"
             android:layout_width="match_parent"
@@ -49,15 +51,23 @@
             android:gravity="center"
             android:text="@string/bottom_sheet_text_collapsed"
             android:textColor="@android:color/white" />
+
         <ImageView
             android:id="@+id/bottom_sheet_image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_sheet_image_height"
+            android:clickable="true"
             android:gravity="center"
-            android:onClick="clickOnImage"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
     </LinearLayout>
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_bottom_toolbar"
+        style="@style/BottomToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/menu_bottom_navigation" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

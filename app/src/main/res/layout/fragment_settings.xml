@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_fragment_settings"
@@ -8,160 +8,128 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:visibility="invisible"
     tools:context=".view.fragments.SettingsFragment">
 
-    <LinearLayout
+
+    <RadioGroup
+        android:id="@+id/settings_radio_group_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/black_alpha_20"
         android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_margin="@dimen/title_margin"
+            android:text="@string/category_radio_group_header"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_popular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_popular"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_top_rated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_top_rated"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_upcoming"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_upcoming"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_in_cinemas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_now_playing"
+            android:textColor="@color/white" />
+
+    </RadioGroup>
+
+
+    <RadioGroup
+        android:id="@+id/settings_radio_group_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/black_alpha_60"
-        android:layout_margin="10dp"
-        android:elevation="0dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/black_alpha_20"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_margin="@dimen/title_margin"
+            android:text="@string/theme_radio_group_header"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_light"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_dark"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_system"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_system"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radio_battery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_battery"
+            android:textColor="@color/white" />
+
+    </RadioGroup>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/black_alpha_20"
         app:cardCornerRadius="10dp">
 
-        <RadioGroup
-            android:id="@+id/settings_radio_group_category"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center|start"
+            android:layout_margin="@dimen/title_margin"
+            android:text="@string/settings_splash_screen_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/white" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/title_margin"
-                android:text="@string/category_radio_group_header"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:layout_gravity="center|start"
-                android:textColor="@color/white" />
-
-            <RadioButton
-                android:id="@+id/radio_popular"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_popular"
-                android:textColor="@color/white" />
-
-            <RadioButton
-                android:id="@+id/radio_top_rated"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_top_rated"
-                android:textColor="@color/white" />
-
-            <RadioButton
-                android:id="@+id/radio_upcoming"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_upcoming"
-                android:textColor="@color/white" />
-
-            <RadioButton
-                android:id="@+id/radio_in_cinemas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_now_playing"
-                android:textColor="@color/white" />
-
-        </RadioGroup>
-
-    </androidx.cardview.widget.CardView>
-
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black_alpha_60"
-        android:layout_margin="10dp"
-        android:elevation="0dp"
-        app:cardCornerRadius="10dp">
-
-        <RadioGroup
-            android:id="@+id/settings_radio_group_theme"
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/settings_splash_screen"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="end"
+            app:trackTint="@color/white_alpha_20" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/title_margin"
-                android:text="@string/theme_radio_group_header"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:layout_gravity="center|start"
-                android:textColor="@color/white" />
+    </FrameLayout>
 
-            <RadioButton
-                android:id="@+id/radio_light"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_light"
-                android:textColor="@color/white" />
-
-            <RadioButton
-                android:id="@+id/radio_dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_dark"
-                android:textColor="@color/white" />
-
-            <RadioButton
-                android:id="@+id/radio_system"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_system"
-                android:textColor="@color/white" />
-
-            <RadioButton
-                android:id="@+id/radio_battery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_battery"
-                android:textColor="@color/white" />
-
-        </RadioGroup>
-
-    </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black_alpha_60"
-            android:layout_margin="10dp"
-            android:elevation="0dp"
-            app:cardCornerRadius="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/white"
-                android:text="@string/settings_splash_screen_title"
-                android:layout_margin="@dimen/title_margin"
-                android:layout_gravity="center|start"/>
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/settings_splash_screen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:trackTint="@color/white_alpha_20"
-                android:layout_gravity="end"/>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/settings_bottom_toolbar"
-        style="@style/BottomToolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        app:menu="@menu/bottom_app_bar" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

@@ -13,7 +13,7 @@ object Converter {
                 Film(
                     id = it.id,
                     title = it.title,
-                    posterId = it.posterPath,
+                    posterId = it.posterPath ?: "",
                     description = it.overview,
                     rating = (it.voteAverage * 10).toInt(),
                     fav_state = false
@@ -23,15 +23,14 @@ object Converter {
         return result
     }
     fun convertToFilmFromApi(film: TmdbSpecificFilmDto): Film {
-            val result = Film(
-                id = film.id,
-                title = film.title,
-                posterId = film.posterPath,
-                description = film.overview,
-                rating = (film.voteAverage * 10).toInt(),
-                fav_state = false
-            )
-           return result
+        return Film(
+            id = film.id,
+            title = film.title,
+            posterId = film.posterPath,
+            description = film.overview,
+            rating = (film.voteAverage * 10).toInt(),
+            fav_state = false
+        )
 
     }
 
@@ -59,7 +58,7 @@ object Converter {
                 MarkedFilm(
                     id = it.id,
                     title = it.title,
-                    posterId = it.posterPath,
+                    posterId = it.posterPath ?: "",
                     description = it.overview,
                     rating = (it.voteAverage * 10).toInt(),
                     fav_state = true

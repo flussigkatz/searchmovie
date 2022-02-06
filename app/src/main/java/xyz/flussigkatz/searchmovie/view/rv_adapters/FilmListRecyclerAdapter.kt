@@ -5,6 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W154
 import xyz.flussigkatz.searchmovie.util.FilmDiff
 import xyz.flussigkatz.searchmovie.databinding.FilmItemBinding
 import xyz.flussigkatz.searchmovie.data.entity.Film
@@ -12,7 +17,7 @@ import xyz.flussigkatz.searchmovie.view.rv_viewholder.FilmViewHolder
 
 class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
-    private val checkboxClickListener: OnCheckboxClickListener
+    private val checkboxClickListener: OnCheckboxClickListener,
 ) : RecyclerView.Adapter<FilmViewHolder>() {
     var items = ArrayList<Film>()
 
@@ -24,31 +29,45 @@ class FilmListRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-        holder.binding.film = items[position]
+        val film = findFilmById(items[position].id)
 
-        holder.binding.favoriteCheckBox.setOnClickListener {
-            checkboxClickListener.click(items[position], it)
-        }
+        if (film != null) {
+            holder.binding.film = film
 
-        holder.binding.filmItemCardview.setOnClickListener {
-            clickListener.click(items[position])
+            Picasso.get()
+                .load(IMAGES_URL + IMAGE_FORMAT_W154 + film.posterId)
+                .fit()
+                .centerCrop()
+                .placeholder(R.drawable.ic_default_picture)
+                .error(R.drawable.ic_default_picture)
+                .into(holder.binding.poster)
+
+            holder.binding.favoriteCheckBox.setOnClickListener {
+                checkboxClickListener.click(film, it)
+            }
+
+            holder.binding.rootFilmItem.setOnClickListener {
+                clickListener.click(film)
+            }
         }
 
     }
 
     override fun getItemCount() = items.size
 
-    fun addItems(list: List<Film>) {
-        items.clear()
-        items.addAll(list)
-        notifyDataSetChanged()
-    }
-
-
-    fun updateData(newList: ArrayList<Film>) {
-        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList))
+    fun updateData(newList: List<Film>) {
+        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList as ArrayList<Film>))
         items = newList
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun findFilmById(id: Int): Film? {
+        var res: Film? = null
+        items.forEach {
+            if (it.id == id) res = it
+            return@forEach
+        }
+        return res
     }
 
     interface OnItemClickListener {

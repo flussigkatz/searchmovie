@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnAttach
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
@@ -24,8 +23,8 @@ import kotlinx.coroutines.*
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_ORIGINAL
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W500
-import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.DetailsFragmentViewModel
 
@@ -47,19 +46,19 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.doOnAttach { AnimationHelper.revealAnimation(view) }
 
         initProgressBarState()
 
         val film = arguments?.get(DETAILS_FILM_KEY) as Film
         binding.film = film
 
+
         Picasso.get()
             .load(IMAGES_URL + IMAGE_FORMAT_W500 + film.posterId)
             .fit()
             .centerCrop()
-            .placeholder(R.drawable.wait)
-            .error(R.drawable.err)
+            .placeholder(R.drawable.ic_default_picture)
+            .error(R.drawable.ic_default_picture)
             .into(binding.detailsPoster)
 
         binding.detailsFabDownloadPoster.setOnClickListener {
@@ -75,45 +74,6 @@ class DetailsFragment : Fragment() {
             )
             intent.type = "text/plain"
             startActivity(Intent.createChooser(intent, "Share to"))
-        }
-
-
-        binding.detailsBottomToolbar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home_page -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_homeFragment
-                    )
-                    true
-                }
-                R.id.history -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_historyFragment
-                    )
-                    true
-                }
-                R.id.marked -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_markedFragment
-                    )
-                    true
-                }
-                R.id.settings -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_settingsFragment
-                    )
-                    true
-                }
-                else -> false
-            }
         }
 
 
@@ -183,9 +143,7 @@ class DetailsFragment : Fragment() {
             viewModel.progressBarState.onNext(true)
             val job = scope.async {
                 viewModel.loadFilmPoster(
-                    xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL +
-                            xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_ORIGINAL +
-                            film.posterId
+                    IMAGES_URL + IMAGE_FORMAT_ORIGINAL + film.posterId
                 )
             }
             val bitmap = job.await()
@@ -196,7 +154,7 @@ class DetailsFragment : Fragment() {
                     R.string.downladed_to_galery,
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.anchorView = binding.detailsBottomToolbar
+//                snackbar.anchorView = binding.rootFragmentDetails
                 snackbar.setAction(R.string.open) {
                     val intent = Intent()
                     intent.action = Intent.ACTION_VIEW
