@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="xyz.flussigkatz.searchmovie.data.entity.Film"/>
+        <import type="xyz.flussigkatz.searchmovie.data.entity.Film" />
 
         <variable
             name="film"
@@ -16,7 +16,7 @@
     <FrameLayout
         android:id="@+id/root_film_item"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/film_item_root_width">
+        android:layout_height="@dimen/film_item_root_height">
 
 
         <xyz.flussigkatz.searchmovie.view.customview.RatingDonutView
@@ -30,63 +30,62 @@
             app:stroke="10" />
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/film_item_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/film_item_container_margins"
+            android:layout_marginEnd="@dimen/film_item_container_margins">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/film_item_container"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/poster"
+                android:layout_width="@dimen/film_item_imageview_poster_width"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/film_item_container_margins"
-                android:layout_marginEnd="@dimen/film_item_container_margins">
+                android:background="@color/white"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/poster"
-                    setImageRes="@{film.posterId}"
-                    android:layout_width="@dimen/film_item_imageview_poster_width"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/favorite_check_box"
-                    android:layout_width="@dimen/film_item_favorite_check_box_size"
-                    android:layout_height="@dimen/film_item_favorite_check_box_size"
-                    android:layout_margin="@dimen/film_item_favorite_check_box_margin"
-                    android:background="@drawable/favorite_selector"
-                    android:backgroundTint="@color/yellow"
-                    android:button="@null"
-                    android:checked="@{film.fav_state}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/favorite_check_box"
+                android:layout_width="@dimen/film_item_favorite_check_box_size"
+                android:layout_height="@dimen/film_item_favorite_check_box_size"
+                android:layout_margin="@dimen/film_item_favorite_check_box_margin"
+                android:background="@drawable/favorite_selector"
+                android:backgroundTint="@color/yellow"
+                android:button="@null"
+                android:checked="@{film.fav_state}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-                <TextView
-                    android:id="@+id/title"
-                    style="@style/Theme.SearchMovie.DarkTextTheme"
-                    android:layout_width="@dimen/film_item_textview_title_width"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/film_item_textview_title_padding"
-                    android:text="@{film.title}"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/poster"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/title"
+                style="@style/Theme.SearchMovie.DarkTextTheme"
+                android:layout_width="@dimen/film_item_textview_title_width"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/film_item_textview_title_padding"
+                android:text="@{film.title}"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/poster"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/description"
-                    style="@style/Theme.SearchMovie.DarkTextTheme"
-                    android:layout_width="@dimen/film_item_textview_description_width"
-                    android:layout_height="@dimen/film_item_textview_description_height"
-                    android:padding="@dimen/film_item_textview_description_padding"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/poster"
-                    app:layout_constraintTop_toBottomOf="@+id/title"
-                    tools:text="@{film.description}" />
+            <TextView
+                android:id="@+id/description"
+                style="@style/Theme.SearchMovie.DarkTextTheme"
+                android:layout_width="@dimen/film_item_textview_description_width"
+                android:layout_height="@dimen/film_item_textview_description_height"
+                android:padding="@dimen/film_item_textview_description_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/poster"
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                tools:text="@{film.description}" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </FrameLayout>

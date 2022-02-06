@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
-//        initBoringNotification()
 
         initRecommendationFromRemoteConfig()
 
@@ -76,12 +75,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         initSplashScreen()
+        initNavigation()
 
-        binding.mainBottomToolbar.setOnItemSelectedListener {
-            val onScreenFragmentId = navController.backStack.last.destination.id
-            NavigationHelper.navigate(navController, it.itemId, onScreenFragmentId, this)
-            true
-        }
+
     }
 
 
@@ -119,6 +115,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             viewHomeFragment.visibility = View.INVISIBLE
             SplashScreenHelper.revealAnimation(viewHomeFragment)
+        }
+    }
+
+    fun initNavigation() {
+        binding.mainBottomToolbar.setOnItemSelectedListener {
+            val onScreenFragmentId = navController.backStack.last.destination.id
+            NavigationHelper.navigate(navController, it.itemId, onScreenFragmentId, this)
+            true
         }
     }
 
@@ -162,9 +166,8 @@ class MainActivity : AppCompatActivity() {
                                 BottomSheetBehavior.STATE_COLLAPSED ->
                                     binding.bottomSheetText.text =
                                         getText(R.string.bottom_sheet_text_collapsed)
-                                BottomSheetBehavior.STATE_EXPANDED ->
-                                    binding.bottomSheetText.text =
-                                        getText(R.string.bottom_sheet_text_expanded)
+                                else -> binding.bottomSheetText.text =
+                                    getText(R.string.bottom_sheet_text_expanded)
                             }
                         }
 
@@ -180,8 +183,8 @@ class MainActivity : AppCompatActivity() {
                                 .load(IMAGES_URL + IMAGE_FORMAT_W500 + it.posterId)
                                 .fit()
                                 .centerCrop()
-                                .placeholder(R.drawable.wait)
-                                .error(R.drawable.err)
+                                .placeholder(R.drawable.ic_default_picture)
+                                .error(R.drawable.ic_default_picture)
                                 .into(binding.bottomSheetImage)
                             binding.bottomSheetImage.setOnClickListener {
                                 val bundle = Bundle()
@@ -260,7 +263,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val HOME_FRAGMENT_LABEL = "fragment_home"
         private const val TIME_INTERVAL = 2000L
     }
 

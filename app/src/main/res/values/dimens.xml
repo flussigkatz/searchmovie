@@ -17,7 +17,7 @@
     <!--    film_item-->
     <dimen name="film_item_favorite_check_box_margin">2dp</dimen>
     <dimen name="film_item_favorite_check_box_size">30dp</dimen>
-    <dimen name="film_item_root_width">150dp</dimen>
+    <dimen name="film_item_root_height">150dp</dimen>
     <dimen name="film_item_rating_donut_size">40dp</dimen>
     <dimen name="film_item_rating_donut_translation_z">5dp</dimen>
     <dimen name="film_item_container_margins">10dp</dimen>

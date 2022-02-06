@@ -22,9 +22,6 @@ class PreferenceProvider(context: Context) {
 
     fun saveDefaultCategory(category: String) {
         preference.edit() { putString(KEY_DEFAULT_CATEGORY, category) }
-        preference.edit() {
-            putLong(KEY_LOAD_FROM_API_TIME_INTERVAL, DEFAULT_LOAD_FROM_API_TIME_INTERVAL)
-        }
     }
 
     fun getDefaultCategory(): String {
@@ -39,17 +36,6 @@ class PreferenceProvider(context: Context) {
         return preference.getInt(KEY_DEFAULT_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
 
-    fun saveLoadFromApiTimeInterval(time: Long) {
-        preference.edit() { putLong(KEY_LOAD_FROM_API_TIME_INTERVAL, time) }
-    }
-
-    fun getLoadFromApiTimeInterval(): Long {
-        return preference.getLong(
-            KEY_LOAD_FROM_API_TIME_INTERVAL,
-            DEFAULT_LOAD_FROM_API_TIME_INTERVAL
-        )
-    }
-
     fun setPlaySplashScreenState(state: Boolean) {
         preference.edit() { putBoolean(KEY_PLAY_SPLASH_SCREEN, state) }
     }
@@ -62,7 +48,5 @@ class PreferenceProvider(context: Context) {
         private const val KEY_DEFAULT_CATEGORY = "default_category"
         private const val KEY_DEFAULT_THEME = "default_theme"
         private const val DEFAULT_CATEGORY = "popular"
-        private const val KEY_LOAD_FROM_API_TIME_INTERVAL = "load_from_api_time_interval"
-        private const val DEFAULT_LOAD_FROM_API_TIME_INTERVAL = 0L
     }
 }

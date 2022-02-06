@@ -52,12 +52,13 @@ class DetailsFragment : Fragment() {
         val film = arguments?.get(DETAILS_FILM_KEY) as Film
         binding.film = film
 
+
         Picasso.get()
             .load(IMAGES_URL + IMAGE_FORMAT_W500 + film.posterId)
             .fit()
             .centerCrop()
-            .placeholder(R.drawable.wait)
-            .error(R.drawable.err)
+            .placeholder(R.drawable.ic_default_picture)
+            .error(R.drawable.ic_default_picture)
             .into(binding.detailsPoster)
 
         binding.detailsFabDownloadPoster.setOnClickListener {
