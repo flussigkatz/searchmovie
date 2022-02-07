@@ -27,7 +27,6 @@ class Interactor(
     private val eventMessage: PublishSubject<String>,
 ) {
 
-    //TODO: Dispose observable
 
     fun getFilmsFromApi(page: Int) {
         val lang = Locale.getDefault().run {
@@ -77,7 +76,6 @@ class Interactor(
             search_query,
             page
         ).map {
-            println(it.tmdbFilms)
             Converter.convertToFilmFromApi(it.tmdbFilms)
         }.doOnError {
             eventMessage.onNext(getText(R.string.error_upload_message))
@@ -124,7 +122,6 @@ class Interactor(
 
     fun setDefaultTheme(theme: Int) {
         preferences.saveDefaultTheme(theme)
-        App.instance.initTheme(theme)
     }
 
     fun getDefaultThemeFromPreferences(): Int {

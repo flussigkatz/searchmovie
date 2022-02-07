@@ -75,7 +75,10 @@ class MainActivity : AppCompatActivity() {
         )
 
         initSplashScreen()
+
         initNavigation()
+
+
 
 
     }

@@ -96,47 +96,4 @@ class MarkedFragment : Fragment() {
         scope.cancel()
         super.onDestroy()
     }
-
-    /*private fun initSearchView() {
-//        binding.homeSearchView.isIconifiedByDefault = false
-//        binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false
-//            println("!!!cache")
-//        }
-//        binding.homeSearchView.setOnCloseListener {
-//            binding.homeSearchView.clearFocus()
-//            true
-//        }
-        //TODO: Deal with isIconified
-        Observable.create(ObservableOnSubscribe<String> { sub ->
-            binding.markedSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    sub.onNext(newText!!)
-                    return false
-                }
-
-            })
-        }).observeOn(Schedulers.io())
-            .map { it.lowercase().trim() }
-            .debounce(1, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter {
-                if (it.isNullOrBlank()) filmsAdapter.addItems(filmDataBase)
-                it.isNotEmpty()
-            }.observeOn(Schedulers.io())
-            .flatMap {
-                viewModel.getSearchedFilms(it)
-            }.observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onError = {
-                    println(it.localizedMessage)
-                },
-                onNext = {
-                    filmsAdapter.addItems(it)
-                }
-            ).addTo(autoDisposable)
-    }*/
 }

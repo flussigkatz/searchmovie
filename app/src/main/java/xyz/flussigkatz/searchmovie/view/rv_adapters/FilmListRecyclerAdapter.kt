@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W154
 import xyz.flussigkatz.searchmovie.util.FilmDiff
@@ -19,7 +18,7 @@ class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
     private val checkboxClickListener: OnCheckboxClickListener,
 ) : RecyclerView.Adapter<FilmViewHolder>() {
-    var items = ArrayList<Film>()
+    private var items = ArrayList<Film>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -61,7 +60,7 @@ class FilmListRecyclerAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun findFilmById(id: Int): Film? {
+    private fun findFilmById(id: Int): Film? {
         var res: Film? = null
         items.forEach {
             if (it.id == id) res = it
