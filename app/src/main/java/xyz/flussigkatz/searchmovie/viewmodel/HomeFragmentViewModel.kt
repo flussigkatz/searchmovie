@@ -28,6 +28,9 @@ class HomeFragmentViewModel : ViewModel() {
     fun getFilms() {
         interactor.getFilmsFromApi(1)
     }
+    fun getFilmsFromDB(): Observable<List<Film>> {
+        return interactor.getFilmsFromDB()
+    }
 
     fun getSearchedFilms(search_query: String): Observable<List<Film>> {
         return interactor.getSearchedFilmsFromApi(search_query, 1)

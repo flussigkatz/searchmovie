@@ -50,6 +50,7 @@ class HomeFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
+                filmDataBase.clear()
                 filmDataBase.addAll(it)
                 filmsAdapter.updateData(it)
             }.addTo(autoDisposable)
@@ -89,6 +90,7 @@ class HomeFragment : Fragment() {
 
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
+            binding.homeSearchView.isIconified = true
             binding.homeSearchView.clearFocus()
             viewModel.getFilms()
             viewModel.refreshState
@@ -108,45 +110,46 @@ class HomeFragment : Fragment() {
     }
 
     private fun initSearchView() {
-//        binding.homeSearchView.isIconifiedByDefault = false
-//        binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false
-//            println("!!!cache")
-//        }
-//        binding.homeSearchView.setOnCloseListener {
-//            binding.homeSearchView.clearFocus()
-//            true
-//        }
-        //TODO: Deal with isIconified and filmDataBase
+//        binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
+        binding.homeSearchView.setOnCloseListener {
+            binding.homeSearchView.clearFocus()
+            true
+        }
         Observable.create(ObservableOnSubscribe<String> { sub ->
             binding.homeSearchView.setOnQueryTextListener(
                 object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        sub.onNext(query)
+                        return false
+                    }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    sub.onNext(newText!!)
-                    return false
-                }
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        sub.onNext(newText)
+                        return false
+                    }
 
-            })
+                })
         }).observeOn(Schedulers.io())
-            .map { it.lowercase().trim() }
-            .debounce(1, TimeUnit.SECONDS)
+            .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .filter {
-                it.isNotEmpty()
-            }.observeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .map { it.lowercase().trim() }
             .flatMap {
-                viewModel.getSearchedFilms(it)
+                if (it.isNullOrBlank()) viewModel.getFilmsFromDB()
+                 else viewModel.getSearchedFilms(it)
+
             }.observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onError = {
-                    println(it.localizedMessage)
+                    println("initSearchView: ${it.localizedMessage}")
                 },
                 onNext = {
                     filmsAdapter.updateData(it)
                 }
             ).addTo(autoDisposable)
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_TIME_MILLISECONDS = 1000L
     }
 }

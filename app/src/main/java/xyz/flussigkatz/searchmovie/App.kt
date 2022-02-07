@@ -16,22 +16,23 @@ class App : Application() {
         super.onCreate()
         instance = this
 
-        dagger = DaggerAppComponent.builder()
-            .remoteProvider(DaggerRemoteComponent.create())
-            .databaseModule(DatabaseModule())
-            .domainModule(DomainModule(this))
-            .build()
+        initDagger()
 
         NotificationHelper.initNotification(this)
 
     }
 
-    fun initTheme(theme: Int) {
-        //TODO: create init theme
+    private fun initDagger() {
+        dagger = DaggerAppComponent.builder()
+            .remoteProvider(DaggerRemoteComponent.create())
+            .databaseModule(DatabaseModule())
+            .domainModule(DomainModule(this))
+            .build()
     }
+
 
     companion object {
         lateinit var instance: App
-        private set
+            private set
     }
 }
