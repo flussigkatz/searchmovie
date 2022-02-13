@@ -9,7 +9,7 @@
     <!--    fragment_details-->
     <dimen name="details_favorite_check_box_margin">20dp</dimen>
     <dimen name="details_favorite_check_box_size">30dp</dimen>
-    <dimen name="details_poster_heigth">500dp</dimen>
+    <dimen name="details_poster_height">600dp</dimen>
     <dimen name="details_fab_margin">20dp</dimen>
     <dimen name="details_description_margin">5dp</dimen>
     <dimen name="details_progress_bar_size">50dp</dimen>
@@ -21,11 +21,7 @@
     <dimen name="film_item_rating_donut_size">40dp</dimen>
     <dimen name="film_item_rating_donut_translation_z">5dp</dimen>
     <dimen name="film_item_container_margins">10dp</dimen>
-    <dimen name="film_item_cardview_corner_radius">10dp</dimen>
     <dimen name="film_item_textview_description_padding">8dp</dimen>
-    <dimen name="film_item_textview_description_width">0dp</dimen>
-    <dimen name="film_item_textview_description_height">0dp</dimen>
-    <dimen name="film_item_textview_title_width">0dp</dimen>
     <dimen name="film_item_textview_title_padding">8dp</dimen>
     <dimen name="film_item_imageview_poster_width">110dp</dimen>
 

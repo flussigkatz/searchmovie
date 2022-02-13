@@ -19,7 +19,7 @@ import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
+import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
 import java.util.concurrent.TimeUnit
 
@@ -75,16 +75,14 @@ class HomeFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
                     override fun click(film: Film, view: View) {
-//                        filmsAdapter.items[position].fav_state = state
                         film.fav_state = (view as MaterialCheckBox).isChecked
                     }
                 })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            val decorator = TopSpasingItemDecoration(5)
+            val decorator = SpacingItemDecoration(5)
             addItemDecoration(decorator)
         }
-
 
     }
 

@@ -1,34 +1,15 @@
 package xyz.flussigkatz.searchmovie.util
 
-import android.content.Context
 import android.os.Bundle
 import androidx.navigation.NavController
 import xyz.flussigkatz.searchmovie.R
 
 object NavigationHelper {
 
-    /*
-    when(menuItemId) {
-        R.id.home_page -> {
-            navController.navigate(R.id.)
-        }
-        R.id.history -> {
-            navController.navigate(R.id.)
-        }
-        R.id.marked -> {
-            navController.navigate(R.id.)
-        }
-        R.id.settings -> {
-            navController.navigate(R.id.)
-        }
-    }
-    */
-
     fun navigate(
         navController: NavController,
         menuItemId: Int,
-        onScreenFragmentId: Int,
-        context: Context?,
+        onScreenFragmentId: Int
     ) {
         when (onScreenFragmentId) {
             R.id.homeFragment -> {

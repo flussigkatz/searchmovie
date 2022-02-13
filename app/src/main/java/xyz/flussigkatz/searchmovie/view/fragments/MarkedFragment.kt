@@ -18,7 +18,7 @@ import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
+import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.MarkedFragmentViewModel
 
 class MarkedFragment : Fragment() {
@@ -74,7 +74,7 @@ class MarkedFragment : Fragment() {
                 })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            val decorator = TopSpasingItemDecoration(5)
+            val decorator = SpacingItemDecoration(5)
             addItemDecoration(decorator)
 
         }

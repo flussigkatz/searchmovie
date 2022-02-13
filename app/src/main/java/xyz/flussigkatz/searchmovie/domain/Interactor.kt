@@ -1,6 +1,5 @@
 package xyz.flussigkatz.searchmovie.domain
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -52,18 +51,6 @@ class Interactor(
             .subscribe {
                 repo.putFilmToDB(it)
             }
-    }
-
-    fun getSpecificFilmFromApi(id: String): Observable<Film> {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
-        return retrofitService.getSpecificFilm(id, API_KEY, lang)
-            .map { Converter.convertToFilmFromApi(it) }
-            .doOnError {
-                println(it.message)
-            }.observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
     }
 
     fun getSearchedFilmsFromApi(search_query: String, page: Int): Observable<List<Film>> {
