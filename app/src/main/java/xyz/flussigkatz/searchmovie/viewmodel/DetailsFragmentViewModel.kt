@@ -11,6 +11,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class DetailsFragmentViewModel : ViewModel() {
     val progressBarState = BehaviorSubject.create<Boolean>()
+    val favoriteMarkState = BehaviorSubject.create<Boolean>()
 
     suspend fun loadFilmPoster(url: String): Bitmap? {
         return suspendCoroutine {

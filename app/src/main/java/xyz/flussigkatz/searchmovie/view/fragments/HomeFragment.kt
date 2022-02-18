@@ -13,13 +13,14 @@ import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import xyz.flussigkatz.searchmovie.*
+import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
+import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
 import java.util.concurrent.TimeUnit
 
@@ -29,7 +30,6 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
-    private var filmDataBase = mutableListOf<Film>()
 
 
     override fun onCreateView(
@@ -48,12 +48,12 @@ class HomeFragment : Fragment() {
 
         viewModel.filmListData
             .subscribeOn(Schedulers.io())
+            .filter { !it.isNullOrEmpty() }
+            .doOnError { println("eventMessage: ${it.localizedMessage}") }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                filmDataBase.clear()
-                filmDataBase.addAll(it)
-                filmsAdapter.updateData(it)
-            }.addTo(autoDisposable)
+            .subscribe({ filmsAdapter.updateData(it) },
+                { println("$TAG viewModel.filmListData onError: ${it.localizedMessage}") })
+            .addTo(autoDisposable)
 
 
         initPullToRefresh()
@@ -75,28 +75,27 @@ class HomeFragment : Fragment() {
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
                     override fun click(film: Film, view: View) {
-//                        filmsAdapter.items[position].fav_state = state
                         film.fav_state = (view as MaterialCheckBox).isChecked
                     }
                 })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            val decorator = TopSpasingItemDecoration(5)
+            val decorator = SpacingItemDecoration(5)
             addItemDecoration(decorator)
         }
-
 
     }
 
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
-            binding.homeSearchView.isIconified = true
+            binding.homeSearchView.setQuery("", false)
             binding.homeSearchView.clearFocus()
             viewModel.getFilms()
             viewModel.refreshState
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { binding.homeRefresh.isRefreshing = it }
+                .subscribe({ binding.homeRefresh.isRefreshing = it },
+                    { println("$TAG initPullToRefresh onError: ${it.localizedMessage}") })
                 .addTo(autoDisposable)
         }
     }
@@ -105,12 +104,12 @@ class HomeFragment : Fragment() {
         viewModel.eventMessage
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+            .subscribe({ Toast.makeText(context, it, Toast.LENGTH_SHORT).show() },
+                { println("$TAG initEventMessage onError: ${it.localizedMessage}") })
             .addTo(autoDisposable)
     }
 
     private fun initSearchView() {
-//        binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false }
         binding.homeSearchView.setOnCloseListener {
             binding.homeSearchView.clearFocus()
             true
@@ -129,27 +128,27 @@ class HomeFragment : Fragment() {
                     }
 
                 })
-        }).observeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.io())
             .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .observeOn(Schedulers.io())
             .map { it.lowercase().trim() }
             .flatMap {
                 if (it.isNullOrBlank()) viewModel.getFilmsFromDB()
-                 else viewModel.getSearchedFilms(it)
+                else viewModel.getSearchedFilms(it)
 
             }.observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onError = {
-                    println("initSearchView: ${it.localizedMessage}")
+                    println("$TAG initSearchView onError: ${it.localizedMessage}")
                 },
                 onNext = {
-                    filmsAdapter.updateData(it)
+                    if (!binding.homeSearchView.isIconified) {
+                        filmsAdapter.updateData(it)
+                    }
                 }
             ).addTo(autoDisposable)
     }
 
     companion object {
-        private const val SEARCH_DEBOUNCE_TIME_MILLISECONDS = 1000L
+        private const val TAG = "HomeFragment"
     }
 }

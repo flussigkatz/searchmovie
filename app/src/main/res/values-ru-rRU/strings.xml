@@ -17,18 +17,17 @@
     <string name="radio_battery">Экономия заряда</string>
     <string name="exit_message">Ещё раз назад для выхода</string>
     <string name="error_upload_message">Ошибка загрузки. Проверьте интернет соединение.</string>
-    <string name="upload_time_interval_massage"> прошло c момента последнего обновления данных. Зачем чаще? </string>
-    <string name="min">мин.</string>
-    <string name="sec">сек.</string>
     <string name="open">Открыть</string>
-    <string name="downladed_to_galery">Сохранено в галерею.</string>
+    <string name="downloaded_to_gallery">Сохранено в галерею.</string>
     <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение.</string>
-    <string name="boring_killer_title">"Скучно?"</string>
-    <string name="boring_killer_text">"Посмотри "</string>
-    <string name="boring_killer_button_text">"Больше не показывать"</string>
-    <string name="settings_splash_screen_title">"Анимация запуска"</string>
-    <string name="bottom_sheet_text_collapsed">"Тяни меня"</string>
-    <string name="bottom_sheet_text_expanded">"Уже видел?"</string>
-
+    <string name="boring_killer_title">Скучно?</string>
+    <string name="boring_killer_text">Посмотри </string>
+    <string name="boring_killer_button_text">Больше не показывать</string>
+    <string name="settings_splash_screen_title">Анимация запуска</string>
+    <string name="bottom_sheet_text_collapsed">Тяни меня</string>
+    <string name="bottom_sheet_text_expanded">Уже видел?</string>
+    <string name="details_fab_share_description">Поделиться фильмом</string>
+    <string name="details_fab_favorite_description">Добавить фильм в избранное</string>
+    <string name="details_fab_download_poster_description">Скачать постер фильма</string>
 
 </resources>

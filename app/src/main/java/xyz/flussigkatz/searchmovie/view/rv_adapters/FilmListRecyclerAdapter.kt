@@ -1,10 +1,12 @@
 package xyz.flussigkatz.searchmovie.view.rv_adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
@@ -13,6 +15,7 @@ import xyz.flussigkatz.searchmovie.util.FilmDiff
 import xyz.flussigkatz.searchmovie.databinding.FilmItemBinding
 import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.view.rv_viewholder.FilmViewHolder
+import java.lang.Exception
 
 class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
@@ -33,13 +36,23 @@ class FilmListRecyclerAdapter(
         if (film != null) {
             holder.binding.film = film
 
+            val callbackPicasso = object : Callback {
+                override fun onSuccess() {
+                    holder.binding.poster.setBackgroundColor(Color.TRANSPARENT)
+                }
+
+                override fun onError(e: Exception?) {
+                }
+
+            }
+
             Picasso.get()
                 .load(IMAGES_URL + IMAGE_FORMAT_W154 + film.posterId)
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.ic_default_picture)
                 .error(R.drawable.ic_default_picture)
-                .into(holder.binding.poster)
+                .into(holder.binding.poster, callbackPicasso)
 
             holder.binding.favoriteCheckBox.setOnClickListener {
                 checkboxClickListener.click(film, it)

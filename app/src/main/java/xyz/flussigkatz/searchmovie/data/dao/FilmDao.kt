@@ -22,6 +22,9 @@ interface FilmDao {
     @Query("SELECT * FROM marked_films WHERE id LIKE :id")
     fun getCashedOneMarkedFilm(id: Int): MarkedFilm
 
+    @Query("SELECT * FROM marked_films WHERE title LIKE '%' || :query || '%'")
+    fun getSearchedMarkedFilm(query: String): Observable<List<MarkedFilm>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllFilms(list: List<Film>)
 
@@ -32,5 +35,5 @@ interface FilmDao {
     fun deleteFilms(films: List<Film>): Int
 
     @Delete
-    fun deleteOneFilm(film: MarkedFilm)
+    fun deleteOneMarkedFilm(film: MarkedFilm)
 }

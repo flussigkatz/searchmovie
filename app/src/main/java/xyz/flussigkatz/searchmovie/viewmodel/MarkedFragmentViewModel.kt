@@ -17,7 +17,7 @@ class MarkedFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
-        markedFilmListData = interactor.getMarkedFilmsFromDB()
+        markedFilmListData = getMarkedFilmsFromDB()
         refreshState = interactor.getRefreshState()
         getMarkedFilms()
     }
@@ -28,5 +28,13 @@ class MarkedFragmentViewModel : ViewModel() {
 
     fun deleteMarkedFilmFromDB(id: Int) {
         interactor.deleteMarkedFilmFromDB(id)
+    }
+
+    fun getMarkedFilmsFromDB(): Observable<List<MarkedFilm>> {
+        return interactor.getMarkedFilmsFromDB()
+    }
+
+    fun getSearchedMarkedFilms(query: String): Observable<List<MarkedFilm>> {
+        return interactor.getSearchedMarkedFilms(query)
     }
 }

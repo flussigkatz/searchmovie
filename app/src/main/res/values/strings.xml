@@ -16,19 +16,19 @@
     <string name="radio_system">System follow</string>
     <string name="radio_battery">Battery auto</string>
     <string name="exit_message">Back again to exit</string>
-    <string name="error_upload_message">Error upload. Check internet connction.</string>
-    <string name="upload_time_interval_massage"> have passed since the last data update. Why more often? .</string>
-    <string name="min">min.</string>
-    <string name="sec">sec.</string>
+    <string name="error_upload_message">Error upload. Check internet connection.</string>
     <string name="open">Open</string>
-    <string name="downladed_to_galery">Saved to the gallery.</string>
+    <string name="downloaded_to_gallery">Saved to the gallery.</string>
     <string name="permission_storage">No permission. Please grant permission</string>
-    <string name="boring_killer_title">"Boring?"</string>
-    <string name="boring_killer_text">"Watch "</string>
-    <string name="boring_killer_button_text">"Do not show again"</string>
-    <string name="settings_splash_screen_title">"Launch animation"</string>
-    <string name="bottom_sheet_text_collapsed">"Pull me"</string>
-    <string name="bottom_sheet_text_expanded">"Watched?"</string>
+    <string name="boring_killer_title">Boring?</string>
+    <string name="boring_killer_text">Watch </string>
+    <string name="boring_killer_button_text">Do not show again</string>
+    <string name="settings_splash_screen_title">Launch animation</string>
+    <string name="bottom_sheet_text_collapsed">Pull me</string>
+    <string name="bottom_sheet_text_expanded">Watched?</string>
+    <string name="details_fab_share_description">Share movie</string>
+    <string name="details_fab_favorite_description">Add movie to favorites</string>
+    <string name="details_fab_download_poster_description">Download movie poster</string>
 
 
 </resources>

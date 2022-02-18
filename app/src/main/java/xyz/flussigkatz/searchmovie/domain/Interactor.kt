@@ -1,6 +1,5 @@
 package xyz.flussigkatz.searchmovie.domain
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -26,53 +25,42 @@ class Interactor(
     private val refreshState: BehaviorSubject<Boolean>,
     private val eventMessage: PublishSubject<String>,
 ) {
-
+    val language = Locale.getDefault().run {
+        "$language-$country"
+    }
 
     fun getFilmsFromApi(page: Int) {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
+
         retrofitService.getFilms(
             getDefaultCategoryFromPreferences(),
             API_KEY,
-            lang,
-            page).map {
-            Converter.convertToFilmFromApi(it.tmdbFilms)
-        }.doOnSubscribe {
-            refreshState.onNext(true)
-            do {
-                repo.clearDB()
-            } while (repo.clearDB() != 0)
-        }.doOnComplete {
-            refreshState.onNext(false)
-        }.doOnError {
-            refreshState.onNext(false)
-            eventMessage.onNext(getText(R.string.error_upload_message))
-        }.subscribeOn(Schedulers.io())
-            .subscribe {
-                repo.putFilmToDB(it)
-            }
-    }
-
-    fun getSpecificFilmFromApi(id: String): Observable<Film> {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
-        return retrofitService.getSpecificFilm(id, API_KEY, lang)
-            .map { Converter.convertToFilmFromApi(it) }
-            .doOnError {
-                println(it.message)
-            }.observeOn(AndroidSchedulers.mainThread())
+            language,
+            page)
             .subscribeOn(Schedulers.io())
+            .filter {
+                !it.tmdbFilms.isNullOrEmpty()
+            }
+            .map { Converter.convertToFilmFromApi(it.tmdbFilms) }
+            .doOnSubscribe { refreshState.onNext(true) }
+            .doOnComplete {
+                refreshState.onNext(false)
+            }
+            .doOnError {
+                refreshState.onNext(false)
+                eventMessage.onNext(getText(R.string.error_upload_message))
+            }.subscribe(
+                {
+                    do repo.clearDB() while (repo.clearDB() != 0)
+                    repo.putFilmToDB(it)
+                },
+                { println("$TAG getFilmsFromApi onError: ${it.localizedMessage}") }
+            )
     }
 
     fun getSearchedFilmsFromApi(search_query: String, page: Int): Observable<List<Film>> {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
         return retrofitService.getSearchedFilms(
             API_KEY,
-            lang,
+            language,
             search_query,
             page
         ).map {
@@ -83,14 +71,11 @@ class Interactor(
     }
 
     fun getMarkedFilmsFromApi(page: Int) {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
         retrofitService.getFavoriteFilms(
             ACCOUNT_ID,
             API_KEY,
             SESSION_ID,
-            lang,
+            language,
             FAVORITE_SORT_BY_CREATED_AT_DESC,
             page
         ).map {
@@ -103,9 +88,9 @@ class Interactor(
             refreshState.onNext(false)
             eventMessage.onNext(getText(R.string.error_upload_message))
         }.subscribeOn(Schedulers.io())
-            .subscribe {
-                repo.putMarkedFilmToDB(it)
-            }
+            .subscribe(
+                { repo.putMarkedFilmToDB(it) },
+                { println("$TAG getMarkedFilmsFromApi onError: ${it.localizedMessage}") })
     }
 
     fun deleteMarkedFilmFromDB(id: Int) {
@@ -144,10 +129,9 @@ class Interactor(
         return repo.getAllMarkedFilmsFromDB()
     }
 
-    fun getMarkedFilmsFromDBToList(): Observable<List<MarkedFilm>>? {
-        return repo.getAllMarkedFilmsDBToList()
+    fun getSearchedMarkedFilms(query: String): Observable<List<MarkedFilm>> {
+        return repo.getSearchedMarkedFilms(query)
     }
-
 
     fun getRefreshState(): BehaviorSubject<Boolean> {
         return refreshState
@@ -161,4 +145,7 @@ class Interactor(
         return App.instance.getText(resId).toString()
     }
 
+    companion object {
+        private const val TAG = "Interactor"
+    }
 }

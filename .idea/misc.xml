@@ -4,19 +4,40 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable-v24/backgrond_gardient_dark.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1455" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/arrow_back.xml" value="0.12314814814814815" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/arrow_with_background.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/background_gradient.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/background_gradient_dark.xml" value="0.1455" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/cloud_download.xml" value="0.1995" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/err.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/favorite_selector.xml" value="0.23" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/history_button.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/home_button.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_arrow_back.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_arrow_back_24.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_baseline_share.xml" value="0.1" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.12314814814814815" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_default_picture.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_favorite.xml" value="0.1455" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_glyphicons.xml" value="0.1455" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/ic_unfavorite.xml" value="0.1455" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/marked_button.xml" value="0.13425925925925927" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/search_view_shape.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/settings.xml" value="0.1" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/unfavorite.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/drawable/wait.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/activity_main.xml" value="0.22685185185185186" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/bottom_sheet.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/film_item.xml" value="0.20260416666666667" />
-        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/fragment_home.xml" value="0.1" />
-        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/fragment_settings.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/film_item.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/fragment_details.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/fragment_settings.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/layout/list_item.xml" value="0.287962962962963" />
         <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/menu/bottom_app_bar.xml" value="0.1" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/menu/details_menu.xml" value="0.287962962962963" />
+        <entry key="..\:/Users/imax/AndroidStudioProjects/searchmovie/app/src/main/res/menu/menu_bottom_navigation.xml" value="0.287962962962963" />
       </map>
     </option>
   </component>

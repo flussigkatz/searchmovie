@@ -5,7 +5,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class TopSpasingItemDecoration(private val paddingInDp: Int): RecyclerView.ItemDecoration() {
+class SpacingItemDecoration(private val paddingInDp: Int) : RecyclerView.ItemDecoration() {
     private val Int.convertPx: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -13,9 +13,10 @@ class TopSpasingItemDecoration(private val paddingInDp: Int): RecyclerView.ItemD
         outRect: Rect,
         view: View,
         parent: RecyclerView,
-        state: RecyclerView.State
+        state: RecyclerView.State,
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        outRect.top = paddingInDp.convertPx
+        if (parent.getChildAdapterPosition(view) == 0) outRect.top = paddingInDp.convertPx
+        outRect.bottom = paddingInDp.convertPx
     }
 }

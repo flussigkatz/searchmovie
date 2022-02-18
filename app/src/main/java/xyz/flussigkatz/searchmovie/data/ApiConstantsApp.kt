@@ -6,5 +6,6 @@ object ApiConstantsApp {
     const val IMAGE_FORMAT_W500 = "w500"
     const val IMAGE_FORMAT_W154 = "w154"
     const val FAVORITE_SORT_BY_CREATED_AT_DESC = "created_at.desc"
+    const val SEARCH_DEBOUNCE_TIME_MILLISECONDS = 1000L
 
 }

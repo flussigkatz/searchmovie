@@ -17,16 +17,18 @@
 
 
     <style name="MainBackground" parent="Theme.SearchMovie">
-        <item name="android:background">@drawable/background_gradient</item>
-        <item name="android:backgroundTintMode">src_atop</item>
-        <item name="android:backgroundTint">@color/black_alpha_20</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <style name="FragmentBackground" parent="Theme.SearchMovie">
         <item name="android:background">@drawable/background_gradient</item>
     </style>
 
-    <style name="Theme.SearchMovie.DarkTextTheme">
+    <style name="Theme.SearchMovie.FilmItemPoster">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="Theme.SearchMovie.TextStyle">
         <item name="android:textColor">@color/black</item>
         <item name="android:background">@color/white</item>
     </style>
@@ -45,7 +47,7 @@
     <style name="BottomToolBar" parent="Theme.SearchMovie">
         <item name="itemIconTint">@color/white</item>
         <item name="itemTextColor">@color/white</item>
-        <item name="android:background">@color/black_alpha_90</item>
+        <item name="android:background">@color/dark_gray</item>
     </style>
 
 

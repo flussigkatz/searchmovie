@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="xyz.flussigkatz.searchmovie.data.entity.Film"/>
+        <import type="xyz.flussigkatz.searchmovie.data.entity.Film" />
 
         <variable
             name="film"
@@ -30,7 +30,7 @@
                 android:id="@+id/details_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:collapsedTitleTextAppearance="@style/Theme.SearchMovie.DarkTextTheme"
+                app:collapsedTitleTextAppearance="@style/Theme.SearchMovie.TextStyle"
                 app:contentScrim="?attr/colorPrimary"
                 app:expandedTitleTextAppearance="@style/Theme.SearchMovie.DetailsAppBar"
                 app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
@@ -39,80 +39,102 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/details_poster"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/details_poster_heigth"
-                    android:scaleType="centerCrop"
+                    android:layout_height="@dimen/details_poster_height"
                     app:layout_collapseMode="pin" />
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/details_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:title="@{film.title}" />
+                    app:layout_collapseMode="pin" />
 
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/details_favorite"
-                    android:layout_width="@dimen/details_favorite_check_box_size"
-                    android:layout_height="@dimen/details_favorite_check_box_size"
-                    android:layout_gravity="start|top"
-                    android:layout_margin="@dimen/details_favorite_check_box_margin"
-                    android:background="@drawable/favorite_selector"
-                    android:backgroundTint="@color/yellow"
-                    android:button="@null"
-                    android:checked="@={film.fav_state}" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/details_fab"
+            android:id="@+id/details_fab_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/details_fab_margin"
+            android:layout_marginEnd="@dimen/details_fab_margin_end"
             android:backgroundTint="@color/app_color_2"
+            android:contentDescription="@string/details_fab_share_description"
             app:borderWidth="0dp"
-            app:rippleColor="@color/app_color_3"
             app:layout_anchor="@id/details_appbar"
             app:layout_anchorGravity="bottom|right"
-            app:srcCompat="@drawable/ic_baseline_share_24" />
+            app:rippleColor="@color/app_color_3"
+            app:srcCompat="@drawable/ic_share" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/details_fab_download_poster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/details_fab_margin"
+            android:layout_marginEnd="@dimen/details_fab_download_poster_layout_margin_end"
             android:backgroundTint="@color/app_color_2"
+            android:contentDescription="@string/details_fab_download_poster_description"
             app:borderWidth="0dp"
-            app:rippleColor="@color/app_color_3"
             app:layout_anchor="@id/details_appbar"
-            app:layout_anchorGravity="bottom|left"
+            app:layout_anchorGravity="bottom|right"
+            app:rippleColor="@color/app_color_3"
             app:srcCompat="@drawable/cloud_download" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/details_fab_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/details_fab_favorite_layout_margin_end"
+            android:backgroundTint="@color/app_color_2"
+            android:contentDescription="@string/details_fab_favorite_description"
+            app:borderWidth="0dp"
+            app:layout_anchor="@id/details_appbar"
+            app:layout_anchorGravity="bottom|right"
+            app:rippleColor="@color/app_color_3"
+            app:srcCompat="@drawable/ic_unfavorite" />
 
         <ProgressBar
             android:id="@+id/details_progress_bar"
             android:layout_width="@dimen/details_progress_bar_size"
             android:layout_height="@dimen/details_progress_bar_size"
             android:indeterminateTint="@color/app_color_1"
-            android:translationZ="10dp"
+            android:translationZ="@dimen/details_progress_bar_translation_z"
             android:visibility="invisible"
             app:layout_anchor="@id/details_fab_download_poster"
             app:layout_anchorGravity="center" />
 
 
         <androidx.core.widget.NestedScrollView
-            style="@style/Theme.SearchMovie.DarkTextTheme"
+            style="@style/Theme.SearchMovie.TextStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <TextView
-                android:id="@+id/details_description"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/details_description_margin"
-                android:text="@{film.description}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/details_title"
+                    style="@style/Theme.SearchMovie.TextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/details_title_padding_top"
+                    android:text="@{film.title}"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+                <TextView
+                    android:id="@+id/details_description"
+                    style="@style/Theme.SearchMovie.TextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/details_description_margin"
+                    android:text="@{film.description}"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            </LinearLayout>
+
         </androidx.core.widget.NestedScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

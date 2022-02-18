@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
@@ -46,26 +48,37 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        initProgressBarState()
-
         val film = arguments?.get(DETAILS_FILM_KEY) as Film
         binding.film = film
 
+        initProgressBarState()
 
-        Picasso.get()
-            .load(IMAGES_URL + IMAGE_FORMAT_W500 + film.posterId)
-            .fit()
-            .centerCrop()
-            .placeholder(R.drawable.ic_default_picture)
-            .error(R.drawable.ic_default_picture)
-            .into(binding.detailsPoster)
+        initFab(film)
+
+        initNavigationIcon()
+
+        initDownloadFilmPoster(film)
+
+    }
+
+    private fun initFab(film: Film) {
+        viewModel.favoriteMarkState.onNext(film.fav_state)
+
+        viewModel.favoriteMarkState.subscribe {
+            film.fav_state = it
+            if (it) binding.detailsFabFavorite.setImageResource(R.drawable.ic_favorite)
+            else binding.detailsFabFavorite.setImageResource(R.drawable.ic_unfavorite)
+        }
+
+        binding.detailsFabFavorite.setOnClickListener {
+            viewModel.favoriteMarkState.onNext(!film.fav_state)
+        }
 
         binding.detailsFabDownloadPoster.setOnClickListener {
             performAsyncLoadOfPoster(film)
         }
 
-        binding.detailsFab.setOnClickListener {
+        binding.detailsFabShare.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
             intent.putExtra(
@@ -75,8 +88,6 @@ class DetailsFragment : Fragment() {
             intent.type = "text/plain"
             startActivity(Intent.createChooser(intent, "Share to"))
         }
-
-
     }
 
     private fun checkPermission(): Boolean {
@@ -151,7 +162,7 @@ class DetailsFragment : Fragment() {
                 saveToGallery(bitmap, film)
                 val snackbar = Snackbar.make(
                     binding.root,
-                    R.string.downladed_to_galery,
+                    R.string.downloaded_to_gallery,
                     Snackbar.LENGTH_LONG
                 )
 //                snackbar.anchorView = binding.rootFragmentDetails
@@ -177,6 +188,23 @@ class DetailsFragment : Fragment() {
         viewModel.progressBarState.subscribe {
             binding.detailsProgressBar.isVisible = it
         }
+    }
+
+    private fun initNavigationIcon() {
+        binding.detailsToolbar.setNavigationIcon(R.drawable.arrow_with_background)
+        binding.detailsToolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+    }
+
+    private fun initDownloadFilmPoster(film: Film) {
+        Picasso.get()
+            .load(IMAGES_URL + IMAGE_FORMAT_W500 + film.posterId)
+            .fit()
+            .centerCrop()
+            .placeholder(R.drawable.ic_default_picture)
+            .error(R.drawable.ic_default_picture)
+            .into(binding.detailsPoster)
     }
 
     override fun onDestroy() {
