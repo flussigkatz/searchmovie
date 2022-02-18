@@ -31,7 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/home_search_view_height"
                 android:background="@color/black_alpha_20"
-                android:queryHint="Search" />
+                android:queryHint="Search"
+                app:iconifiedByDefault="false" />
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

@@ -15,7 +15,7 @@
         android:id="@+id/settings_radio_group_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/settings_menu_margin_top"
         android:background="@color/black_alpha_20"
         android:orientation="vertical">
 
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|start"
-            android:layout_margin="@dimen/title_margin"
+            android:layout_margin="@dimen/settings_title_margin"
             android:text="@string/category_radio_group_header"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/white" />
@@ -63,7 +63,7 @@
         android:id="@+id/settings_radio_group_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/settings_menu_margin_top"
         android:background="@color/black_alpha_20"
         android:orientation="vertical">
 
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|start"
-            android:layout_margin="@dimen/title_margin"
+            android:layout_margin="@dimen/settings_title_margin"
             android:text="@string/theme_radio_group_header"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/white" />
@@ -110,15 +110,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@color/black_alpha_20"
-        app:cardCornerRadius="10dp">
+        android:layout_marginTop="@dimen/settings_menu_margin_top"
+        android:background="@color/black_alpha_20">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|start"
-            android:layout_margin="@dimen/title_margin"
+            android:layout_margin="@dimen/settings_title_margin"
             android:text="@string/settings_splash_screen_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/white" />

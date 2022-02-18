@@ -25,6 +25,7 @@ import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import xyz.flussigkatz.searchmovie.util.*
 import xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment
+import xyz.flussigkatz.searchmovie.view.fragments.HomeFragment
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants
 import javax.inject.Inject
 
@@ -105,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun initNavigation() {
+    private fun initNavigation() {
         binding.mainBottomToolbar.setOnItemSelectedListener {
             val onScreenFragmentId = navController.backStack.last.destination.id
             NavigationHelper.navigate(navController, it.itemId, onScreenFragmentId)
@@ -113,26 +114,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun initBoringNotification() {
-        var film: Film? = null
+    private fun initBoringNotification() {
         notificationManager = NotificationManagerCompat.from(this)
-        scope.launch {
-            val markedFilm = interactor.getMarkedFilmsFromDBToList()
-            markedFilm?.subscribeOn(Schedulers.io())?.doOnComplete {
-                if (film != null) {
-                    setWatchFilmReminder(this@MainActivity, film!!)
-                } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "No one marked film",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            }?.map { Converter.convertToFilm(it) }?.subscribe {
-                film = it.get((0..it.size - 1).random())
-            }
-        }
+        interactor.getMarkedFilmsFromDB()
+            .filter { !it.isNullOrEmpty() }
+            .subscribeOn(Schedulers.io())
+            .map { Converter.convertToFilm(it) }
+            .doOnError { println("initBoringNotification ${it.localizedMessage}") }
+            .subscribe({ setWatchFilmReminder(this@MainActivity, it.random()) },
+                { println("$TAG initBoringNotification onError: ${it.localizedMessage}") })
     }
 
     private fun startDetailsMarkedFilm(intent: Intent?) {
@@ -144,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setWatchFilmReminder(context: Context, film: Film) {
+    private fun setWatchFilmReminder(context: Context, film: Film) {
         val bundle = Bundle()
         val intentBoringKillerAlarm = Intent(
             context,
@@ -172,7 +162,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    inner class Receiver : BroadcastReceiver() {
+    private inner class Receiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY -> {
@@ -196,6 +186,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TIME_INTERVAL = 2000L
+        private const val TAG = "MainActivity"
     }
 
 }
