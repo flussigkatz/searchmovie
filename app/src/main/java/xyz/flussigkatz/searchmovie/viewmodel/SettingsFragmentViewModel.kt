@@ -1,5 +1,6 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
+import android.app.Activity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.flussigkatz.searchmovie.App
@@ -16,7 +17,7 @@ class SettingsFragmentViewModel : ViewModel() {
     init {
         App.instance.dagger.inject(this)
         getCategoryProperty()
-        getThemeProperty()
+        getNightMode()
         getSplashScreenProperty()
     }
 
@@ -29,16 +30,20 @@ class SettingsFragmentViewModel : ViewModel() {
         getCategoryProperty()
     }
 
-    fun getThemeProperty() {
-        themePropertyLifeData.value = interactor.getDefaultThemeFromPreferences()
+    private fun getNightMode() {
+        themePropertyLifeData.value = interactor.getNightModeFromPreferences()
     }
 
-    fun putThemeProperty(theme: Int) {
-        interactor.setDefaultTheme(theme)
-        getThemeProperty()
+    fun setNightMode(mode: Int, activity: Activity) {
+        val mMode = interactor.getNightModeFromPreferences()
+        if (mMode != mode) {
+            interactor.saveNightModeToPreferences(mode)
+            activity.recreate()
+            getNightMode()
+        }
     }
 
-    fun getSplashScreenProperty() {
+    private fun getSplashScreenProperty() {
         splashScreenPropertyLifeData.value = interactor.getSplashScreenStateFromPreferences()
     }
 

@@ -18,7 +18,6 @@ import javax.inject.Singleton
 )
 
 interface AppComponent {
-//    fun inject(app: App)
 
     fun inject(mainActivity: MainActivity)
 

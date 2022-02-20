@@ -29,6 +29,7 @@
     <string name="details_fab_share_description">Share movie</string>
     <string name="details_fab_favorite_description">Add movie to favorites</string>
     <string name="details_fab_download_poster_description">Download movie poster</string>
+    <string name="film_item_poster_description">Film poster</string>
 
 
 </resources>

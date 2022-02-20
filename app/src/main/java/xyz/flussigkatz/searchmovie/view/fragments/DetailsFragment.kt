@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
@@ -165,7 +163,6 @@ class DetailsFragment : Fragment() {
                     R.string.downloaded_to_gallery,
                     Snackbar.LENGTH_LONG
                 )
-//                snackbar.anchorView = binding.rootFragmentDetails
                 snackbar.setAction(R.string.open) {
                     val intent = Intent()
                     intent.action = Intent.ACTION_VIEW
