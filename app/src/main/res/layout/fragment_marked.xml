@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_fragment_marked"
-    style="@style/FragmentBackground"
+    android:background="@color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -12,7 +12,8 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/marked_appbar"
-        style="@style/AppBar"
+        android:background="@color/transparent"
+        app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
@@ -21,8 +22,6 @@
             android:id="@+id/marked_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:collapsedTitleTextAppearance="@style/AppBar"
-            app:expandedTitleTextAppearance="@style/AppBar"
             app:layout_scrollFlags="scroll|snap|enterAlways"
             app:toolbarId="@+id/marked_toolbar">
 

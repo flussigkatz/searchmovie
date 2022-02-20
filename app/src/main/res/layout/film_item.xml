@@ -38,18 +38,19 @@
 
             <ImageView
                 android:id="@+id/poster"
-                style="@style/Theme.SearchMovie.FilmItemPoster"
+                style="@style/CommonBackground"
                 android:layout_width="@dimen/film_item_imageview_poster_width"
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
                 android:layout_marginStart="5dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/film_item_poster_description" />
 
 
             <TextView
                 android:id="@+id/title"
-                style="@style/Theme.SearchMovie.TextStyle"
+                style="@style/CommonTextColor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/film_item_textview_title_padding"
@@ -66,7 +67,7 @@
 
             <TextView
                 android:id="@+id/description"
-                style="@style/Theme.SearchMovie.TextStyle"
+                style="@style/CommonTextColor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:padding="@dimen/film_item_textview_description_padding"
@@ -85,7 +86,6 @@
                 android:layout_height="@dimen/film_item_favorite_check_box_size"
                 android:layout_margin="@dimen/film_item_favorite_check_box_margin"
                 android:background="@drawable/favorite_selector"
-                android:backgroundTint="@color/app_color_2"
                 android:button="@null"
                 android:checked="@{film.fav_state}"
                 app:layout_constraintEnd_toEndOf="parent"

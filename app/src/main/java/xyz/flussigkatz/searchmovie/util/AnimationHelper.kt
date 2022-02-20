@@ -11,7 +11,7 @@ import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.*
 import kotlin.math.hypot
 
-object SplashScreenHelper {
+object AnimationHelper {
 
     private const val LOTTIE_ANIMATION_SPEED = 0.7F
     private const val CIRCULAR_ANIMATION_DURATION = 500L

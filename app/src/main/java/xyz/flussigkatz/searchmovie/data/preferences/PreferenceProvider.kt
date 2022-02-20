@@ -28,11 +28,11 @@ class PreferenceProvider(context: Context) {
         return preference.getString(KEY_DEFAULT_CATEGORY, DEFAULT_CATEGORY) ?: DEFAULT_CATEGORY
     }
 
-    fun saveDefaultTheme(theme: Int) {
-        preference.edit() { putInt(KEY_DEFAULT_THEME, theme) }
+    fun saveNightMode(mode: Int) {
+        preference.edit() { putInt(KEY_DEFAULT_THEME, mode) }
     }
 
-    fun getDefaultTheme(): Int {
+    fun getNightMode(): Int {
         return preference.getInt(KEY_DEFAULT_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
 

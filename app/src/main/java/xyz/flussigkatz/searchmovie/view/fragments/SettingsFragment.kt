@@ -71,16 +71,19 @@ class SettingsFragment : Fragment() {
         binding.settingsRadioGroupTheme.setOnCheckedChangeListener { _, chekedId ->
             when (chekedId) {
                 R.id.radio_light ->
-                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_NO)
+                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_NO,
+                        requireActivity())
                 R.id.radio_dark ->
-                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_YES)
+                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_YES,
+                        requireActivity())
                 R.id.radio_system ->
-                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+                        requireActivity())
                 R.id.radio_battery ->
-                    viewModel.putThemeProperty(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY,
+                        requireActivity())
             }
         }
-
 
         binding.settingsSplashScreen.setOnCheckedChangeListener { _, chekedId ->
             viewModel.putSplashScreenProperty(chekedId)

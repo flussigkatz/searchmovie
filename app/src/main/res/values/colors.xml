@@ -12,6 +12,9 @@
     <color name="app_color_1">#00FFFD</color>
     <color name="app_color_2">#6400FF</color>
     <color name="app_color_3">#FF0000</color>
+    <color name="app_color_dark_1">#007D7D</color>
+    <color name="app_color_dark_2">#32007D</color>
+    <color name="app_color_dark_3">#7D0000</color>
     <color name="transparent">#00000000</color>
     <color name="yellow">#FFEB3B</color>
     <color name="black_alpha_90">#E6000000</color>

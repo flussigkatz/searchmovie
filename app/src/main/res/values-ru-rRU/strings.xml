@@ -29,5 +29,6 @@
     <string name="details_fab_share_description">Поделиться фильмом</string>
     <string name="details_fab_favorite_description">Добавить фильм в избранное</string>
     <string name="details_fab_download_poster_description">Скачать постер фильма</string>
+    <string name="film_item_poster_description">Постер фильма</string>
 
 </resources>

@@ -30,9 +30,7 @@
                 android:id="@+id/details_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:collapsedTitleTextAppearance="@style/Theme.SearchMovie.TextStyle"
                 app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleTextAppearance="@style/Theme.SearchMovie.DetailsAppBar"
                 app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
                 app:toolbarId="@+id/details_toolbar">
 
@@ -55,48 +53,42 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/details_fab_share"
+            style="@style/FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/details_fab_margin_end"
-            android:backgroundTint="@color/app_color_2"
             android:contentDescription="@string/details_fab_share_description"
-            app:borderWidth="0dp"
             app:layout_anchor="@id/details_appbar"
             app:layout_anchorGravity="bottom|right"
-            app:rippleColor="@color/app_color_3"
             app:srcCompat="@drawable/ic_share" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/details_fab_download_poster"
+            style="@style/FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/details_fab_download_poster_layout_margin_end"
-            android:backgroundTint="@color/app_color_2"
             android:contentDescription="@string/details_fab_download_poster_description"
-            app:borderWidth="0dp"
             app:layout_anchor="@id/details_appbar"
             app:layout_anchorGravity="bottom|right"
-            app:rippleColor="@color/app_color_3"
-            app:srcCompat="@drawable/cloud_download" />
+            app:srcCompat="@drawable/ic_cloud_download" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/details_fab_favorite"
+            style="@style/FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/details_fab_favorite_layout_margin_end"
-            android:backgroundTint="@color/app_color_2"
             android:contentDescription="@string/details_fab_favorite_description"
-            app:borderWidth="0dp"
             app:layout_anchor="@id/details_appbar"
             app:layout_anchorGravity="bottom|right"
-            app:rippleColor="@color/app_color_3"
             app:srcCompat="@drawable/ic_unfavorite" />
 
         <ProgressBar
             android:id="@+id/details_progress_bar"
+            style="@style/ProgressBar"
             android:layout_width="@dimen/details_progress_bar_size"
             android:layout_height="@dimen/details_progress_bar_size"
-            android:indeterminateTint="@color/app_color_1"
             android:translationZ="@dimen/details_progress_bar_translation_z"
             android:visibility="invisible"
             app:layout_anchor="@id/details_fab_download_poster"
@@ -104,7 +96,7 @@
 
 
         <androidx.core.widget.NestedScrollView
-            style="@style/Theme.SearchMovie.TextStyle"
+            style="@style/CommonBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -116,7 +108,7 @@
 
                 <TextView
                     android:id="@+id/details_title"
-                    style="@style/Theme.SearchMovie.TextStyle"
+                    style="@style/CommonTextColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/details_title_padding_top"
@@ -126,7 +118,7 @@
 
                 <TextView
                     android:id="@+id/details_description"
-                    style="@style/Theme.SearchMovie.TextStyle"
+                    style="@style/CommonTextColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/details_description_margin"

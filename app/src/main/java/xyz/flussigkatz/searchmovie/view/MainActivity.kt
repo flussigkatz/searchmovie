@@ -1,5 +1,6 @@
 package xyz.flussigkatz.searchmovie.view
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.*
@@ -25,7 +27,6 @@ import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import xyz.flussigkatz.searchmovie.util.*
 import xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment
-import xyz.flussigkatz.searchmovie.view.fragments.HomeFragment
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants
 import javax.inject.Inject
 
@@ -36,40 +37,28 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManagerCompat
     private val scope = CoroutineScope(Dispatchers.IO)
     private val receiver = Receiver()
+    lateinit var navController: NavController
+    private var backPressedTime = 0L
 
     init {
         App.instance.dagger.inject(this)
     }
 
-    lateinit var navController: NavController
-    private var backPressedTime = 0L
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        initTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
 
+        initReceiver()
 
-        val filter = IntentFilter().also {
-            it.addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)
-            it.addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_OFF_KEY)
-        }
-
-        registerReceiver(receiver, filter)
-
-        //TODO: Deal with navigation backstack
-        navController = Navigation.findNavController(
-            this@MainActivity,
-            R.id.nav_host_fragment
-        )
-
-        initSplashScreen()
+        initAnimationHelper()
 
         initNavigation()
-
     }
 
 
+    @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
         val onScreenFragmentId = navController.backStack.last.destination.id
         if (R.id.homeFragment != onScreenFragmentId) {
@@ -90,23 +79,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        SplashScreenHelper.cancelAnimScope()
+        AnimationHelper.cancelAnimScope()
         scope.cancel()
         unregisterReceiver(receiver)
         super.onDestroy()
     }
 
-    private fun initSplashScreen() {
+    private fun initAnimationHelper() {
         val viewHomeFragment = findViewById<CoordinatorLayout>(R.id.root_fragment_home)
         if (interactor.getSplashScreenStateFromPreferences()) {
-            SplashScreenHelper.initSplashScreen(binding.splashScreen, viewHomeFragment)
-        } else {
+            AnimationHelper.initSplashScreen(binding.splashScreen, viewHomeFragment)
+        } else if (viewHomeFragment != null) {
             viewHomeFragment.visibility = View.INVISIBLE
-            SplashScreenHelper.revealAnimation(viewHomeFragment)
+            AnimationHelper.revealAnimation(viewHomeFragment)
         }
     }
 
+
+    @SuppressLint("RestrictedApi")
     private fun initNavigation() {
+        //TODO: Deal with navigation backstack
+        navController = Navigation.findNavController(
+            this@MainActivity,
+            R.id.nav_host_fragment
+        )
         binding.mainBottomToolbar.setOnItemSelectedListener {
             val onScreenFragmentId = navController.backStack.last.destination.id
             NavigationHelper.navigate(navController, it.itemId, onScreenFragmentId)
@@ -160,6 +156,19 @@ class MainActivity : AppCompatActivity() {
             System.currentTimeMillis() + 10,
             pendingIntentAlarm
         )
+    }
+
+    private fun initReceiver() {
+        val filter = IntentFilter().also {
+            it.addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)
+            it.addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_OFF_KEY)
+        }
+
+        registerReceiver(receiver, filter)
+    }
+
+    private fun initTheme() {
+        AppCompatDelegate.setDefaultNightMode(interactor.getNightModeFromPreferences())
     }
 
     private inner class Receiver : BroadcastReceiver() {

@@ -25,7 +25,7 @@ class Interactor(
     private val refreshState: BehaviorSubject<Boolean>,
     private val eventMessage: PublishSubject<String>,
 ) {
-    val language = Locale.getDefault().run {
+    private val language = Locale.getDefault().run {
         "$language-$country"
     }
 
@@ -105,12 +105,12 @@ class Interactor(
         return preferences.getDefaultCategory()
     }
 
-    fun setDefaultTheme(theme: Int) {
-        preferences.saveDefaultTheme(theme)
+    fun saveNightModeToPreferences(mode: Int) {
+        preferences.saveNightMode(mode)
     }
 
-    fun getDefaultThemeFromPreferences(): Int {
-        return preferences.getDefaultTheme()
+    fun getNightModeFromPreferences(): Int {
+        return preferences.getNightMode()
     }
 
     fun setSplashScreenState(state: Boolean) {
