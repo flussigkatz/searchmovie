@@ -1,4 +1,4 @@
-package xyz.flussigkatz.searchmovie.data.entity
+package xyz.flussigkatz.core_api.entity
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

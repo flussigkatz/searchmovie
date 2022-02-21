@@ -4,6 +4,8 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.MarkedFilm
 import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
@@ -13,13 +15,11 @@ import xyz.flussigkatz.searchmovie.data.Api.SESSION_ID
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
-import xyz.flussigkatz.searchmovie.data.entity.Film
-import xyz.flussigkatz.searchmovie.data.entity.MarkedFilm
 import xyz.flussigkatz.searchmovie.util.Converter
 import java.util.*
 
 class Interactor(
-    private val repo: MainRepository,
+    private val repository: MainRepository,
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider,
     private val refreshState: BehaviorSubject<Boolean>,
@@ -50,8 +50,8 @@ class Interactor(
                 eventMessage.onNext(getText(R.string.error_upload_message))
             }.subscribe(
                 {
-                    do repo.clearDB() while (repo.clearDB() != 0)
-                    repo.putFilmToDB(it)
+                    do repository.clearDB() while (repository.clearDB() != 0)
+                    repository.putFilmToDB(it)
                 },
                 { println("$TAG getFilmsFromApi onError: ${it.localizedMessage}") }
             )
@@ -89,12 +89,12 @@ class Interactor(
             eventMessage.onNext(getText(R.string.error_upload_message))
         }.subscribeOn(Schedulers.io())
             .subscribe(
-                { repo.putMarkedFilmToDB(it) },
+                { repository.putMarkedFilmToDB(it) },
                 { println("$TAG getMarkedFilmsFromApi onError: ${it.localizedMessage}") })
     }
 
     fun deleteMarkedFilmFromDB(id: Int) {
-        repo.deleteMarkedFilmFromDB(id)
+        repository.deleteMarkedFilmFromDB(id)
     }
 
     fun saveDefaultCategoryToPreferences(category: String) {
@@ -122,15 +122,15 @@ class Interactor(
     }
 
     fun getFilmsFromDB(): Observable<List<Film>> {
-        return repo.getAllFilmsFromDB()
+        return repository.getAllFilmsFromDB()
     }
 
     fun getMarkedFilmsFromDB(): Observable<List<MarkedFilm>> {
-        return repo.getAllMarkedFilmsFromDB()
+        return repository.getAllMarkedFilmsFromDB()
     }
 
     fun getSearchedMarkedFilms(query: String): Observable<List<MarkedFilm>> {
-        return repo.getSearchedMarkedFilms(query)
+        return repository.getSearchedMarkedFilms(query)
     }
 
     fun getRefreshState(): BehaviorSubject<Boolean> {

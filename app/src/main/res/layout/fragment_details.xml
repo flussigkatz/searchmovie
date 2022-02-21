@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="xyz.flussigkatz.searchmovie.data.entity.Film" />
+        <import type="xyz.flussigkatz.core_api.entity.Film" />
 
         <variable
             name="film"

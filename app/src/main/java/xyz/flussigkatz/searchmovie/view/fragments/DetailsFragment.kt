@@ -20,7 +20,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
-import xyz.flussigkatz.searchmovie.data.entity.Film
+import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_ORIGINAL

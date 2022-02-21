@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.NotificationManagerCompat
 import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment
 
 object NotificationHelper {

@@ -14,10 +14,10 @@ import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
+import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.*
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
-import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.addTo

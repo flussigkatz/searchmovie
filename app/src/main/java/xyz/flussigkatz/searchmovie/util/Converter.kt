@@ -1,9 +1,9 @@
 package xyz.flussigkatz.searchmovie.util
 
+import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.MarkedFilm
 import xyz.flussigkatz.remote_module.entity.TmdbSpecificFilmDto
 import xyz.flussigkatz.searchmovie.data.entity.TmdbFilm
-import xyz.flussigkatz.searchmovie.data.entity.Film
-import xyz.flussigkatz.searchmovie.data.entity.MarkedFilm
 
 object Converter {
     fun convertToFilmFromApi(list: List<TmdbFilm>?): List<Film> {

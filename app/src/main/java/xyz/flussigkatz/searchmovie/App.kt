@@ -1,16 +1,17 @@
 package xyz.flussigkatz.searchmovie
 
 import android.app.Application
+import xyz.flussigkatz.core.CoreProvidersFactory
 import xyz.flussigkatz.remote_module.di.DaggerRemoteComponent
 import xyz.flussigkatz.searchmovie.di.AppComponent
-import xyz.flussigkatz.searchmovie.di.DaggerAppComponent
-import xyz.flussigkatz.searchmovie.di.modules.DatabaseModule
+import xyz.flussigkatz.searchmovie.di.MainComponent
+import xyz.flussigkatz.searchmovie.di.DaggerMainComponent
 import xyz.flussigkatz.searchmovie.di.modules.DomainModule
 import xyz.flussigkatz.searchmovie.view.notification.NotificationHelper
 
 class App : Application() {
 
-    lateinit var dagger: AppComponent
+    lateinit var dagger: MainComponent
 
     override fun onCreate() {
         super.onCreate()
@@ -23,10 +24,11 @@ class App : Application() {
     }
 
     private fun initDagger() {
-        dagger = DaggerAppComponent.builder()
+        dagger = DaggerMainComponent.builder()
+            .appProvider(AppComponent.create(this))
             .remoteProvider(DaggerRemoteComponent.create())
-            .databaseModule(DatabaseModule())
-            .domainModule(DomainModule(this))
+            .databaseProvider(CoreProvidersFactory.createDatabaseBuilder(AppComponent.create(this)))
+            .domainModule(DomainModule())
             .build()
     }
 

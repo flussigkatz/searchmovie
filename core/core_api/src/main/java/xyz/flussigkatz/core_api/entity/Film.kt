@@ -14,21 +14,6 @@ data class Film(
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "poster_path") val posterId: String,
     @ColumnInfo(name = "overview") val description: String,
-    @ColumnInfo(name = "vote_average") var rating: Int = 0,
-    var fav_state: Boolean = false
-) : Parcelable {
-
-   /* companion object {
-        @BindingAdapter("setImageRes")
-        @JvmStatic
-        fun setImage(view: ImageView, image: String) {
-            Picasso.get()
-                .load(ApiConstants.IMAGES_URL + "w154" + image)
-                .fit()
-                .centerCrop()
-                .placeholder(R.drawable.wait)
-                .error(R.drawable.err)
-                .into(view)
-        }
-    }*/
-}
+    @ColumnInfo(name = "vote_average") var rating: Int,
+    @ColumnInfo(name = "marked") var fav_state: Boolean = false,
+) : Parcelable

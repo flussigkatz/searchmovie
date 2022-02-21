@@ -1,7 +1,7 @@
 package xyz.flussigkatz.searchmovie.util
 
 import androidx.recyclerview.widget.DiffUtil
-import xyz.flussigkatz.searchmovie.data.entity.Film
+import xyz.flussigkatz.core_api.entity.Film
 
 class FilmDiff(var oldList: ArrayList<Film>, val newList: ArrayList<Film>) : DiffUtil.Callback() {
 

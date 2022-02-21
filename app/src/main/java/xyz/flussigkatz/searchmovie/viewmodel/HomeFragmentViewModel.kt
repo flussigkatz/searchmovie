@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.App
-import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 

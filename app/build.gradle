@@ -146,12 +146,6 @@ dependencies {
     implementation dagger2
     kapt dagger2_compiler
 
-    //Room
-    implementation room_runtime
-    implementation room_ktx
-    implementation room_rxjava3
-    kapt room_compiler
-
     //Fragment-ktx
     implementation "androidx.fragment:fragment-ktx:1.3.6"
 
@@ -165,7 +159,7 @@ dependencies {
     implementation rxjava
     implementation rxkotlin
 
-    implementation project(':core:core_api')
+    implementation project(':core:core')
     implementation project(':remote_module')
 
     //Firebase

@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import xyz.flussigkatz.core_api.db.FilmDao
 import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
@@ -12,22 +13,23 @@ import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Singleton
 
 @Module
-class DomainModule(val context: Context) {
-
-    @Provides
-    fun provideContext() = context
+class DomainModule {
 
     @Singleton
     @Provides
     fun providePreferences(context: Context) = PreferenceProvider(context)
 
-    @Provides
     @Singleton
-    fun provideBehaviorSubjectRefreshState() = BehaviorSubject.create<Boolean>()
+    @Provides
+    fun provideRepository(filmDao: FilmDao) = MainRepository(filmDao)
 
     @Provides
     @Singleton
-    fun providePublishSubjectEventMessage() = PublishSubject.create<String>()
+    fun provideBehaviorSubjectRefreshState(): BehaviorSubject<Boolean> = BehaviorSubject.create()
+
+    @Provides
+    @Singleton
+    fun providePublishSubjectEventMessage(): PublishSubject<String> = PublishSubject.create()
 
     @Provides
     @Singleton
@@ -38,7 +40,7 @@ class DomainModule(val context: Context) {
         refreshState: BehaviorSubject<Boolean>,
         eventMessage: PublishSubject<String>
     ) = Interactor(
-        repo = repository,
+        repository = repository,
         retrofitService = tmdbApi,
         preferences = preferenceProvider,
         refreshState = refreshState,

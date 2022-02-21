@@ -19,10 +19,10 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
+import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.SearchMovieReceiver
-import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import xyz.flussigkatz.searchmovie.util.*

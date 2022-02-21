@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W154
 import xyz.flussigkatz.searchmovie.util.FilmDiff
 import xyz.flussigkatz.searchmovie.databinding.FilmItemBinding
-import xyz.flussigkatz.searchmovie.data.entity.Film
 import xyz.flussigkatz.searchmovie.view.rv_viewholder.FilmViewHolder
 import java.lang.Exception
 
