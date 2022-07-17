@@ -13,6 +13,7 @@ import kotlin.math.hypot
 
 object AnimationHelper {
 
+    private const val HALF_DIVIDER = 2
     private const val LOTTIE_ANIMATION_SPEED = 0.7F
     private const val CIRCULAR_ANIMATION_DURATION = 500L
     private val animScope = CoroutineScope(Dispatchers.IO)
@@ -48,8 +49,8 @@ object AnimationHelper {
             do {
                 if (view.width > 0 || view.height > 0) {
                     withContext(Dispatchers.Main) {
-                        val x: Int = view.width.div(2)
-                        val y: Int = view.height.div(2)
+                        val x: Int = view.width.div(HALF_DIVIDER)
+                        val y: Int = view.height.div(HALF_DIVIDER)
                         val startRadius = 0
                         val endRadius = hypot(view.width.toDouble(), view.height.toDouble())
                         val anim = ViewAnimationUtils.createCircularReveal(
@@ -76,8 +77,8 @@ object AnimationHelper {
     }
 
     fun lottieCoverAnimation(coverView: View, revealView: View) {
-        val x: Int = coverView.width.div(2)
-        val y: Int = coverView.height.div(2)
+        val x: Int = coverView.width.div(HALF_DIVIDER)
+        val y: Int = coverView.height.div(HALF_DIVIDER)
         val startRadius = hypot(coverView.width.toDouble(), coverView.height.toDouble())
         val endRadius = 0
         val anim = ViewAnimationUtils.createCircularReveal(

@@ -58,9 +58,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
-        val onScreenFragmentId = navController.backStack.last.destination.id
+        val onScreenFragmentId = navController.backQueue.last().destination.id
         if (R.id.homeFragment != onScreenFragmentId) {
             super.onBackPressed()
         } else {
@@ -96,15 +95,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("RestrictedApi")
     private fun initNavigation() {
-        //TODO: Deal with navigation backstack
         navController = Navigation.findNavController(
             this@MainActivity,
             R.id.nav_host_fragment
         )
         binding.mainBottomToolbar.setOnItemSelectedListener {
-            val onScreenFragmentId = navController.backStack.last.destination.id
+            val onScreenFragmentId = navController.backQueue.last().destination.id
             NavigationHelper.navigate(navController, it.itemId, onScreenFragmentId)
             true
         }

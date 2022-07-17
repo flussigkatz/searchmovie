@@ -37,14 +37,10 @@ class Interactor(
             language,
             page)
             .subscribeOn(Schedulers.io())
-            .filter {
-                !it.tmdbFilms.isNullOrEmpty()
-            }
+            .filter { !it.tmdbFilms.isNullOrEmpty() }
             .map { Converter.convertToFilmFromApi(it.tmdbFilms) }
             .doOnSubscribe { refreshState.onNext(true) }
-            .doOnComplete {
-                refreshState.onNext(false)
-            }
+            .doOnComplete { refreshState.onNext(false) }
             .doOnError {
                 refreshState.onNext(false)
                 eventMessage.onNext(getText(R.string.error_upload_message))
