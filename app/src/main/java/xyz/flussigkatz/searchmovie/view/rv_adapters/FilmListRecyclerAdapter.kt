@@ -14,6 +14,7 @@ import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W154
 import xyz.flussigkatz.searchmovie.util.FilmDiff
 import xyz.flussigkatz.searchmovie.databinding.FilmItemBinding
+import xyz.flussigkatz.searchmovie.view.customview.RatingDonutView
 import xyz.flussigkatz.searchmovie.view.rv_viewholder.FilmViewHolder
 import java.lang.Exception
 
@@ -25,9 +26,7 @@ class FilmListRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return FilmViewHolder(
-            FilmItemBinding.inflate(inflater, parent, false)
-        )
+        return FilmViewHolder(FilmItemBinding.inflate(inflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
@@ -35,15 +34,12 @@ class FilmListRecyclerAdapter(
 
         if (film != null) {
             holder.binding.film = film
-
             val callbackPicasso = object : Callback {
                 override fun onSuccess() {
                     holder.binding.poster.setBackgroundColor(Color.TRANSPARENT)
                 }
 
-                override fun onError(e: Exception?) {
-                }
-
+                override fun onError(e: Exception?) {}
             }
 
             Picasso.get()

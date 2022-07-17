@@ -22,12 +22,12 @@
 
         <xyz.flussigkatz.searchmovie.view.customview.RatingDonutView
             android:id="@+id/rating_donut"
-            rating="@{film.rating}"
             android:layout_width="@dimen/film_item_rating_donut_size"
             android:layout_height="@dimen/film_item_rating_donut_size"
             android:layout_gravity="bottom|start"
             android:translationZ="@dimen/film_item_rating_donut_translation_z"
             app:scaleSize="45"
+            app:progress="@{film.rating}"
             app:stroke="10" />
 
 
