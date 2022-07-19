@@ -45,37 +45,27 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val film = arguments?.get(DETAILS_FILM_KEY) as Film
         binding.film = film
-
         initProgressBarState()
-
         initFab(film)
-
         initNavigationIcon()
-
         initDownloadFilmPoster(film)
-
     }
 
     private fun initFab(film: Film) {
         viewModel.favoriteMarkState.onNext(film.fav_state)
-
         viewModel.favoriteMarkState.subscribe {
             film.fav_state = it
             if (it) binding.detailsFabFavorite.setImageResource(R.drawable.ic_favorite)
             else binding.detailsFabFavorite.setImageResource(R.drawable.ic_unfavorite)
         }
-
         binding.detailsFabFavorite.setOnClickListener {
             viewModel.favoriteMarkState.onNext(!film.fav_state)
         }
-
         binding.detailsFabDownloadPoster.setOnClickListener {
             performAsyncLoadOfPoster(film)
         }
-
         binding.detailsFabShare.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
@@ -122,9 +112,11 @@ class DetailsFragment : Fragment() {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues
             )
-            val outputStream = contentResolver.openOutputStream(uri!!)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            outputStream!!.close()
+            uri?.let {
+                val outputStream = contentResolver.openOutputStream(it)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                outputStream?.close()
+            }
         } else {
             @Suppress("DEPRECATION")
             MediaStore.Images.Media.insertImage(
@@ -151,9 +143,7 @@ class DetailsFragment : Fragment() {
         MainScope().launch {
             viewModel.progressBarState.onNext(true)
             val job = scope.async {
-                viewModel.loadFilmPoster(
-                    IMAGES_URL + IMAGE_FORMAT_ORIGINAL + film.posterId
-                )
+                viewModel.loadFilmPoster(IMAGES_URL + IMAGE_FORMAT_ORIGINAL + film.posterId)
             }
             val bitmap = job.await()
             if (bitmap != null) {
