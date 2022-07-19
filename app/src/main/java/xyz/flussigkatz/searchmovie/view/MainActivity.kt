@@ -1,31 +1,33 @@
 package xyz.flussigkatz.searchmovie.view
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.SearchMovieReceiver
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
-import xyz.flussigkatz.searchmovie.util.*
+import xyz.flussigkatz.searchmovie.util.AnimationHelper
+import xyz.flussigkatz.searchmovie.util.Converter
+import xyz.flussigkatz.searchmovie.util.NavigationHelper
 import xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants
 import javax.inject.Inject
@@ -49,14 +51,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.rootActivityMain)
-
         initReceiver()
-
         initAnimationHelper()
-
         initNavigation()
     }
-
 
     override fun onBackPressed() {
         val onScreenFragmentId = navController.backQueue.last().destination.id
@@ -78,7 +76,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        AnimationHelper.cancelAnimScope()
         scope.cancel()
         unregisterReceiver(receiver)
         super.onDestroy()
@@ -88,12 +85,8 @@ class MainActivity : AppCompatActivity() {
         val viewHomeFragment = findViewById<CoordinatorLayout>(R.id.root_fragment_home)
         if (interactor.getSplashScreenStateFromPreferences()) {
             AnimationHelper.initSplashScreen(binding.splashScreen, viewHomeFragment)
-        } else if (viewHomeFragment != null) {
-            viewHomeFragment.visibility = View.INVISIBLE
-            AnimationHelper.revealAnimation(viewHomeFragment)
-        }
+        } else AnimationHelper.firstStartAnimation(viewHomeFragment)
     }
-
 
     private fun initNavigation() {
         navController = Navigation.findNavController(
@@ -194,5 +187,4 @@ class MainActivity : AppCompatActivity() {
         private const val TIME_INTERVAL = 2000L
         private const val TAG = "MainActivity"
     }
-
 }

@@ -43,9 +43,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         autoDisposable.bindTo(lifecycle)
-
         viewModel.filmListData
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }
@@ -54,15 +52,9 @@ class HomeFragment : Fragment() {
             .subscribe({ filmsAdapter.updateData(it) },
                 { println("$TAG viewModel.filmListData onError: ${it.localizedMessage}") })
             .addTo(autoDisposable)
-
-
         initPullToRefresh()
-
         initEventMessage()
-
         initSearchView()
-
-
         binding.homeRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {

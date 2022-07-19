@@ -27,8 +27,6 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         viewModel.categoryPropertyLifeData.observe(viewLifecycleOwner, Observer<String> {
             when (it) {
                 POPULAR_CATEGORY ->
@@ -41,7 +39,6 @@ class SettingsFragment : Fragment() {
                     binding.settingsRadioGroupCategory.check(R.id.radio_in_cinemas)
             }
         })
-
         viewModel.themePropertyLifeData.observe(viewLifecycleOwner, Observer<Int> {
             when (it) {
                 AppCompatDelegate.MODE_NIGHT_NO ->
@@ -54,11 +51,9 @@ class SettingsFragment : Fragment() {
                     binding.settingsRadioGroupTheme.check(R.id.radio_battery)
             }
         })
-
         viewModel.splashScreenPropertyLifeData.observe(viewLifecycleOwner, Observer<Boolean> {
             binding.settingsSplashScreen.isChecked = it
         })
-
         binding.settingsRadioGroupCategory.setOnCheckedChangeListener { _, chekedId ->
             when (chekedId) {
                 R.id.radio_popular -> viewModel.putCategoryProperty(POPULAR_CATEGORY)
@@ -67,7 +62,6 @@ class SettingsFragment : Fragment() {
                 R.id.radio_in_cinemas -> viewModel.putCategoryProperty(NOW_PLAYING_CATEGORY)
             }
         }
-
         binding.settingsRadioGroupTheme.setOnCheckedChangeListener { _, chekedId ->
             when (chekedId) {
                 R.id.radio_light ->
@@ -84,7 +78,6 @@ class SettingsFragment : Fragment() {
                         requireActivity())
             }
         }
-
         binding.settingsSplashScreen.setOnCheckedChangeListener { _, chekedId ->
             viewModel.putSplashScreenProperty(chekedId)
         }
@@ -96,5 +89,4 @@ class SettingsFragment : Fragment() {
         private const val UPCOMING_CATEGORY = "upcoming"
         private const val NOW_PLAYING_CATEGORY = "now_playing"
     }
-
 }
