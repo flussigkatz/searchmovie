@@ -46,13 +46,9 @@ class MarkedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         autoDisposable.bindTo(lifecycle)
-
         initPullToRefresh()
-
         initSearchView()
-
         viewModel.markedFilmListData
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }
@@ -87,7 +83,6 @@ class MarkedFragment : Fragment() {
         }
     }
 
-
     private fun initSearchView() {
         binding.markedSearchView.setOnCloseListener {
             binding.markedSearchView.clearFocus()
@@ -97,12 +92,13 @@ class MarkedFragment : Fragment() {
             binding.markedSearchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        sub.onNext(query)
+//                        sub.onNext(query)
+                        if (query.isNullOrBlank()) sub.onNext("") else sub.onNext(query)
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        sub.onNext(newText)
+                        if (newText.isNullOrBlank()) sub.onNext("") else sub.onNext(newText)
                         return false
                     }
 
