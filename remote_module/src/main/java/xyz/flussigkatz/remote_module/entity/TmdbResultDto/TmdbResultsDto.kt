@@ -1,4 +1,4 @@
-package xyz.flussigkatz.searchmovie.data.entity
+package xyz.flussigkatz.remote_module.entity.TmdbResultDto
 
 
 import com.google.gson.annotations.SerializedName

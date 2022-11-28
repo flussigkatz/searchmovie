@@ -2,8 +2,8 @@ package xyz.flussigkatz.searchmovie.util
 
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.core_api.entity.MarkedFilm
-import xyz.flussigkatz.remote_module.entity.TmdbSpecificFilmDto
-import xyz.flussigkatz.searchmovie.data.entity.TmdbFilm
+import xyz.flussigkatz.remote_module.entity.FavoriteMovieListDto.FavoriteListItem
+import xyz.flussigkatz.remote_module.entity.TmdbResultDto.TmdbFilm
 
 object Converter {
     fun convertToFilmFromApi(list: List<TmdbFilm>?): List<Film> {
@@ -21,17 +21,6 @@ object Converter {
             )
         }
         return result
-    }
-    fun convertToFilmFromApi(film: TmdbSpecificFilmDto): Film {
-        return Film(
-            id = film.id,
-            title = film.title,
-            posterId = film.posterPath,
-            description = film.overview,
-            rating = (film.voteAverage * 10).toInt(),
-            fav_state = false
-        )
-
     }
 
     fun convertToFilm(list: List<MarkedFilm>): List<Film> {
@@ -51,13 +40,13 @@ object Converter {
         return result
     }
 
-    fun convertToMarkedFilmFromApi(list: List<TmdbFilm>?): List<MarkedFilm> {
+    fun convertToMarkedFilmFromApi(list: List<FavoriteListItem>?): List<MarkedFilm> {
         val result = mutableListOf<MarkedFilm>()
         list?.forEach {
             result.add(
                 MarkedFilm(
                     id = it.id,
-                    title = it.title,
+                    title = it.title ?: it.name,
                     posterId = it.posterPath ?: "",
                     description = it.overview,
                     rating = (it.voteAverage * 10).toInt(),

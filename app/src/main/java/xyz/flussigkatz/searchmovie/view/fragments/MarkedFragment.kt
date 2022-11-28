@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +14,9 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.*
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.*
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.Converter
@@ -32,7 +32,6 @@ class MarkedFragment : Fragment() {
     private lateinit var binding: FragmentMarkedBinding
     private val viewModel: MarkedFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
-    private val scope = CoroutineScope(Dispatchers.IO)
 
 
     override fun onCreateView(
@@ -45,10 +44,13 @@ class MarkedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         autoDisposable.bindTo(lifecycle)
+        initRecycler()
         initPullToRefresh()
         initSearchView()
+    }
+
+    private fun initRecycler() {
         viewModel.markedFilmListData
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }
@@ -57,7 +59,6 @@ class MarkedFragment : Fragment() {
             .subscribe({ filmsAdapter.updateData(it) },
                 { println("$TAG viewModel.markedFilmListData onError: ${it.localizedMessage}") })
             .addTo(autoDisposable)
-
         binding.markedRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
@@ -69,17 +70,15 @@ class MarkedFragment : Fragment() {
                         )
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: Film, view: View) {
-                        scope.launch {
-                            viewModel.deleteMarkedFilmFromDB(film.id)
-                        }
+                    override fun click(film: Film, view: CheckBox) {
+                        if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
+                        else viewModel.removeFavoriteFilmFromList(film.id)
                     }
                 })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
             val decorator = SpacingItemDecoration(5)
             addItemDecoration(decorator)
-
         }
     }
 
@@ -92,7 +91,6 @@ class MarkedFragment : Fragment() {
             binding.markedSearchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-//                        sub.onNext(query)
                         if (query.isNullOrBlank()) sub.onNext("") else sub.onNext(query)
                         return false
                     }
@@ -132,14 +130,9 @@ class MarkedFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ binding.markedRefresh.isRefreshing = it },
-                    { println("${TAG} initPullToRefresh onError: ${it.localizedMessage}") })
+                    { println("$TAG initPullToRefresh onError: ${it.localizedMessage}") })
                 .addTo(autoDisposable)
         }
-    }
-
-    override fun onDestroy() {
-        scope.cancel()
-        super.onDestroy()
     }
 
     companion object {

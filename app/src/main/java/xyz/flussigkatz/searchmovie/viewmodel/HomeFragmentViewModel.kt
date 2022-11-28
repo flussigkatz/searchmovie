@@ -32,6 +32,14 @@ class HomeFragmentViewModel : ViewModel() {
         return interactor.getFilmsFromDB()
     }
 
+    fun removeFavoriteFilmFromList(id: Int){
+        interactor.removeFavoriteFilmFromList(id)
+    }
+
+    fun addFavoriteFilmToList(id: Int){
+        interactor.addFavoriteFilmToList(id)
+    }
+
     fun getSearchedFilms(search_query: String): Observable<List<Film>> {
         return interactor.getSearchedFilmsFromApi(search_query, 1)
     }

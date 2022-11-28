@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DEFAULT_LIST_ID
 
 class PreferenceProvider(context: Context) {
     private val appContext = context.applicationContext
@@ -42,10 +43,17 @@ class PreferenceProvider(context: Context) {
 
     fun getPlaySplashScreenState() = preference.getBoolean(KEY_PLAY_SPLASH_SCREEN, true)
 
+    fun getFavoriteFilmListId(): Int = preference.getInt(KEY_FAVORITE_FILM_LIST_ID, DEFAULT_LIST_ID)
+
+    fun setFavoriteFilmListId(id: Int) {
+        preference.edit() { putInt(KEY_FAVORITE_FILM_LIST_ID, id) }
+    }
+
     companion object {
         private const val KEY_FIRST_LAUNCH = "first_launch"
         private const val KEY_PLAY_SPLASH_SCREEN = "splash_screen"
         private const val KEY_DEFAULT_CATEGORY = "default_category"
+        private const val KEY_FAVORITE_FILM_LIST_ID = "favorite_film_list_id"
         private const val KEY_DEFAULT_THEME = "default_theme"
         private const val DEFAULT_CATEGORY = "popular"
     }

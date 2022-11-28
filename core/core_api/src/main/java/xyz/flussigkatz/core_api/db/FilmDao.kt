@@ -35,5 +35,8 @@ interface FilmDao {
     fun deleteFilms(films: List<Film>): Int
 
     @Delete
+    fun deleteMarkedFilms(films: List<MarkedFilm>): Int
+
+    @Delete
     fun deleteOneMarkedFilm(film: MarkedFilm)
 }

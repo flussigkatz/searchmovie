@@ -23,15 +23,19 @@ class MarkedFragmentViewModel : ViewModel() {
     }
 
     fun getMarkedFilms() {
-        interactor.getMarkedFilmsFromApi(1)
-    }
-
-    fun deleteMarkedFilmFromDB(id: Int) {
-        interactor.deleteMarkedFilmFromDB(id)
+        interactor.getMarkedFilmsFromApi()
     }
 
     fun getMarkedFilmsFromDB(): Observable<List<MarkedFilm>> {
         return interactor.getMarkedFilmsFromDB()
+    }
+
+    fun removeFavoriteFilmFromList(id: Int){
+         interactor.removeFavoriteFilmFromList(id)
+    }
+
+    fun addFavoriteFilmToList(id: Int){
+         interactor.addFavoriteFilmToList(id)
     }
 
     fun getSearchedMarkedFilms(query: String): Observable<List<MarkedFilm>> {

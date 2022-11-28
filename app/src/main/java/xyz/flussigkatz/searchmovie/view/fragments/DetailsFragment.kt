@@ -19,19 +19,25 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_ORIGINAL
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W500
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_ORIGINAL
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_W500
 import xyz.flussigkatz.searchmovie.databinding.FragmentDetailsBinding
+import xyz.flussigkatz.searchmovie.util.AutoDisposable
+import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.viewmodel.DetailsFragmentViewModel
 
 
 class DetailsFragment : Fragment() {
     private lateinit var binding: FragmentDetailsBinding
     private val scope = CoroutineScope(Dispatchers.IO)
+    private val favoriteMarkState: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    private val autoDisposable = AutoDisposable()
     private val viewModel: DetailsFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -45,23 +51,39 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film = arguments?.get(DETAILS_FILM_KEY) as Film
-        binding.film = film
+        autoDisposable.bindTo(lifecycle)
+        initFilm(arguments?.get(DETAILS_FILM_KEY) as Film)
         initProgressBarState()
-        initFab(film)
         initNavigationIcon()
+    }
+
+    private fun initFilm(film: Film) {
+        binding.film = film
         initDownloadFilmPoster(film)
+        viewModel.getFilmMarkStatusFromApi(film.id)
+            .subscribeOn(Schedulers.io()).subscribe(
+                {
+                    film.fav_state = it.itemPresent
+                    initFab(film)
+                },
+                { println("$TAG initFilm onError: ${it.localizedMessage}") }
+            ).addTo(autoDisposable)
     }
 
     private fun initFab(film: Film) {
-        viewModel.favoriteMarkState.onNext(film.fav_state)
-        viewModel.favoriteMarkState.subscribe {
+        favoriteMarkState.onNext(film.fav_state)
+        favoriteMarkState.subscribe {
             film.fav_state = it
             if (it) binding.detailsFabFavorite.setImageResource(R.drawable.ic_favorite)
             else binding.detailsFabFavorite.setImageResource(R.drawable.ic_unfavorite)
-        }
+        }.addTo(autoDisposable)
         binding.detailsFabFavorite.setOnClickListener {
-            viewModel.favoriteMarkState.onNext(!film.fav_state)
+            binding.film?.let {
+                it.fav_state = !film.fav_state
+                favoriteMarkState.onNext(it.fav_state)
+                if (film.fav_state) viewModel.addFavoriteFilmToList(it.id)
+                else viewModel.removeFavoriteFilmFromList(it.id)
+            }
         }
         binding.detailsFabDownloadPoster.setOnClickListener {
             performAsyncLoadOfPoster(film)
@@ -174,7 +196,7 @@ class DetailsFragment : Fragment() {
     private fun initProgressBarState() {
         viewModel.progressBarState.subscribe {
             binding.detailsProgressBar.isVisible = it
-        }
+        }.addTo(autoDisposable)
     }
 
     private fun initNavigationIcon() {
@@ -201,5 +223,6 @@ class DetailsFragment : Fragment() {
 
     companion object {
         const val DETAILS_FILM_KEY = "details_film"
+        private const val TAG = "DetailsFragment"
     }
 }

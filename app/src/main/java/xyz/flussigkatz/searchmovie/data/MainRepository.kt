@@ -28,13 +28,13 @@ class MainRepository(private val filmDao: FilmDao) {
         return filmDao.getCashedMarkedFilms()
     }
 
-    fun clearDB(): Int {
+    fun clearCashedFilmsDB(): Int {
         val films = filmDao.getCashedFilmsToList()
         return filmDao.deleteFilms(films)
     }
 
-    fun deleteMarkedFilmFromDB(id: Int) {
-        val film = filmDao.getCashedOneMarkedFilm(id)
-        filmDao.deleteOneMarkedFilm(film)
+    fun clearMarkedFilmsDB(): Int {
+        val films = filmDao.getCashedMarkedFilmsToList()
+        return filmDao.deleteMarkedFilms(films)
     }
 }
