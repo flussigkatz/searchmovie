@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import java.io.IOException
@@ -43,4 +44,8 @@ class DetailsFragmentViewModel : ViewModel() {
     }
 
     fun getFilmMarkStatusFromApi(id: Int) = interactor.getFilmMarkStatusFromApi(id)
+
+    fun putBrowsingFilmToDB(film: BrowsingFilm) {
+        interactor.putBrowsingFilmToDB(film)
+    }
 }

@@ -8,10 +8,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.core_api.entity.MarkedFilm
 import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussigkatz.remote_module.entity.FavoriteMovieInfoDto
 import xyz.flussigkatz.remote_module.entity.ListInfo
+import xyz.flussigkatz.remote_module.entity.TmdbResultDto.TmdbFilm
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID
@@ -21,7 +23,6 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.DEFAULT_LIST_ID
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.FAVORITE_FILM_LIST_NAME
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
-import xyz.flussigkatz.searchmovie.util.Converter
 import java.util.*
 
 class Interactor(
@@ -44,7 +45,7 @@ class Interactor(
             page)
             .subscribeOn(Schedulers.io())
             .filter { it.tmdbFilms.isNotEmpty() }
-            .map { Converter.convertToFilmFromApi(it.tmdbFilms) }
+            .map { convertToFilmFromApi(it.tmdbFilms) }
             .doOnSubscribe { refreshState.onNext(true) }
             .doOnComplete { refreshState.onNext(false) }
             .doOnError {
@@ -53,7 +54,7 @@ class Interactor(
             }.subscribe(
                 {
                     repository.clearCashedFilmsDB()
-                    repository.putFilmToDB(it)
+                    repository.putFilmsToDB(it)
                 },
                 { println("$TAG getFilmsFromApi onError: ${it.localizedMessage}") }
             )
@@ -66,7 +67,7 @@ class Interactor(
             search_query,
             page
         ).map {
-            Converter.convertToFilmFromApi(it.tmdbFilms)
+            convertToFilmFromApi(it.tmdbFilms)
         }.doOnError {
             eventMessage.onNext(getText(R.string.error_upload_message))
         }
@@ -77,8 +78,17 @@ class Interactor(
             list_id = getFavoriteListIdFromPreferences(),
             api_key = API_KEY,
             language = language,
-        ).map {
-            Converter.convertToMarkedFilmFromApi(it.favoriteListItems)
+        ).map { favoriteMovieListDto ->
+            favoriteMovieListDto.favoriteListItems.map {
+                MarkedFilm(
+                    id = it.id,
+                    title = it.title ?: it.name,
+                    posterId = it.posterPath ?: "",
+                    description = it.overview,
+                    rating = (it.voteAverage * 10).toInt(),
+                    fav_state = true
+                )
+            }
         }.doOnSubscribe {
             refreshState.onNext(true)
         }.doOnComplete {
@@ -152,17 +162,17 @@ class Interactor(
     //endregion
 
     //region DB
-    fun getFilmsFromDB(): Observable<List<Film>> {
-        return repository.getAllFilmsFromDB()
+    fun putBrowsingFilmToDB(film: BrowsingFilm) {
+        repository.putBrowsingFilmToDB(film)
     }
 
-    fun getMarkedFilmsFromDB(): Observable<List<MarkedFilm>> {
-        return repository.getAllMarkedFilmsFromDB()
-    }
+    fun getFilmsFromDB() = repository.getAllFilmsFromDB()
 
-    fun getSearchedMarkedFilms(query: String): Observable<List<MarkedFilm>> {
-        return repository.getSearchedMarkedFilms(query)
-    }
+    fun getMarkedFilmsFromDB() = repository.getAllMarkedFilmsFromDB()
+
+    fun getSearchedMarkedFilms(query: String) = repository.getSearchedMarkedFilms(query)
+
+    fun getCashedBrowsingFilmsFromDB() = repository.getAllBrowsingFilmsFromDB()
     //endregion
 
     //region Preferences
@@ -229,6 +239,17 @@ class Interactor(
 
     private fun getText(resId: Int): String {
         return App.instance.getText(resId).toString()
+    }
+
+    fun convertToFilmFromApi(list: List<TmdbFilm>) = list.map {
+        Film(
+            id = it.id,
+            title = it.title,
+            posterId = it.posterPath ?: "",
+            description = it.overview,
+            rating = (it.voteAverage * 10).toInt(),
+            fav_state = false
+        )
     }
 
     companion object {

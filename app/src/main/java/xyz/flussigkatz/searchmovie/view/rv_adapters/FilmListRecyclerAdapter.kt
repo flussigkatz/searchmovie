@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_W154
@@ -20,7 +20,7 @@ class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
     private val checkboxClickListener: OnCheckboxClickListener,
 ) : RecyclerView.Adapter<FilmViewHolder>() {
-    private var items = ArrayList<Film>()
+    private var items = listOf<AbstractFilmEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -61,14 +61,14 @@ class FilmListRecyclerAdapter(
 
     override fun getItemCount() = items.size
 
-    fun updateData(newList: List<Film>) {
-        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList as ArrayList<Film>))
+    fun updateData(newList: List<AbstractFilmEntity>) {
+        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList))
         items = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun findFilmById(id: Int): Film? {
-        var res: Film? = null
+    private fun findFilmById(id: Int): AbstractFilmEntity? {
+        var res: AbstractFilmEntity? = null
         items.forEach {
             if (it.id == id) res = it
             return@forEach
@@ -77,10 +77,10 @@ class FilmListRecyclerAdapter(
     }
 
     interface OnItemClickListener {
-        fun click(film: Film)
+        fun click(film: AbstractFilmEntity)
     }
 
     interface OnCheckboxClickListener {
-        fun click(film: Film, view: CheckBox)
+        fun click(film: AbstractFilmEntity, view: CheckBox)
     }
 }

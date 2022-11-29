@@ -19,14 +19,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.SearchMovieReceiver
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import xyz.flussigkatz.searchmovie.util.AnimationHelper
-import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.NavigationHelper
 import xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants
@@ -105,7 +104,6 @@ class MainActivity : AppCompatActivity() {
         interactor.getMarkedFilmsFromDB()
             .filter { !it.isNullOrEmpty() }
             .subscribeOn(Schedulers.io())
-            .map { Converter.convertToFilm(it) }
             .doOnError { println("initBoringNotification ${it.localizedMessage}") }
             .subscribe({ setWatchFilmReminder(this@MainActivity, it.random()) },
                 { println("$TAG initBoringNotification onError: ${it.localizedMessage}") })
@@ -120,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setWatchFilmReminder(context: Context, film: Film) {
+    private fun setWatchFilmReminder(context: Context, film: AbstractFilmEntity) {
         val bundle = Bundle()
         val intentBoringKillerAlarm = Intent(
             context,

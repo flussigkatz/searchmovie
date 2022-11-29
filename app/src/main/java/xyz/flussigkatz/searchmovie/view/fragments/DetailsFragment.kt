@@ -22,7 +22,8 @@ import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.*
-import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
+import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_ORIGINAL
@@ -52,12 +53,12 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         autoDisposable.bindTo(lifecycle)
-        initFilm(arguments?.get(DETAILS_FILM_KEY) as Film)
+        initFilm(arguments?.get(DETAILS_FILM_KEY) as AbstractFilmEntity)
         initProgressBarState()
         initNavigationIcon()
     }
 
-    private fun initFilm(film: Film) {
+    private fun initFilm(film: AbstractFilmEntity) {
         binding.film = film
         initDownloadFilmPoster(film)
         viewModel.getFilmMarkStatusFromApi(film.id)
@@ -65,12 +66,20 @@ class DetailsFragment : Fragment() {
                 {
                     film.fav_state = it.itemPresent
                     initFab(film)
+                    viewModel.putBrowsingFilmToDB(BrowsingFilm(
+                        id = film.id,
+                        title = film.title,
+                        posterId = film.posterId,
+                        description = film.description,
+                        rating = film.rating,
+                        fav_state = film.fav_state
+                    ))
                 },
                 { println("$TAG initFilm onError: ${it.localizedMessage}") }
             ).addTo(autoDisposable)
     }
 
-    private fun initFab(film: Film) {
+    private fun initFab(film: AbstractFilmEntity) {
         favoriteMarkState.onNext(film.fav_state)
         favoriteMarkState.subscribe {
             film.fav_state = it
@@ -116,7 +125,7 @@ class DetailsFragment : Fragment() {
         )
     }
 
-    private fun saveToGallery(bitmap: Bitmap, film: Film) {
+    private fun saveToGallery(bitmap: Bitmap, film: AbstractFilmEntity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.TITLE, film.title.handleSingleQuote())
@@ -154,7 +163,7 @@ class DetailsFragment : Fragment() {
         return this.replace("'", "")
     }
 
-    private fun performAsyncLoadOfPoster(film: Film) {
+    private fun performAsyncLoadOfPoster(film: AbstractFilmEntity) {
         if (!checkPermission()) {
             Toast.makeText(
                 requireContext(), R.string.permission_storage, Toast.LENGTH_SHORT
@@ -206,7 +215,7 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun initDownloadFilmPoster(film: Film) {
+    private fun initDownloadFilmPoster(film: AbstractFilmEntity) {
         Picasso.get()
             .load(IMAGES_URL + IMAGE_FORMAT_W500 + film.posterId)
             .fit()

@@ -14,12 +14,11 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
-import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
@@ -54,7 +53,6 @@ class MarkedFragment : Fragment() {
         viewModel.markedFilmListData
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }
-            .map { Converter.convertToFilm(it) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ filmsAdapter.updateData(it) },
                 { println("$TAG viewModel.markedFilmListData onError: ${it.localizedMessage}") })
@@ -62,7 +60,7 @@ class MarkedFragment : Fragment() {
         binding.markedRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: Film) {
+                    override fun click(film: AbstractFilmEntity) {
                         val bundle = Bundle()
                         bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
                         (requireActivity() as MainActivity).navController.navigate(
@@ -70,7 +68,7 @@ class MarkedFragment : Fragment() {
                         )
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: Film, view: CheckBox) {
+                    override fun click(film: AbstractFilmEntity, view: CheckBox) {
                         if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
                         else viewModel.removeFavoriteFilmFromList(film.id)
                     }
@@ -110,14 +108,8 @@ class MarkedFragment : Fragment() {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onError = {
-                    println("$TAG initSearchView onError: ${it.localizedMessage}")
-                },
-                onNext = {
-                    if (!binding.markedSearchView.isIconified) {
-                        filmsAdapter.updateData(Converter.convertToFilm(it))
-                    }
-                }
+                onError = { println("$TAG initSearchView onError: ${it.localizedMessage}") },
+                onNext = { if (!binding.markedSearchView.isIconified) filmsAdapter.updateData(it) }
             ).addTo(autoDisposable)
     }
 

@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
         binding.homeRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: Film) {
+                    override fun click(film: AbstractFilmEntity) {
                         val bundle = Bundle()
                         bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
                         (requireActivity() as MainActivity).navController.navigate(
@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
                         )
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: Film, view: CheckBox) {
+                    override fun click(film: AbstractFilmEntity, view: CheckBox) {
                         film.fav_state = view.isChecked
                         if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
                         else viewModel.removeFavoriteFilmFromList(film.id)
@@ -134,14 +134,8 @@ class HomeFragment : Fragment() {
 
             }.observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onError = {
-                    println("$TAG initSearchView onError: ${it.localizedMessage}")
-                },
-                onNext = {
-                    if (!binding.homeSearchView.isIconified) {
-                        filmsAdapter.updateData(it)
-                    }
-                }
+                onError = { println("$TAG initSearchView onError: ${it.localizedMessage}") },
+                onNext = { if (!binding.homeSearchView.isIconified) filmsAdapter.updateData(it) }
             ).addTo(autoDisposable)
     }
 
