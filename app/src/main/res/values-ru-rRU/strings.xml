@@ -17,6 +17,8 @@
     <string name="radio_battery">Экономия заряда</string>
     <string name="exit_message">Ещё раз назад для выхода</string>
     <string name="error_upload_message">Ошибка загрузки. Проверьте интернет соединение.</string>
+    <string name="error_add_to_favorite_message">Ошибка добавления, может позже?</string>
+    <string name="error_remove_from_favorite_message">Ошибка удаления, может позже?</string>
     <string name="open">Открыть</string>
     <string name="downloaded_to_gallery">Сохранено в галерею.</string>
     <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение.</string>

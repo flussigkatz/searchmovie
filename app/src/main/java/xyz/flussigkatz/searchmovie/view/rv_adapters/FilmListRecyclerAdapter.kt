@@ -2,27 +2,25 @@ package xyz.flussigkatz.searchmovie.view.rv_adapters
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGES_URL
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.IMAGE_FORMAT_W154
-import xyz.flussigkatz.searchmovie.util.FilmDiff
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_W154
 import xyz.flussigkatz.searchmovie.databinding.FilmItemBinding
-import xyz.flussigkatz.searchmovie.view.customview.RatingDonutView
+import xyz.flussigkatz.searchmovie.util.FilmDiff
 import xyz.flussigkatz.searchmovie.view.rv_viewholder.FilmViewHolder
-import java.lang.Exception
 
 class FilmListRecyclerAdapter(
     private val clickListener: OnItemClickListener,
     private val checkboxClickListener: OnCheckboxClickListener,
 ) : RecyclerView.Adapter<FilmViewHolder>() {
-    private var items = ArrayList<Film>()
+    private var items = listOf<AbstractFilmEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -51,7 +49,7 @@ class FilmListRecyclerAdapter(
                 .into(holder.binding.poster, callbackPicasso)
 
             holder.binding.favoriteCheckBox.setOnClickListener {
-                checkboxClickListener.click(film, it)
+                checkboxClickListener.click(film, it as CheckBox)
             }
 
             holder.binding.rootFilmItem.setOnClickListener {
@@ -63,14 +61,14 @@ class FilmListRecyclerAdapter(
 
     override fun getItemCount() = items.size
 
-    fun updateData(newList: List<Film>) {
-        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList as ArrayList<Film>))
+    fun updateData(newList: List<AbstractFilmEntity>) {
+        val diffResult = DiffUtil.calculateDiff(FilmDiff(items, newList))
         items = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun findFilmById(id: Int): Film? {
-        var res: Film? = null
+    private fun findFilmById(id: Int): AbstractFilmEntity? {
+        var res: AbstractFilmEntity? = null
         items.forEach {
             if (it.id == id) res = it
             return@forEach
@@ -79,10 +77,10 @@ class FilmListRecyclerAdapter(
     }
 
     interface OnItemClickListener {
-        fun click(film: Film)
+        fun click(film: AbstractFilmEntity)
     }
 
     interface OnCheckboxClickListener {
-        fun click(film: Film, view: View)
+        fun click(film: AbstractFilmEntity, view: CheckBox)
     }
 }

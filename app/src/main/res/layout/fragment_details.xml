@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="xyz.flussigkatz.core_api.entity.Film" />
+        <import type="xyz.flussigkatz.core_api.entity.AbstractFilmEntity" />
 
         <variable
             name="film"
-            type="Film" />
+            type="AbstractFilmEntity" />
 
     </data>
 

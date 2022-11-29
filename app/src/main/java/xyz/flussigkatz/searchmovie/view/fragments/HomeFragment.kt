@@ -2,19 +2,19 @@ package xyz.flussigkatz.searchmovie.view.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.widget.CheckBox
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.checkbox.MaterialCheckBox
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
-import xyz.flussigkatz.searchmovie.data.ApiConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.addTo
@@ -44,6 +44,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         autoDisposable.bindTo(lifecycle)
+        initRecycler()
+        initPullToRefresh()
+        initEventMessage()
+        initSearchView()
+    }
+
+    private fun initRecycler() {
         viewModel.filmListData
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }
@@ -52,13 +59,10 @@ class HomeFragment : Fragment() {
             .subscribe({ filmsAdapter.updateData(it) },
                 { println("$TAG viewModel.filmListData onError: ${it.localizedMessage}") })
             .addTo(autoDisposable)
-        initPullToRefresh()
-        initEventMessage()
-        initSearchView()
         binding.homeRecycler.apply {
             filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: Film) {
+                    override fun click(film: AbstractFilmEntity) {
                         val bundle = Bundle()
                         bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
                         (requireActivity() as MainActivity).navController.navigate(
@@ -66,8 +70,10 @@ class HomeFragment : Fragment() {
                         )
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: Film, view: View) {
-                        film.fav_state = (view as MaterialCheckBox).isChecked
+                    override fun click(film: AbstractFilmEntity, view: CheckBox) {
+                        film.fav_state = view.isChecked
+                        if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
+                        else viewModel.removeFavoriteFilmFromList(film.id)
                     }
                 })
             adapter = filmsAdapter
@@ -75,7 +81,6 @@ class HomeFragment : Fragment() {
             val decorator = SpacingItemDecoration(5)
             addItemDecoration(decorator)
         }
-
     }
 
     private fun initPullToRefresh() {
@@ -110,12 +115,12 @@ class HomeFragment : Fragment() {
             binding.homeSearchView.setOnQueryTextListener(
                 object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        sub.onNext(query)
+                        if (query.isNullOrBlank()) sub.onNext("") else sub.onNext(query)
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        sub.onNext(newText)
+                        if (newText.isNullOrBlank()) sub.onNext("") else sub.onNext(newText)
                         return false
                     }
 
@@ -129,14 +134,8 @@ class HomeFragment : Fragment() {
 
             }.observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onError = {
-                    println("$TAG initSearchView onError: ${it.localizedMessage}")
-                },
-                onNext = {
-                    if (!binding.homeSearchView.isIconified) {
-                        filmsAdapter.updateData(it)
-                    }
-                }
+                onError = { println("$TAG initSearchView onError: ${it.localizedMessage}") },
+                onNext = { if (!binding.homeSearchView.isIconified) filmsAdapter.updateData(it) }
             ).addTo(autoDisposable)
     }
 

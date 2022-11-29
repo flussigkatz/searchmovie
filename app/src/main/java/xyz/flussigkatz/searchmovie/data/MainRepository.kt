@@ -1,40 +1,38 @@
 package xyz.flussigkatz.searchmovie.data
 
-import io.reactivex.rxjava3.core.Observable
 import xyz.flussigkatz.core_api.db.FilmDao
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.core_api.entity.MarkedFilm
+import xyz.flussigkatz.core_api.entity.BrowsingFilm
 
 class MainRepository(private val filmDao: FilmDao) {
-
-
-    fun putFilmToDB(films: List<Film>) {
+    //region Film
+    fun putFilmsToDB(films: List<Film>) {
         filmDao.insertAllFilms(films)
     }
 
+    fun getAllFilmsFromDB() = filmDao.getCashedFilms()
+
+    fun clearCashedFilmsDB() = filmDao.deleteFilms(filmDao.getCashedFilmsToList())
+    //endregion
+
+    //region MarkedFilm
     fun putMarkedFilmToDB(films: List<MarkedFilm>) {
         filmDao.insertAllMarkedFilms(films)
     }
 
-    fun getAllFilmsFromDB(): Observable<List<Film>>{
-        return filmDao.getCashedFilms()
+    fun getSearchedMarkedFilms(query: String) = filmDao.getSearchedMarkedFilm(query)
+
+    fun getAllMarkedFilmsFromDB() = filmDao.getCashedMarkedFilms()
+
+    fun clearMarkedFilmsDB() = filmDao.deleteMarkedFilms(filmDao.getCashedMarkedFilmsToList())
+    //endregion
+
+    //region BrowsingFilm
+    fun putBrowsingFilmToDB(film: BrowsingFilm) {
+        filmDao.insertBrowsingFilm(film)
     }
 
-    fun getSearchedMarkedFilms(query: String): Observable<List<MarkedFilm>>{
-        return filmDao.getSearchedMarkedFilm(query)
-    }
-
-    fun getAllMarkedFilmsFromDB(): Observable<List<MarkedFilm>>{
-        return filmDao.getCashedMarkedFilms()
-    }
-
-    fun clearDB(): Int {
-        val films = filmDao.getCashedFilmsToList()
-        return filmDao.deleteFilms(films)
-    }
-
-    fun deleteMarkedFilmFromDB(id: Int) {
-        val film = filmDao.getCashedOneMarkedFilm(id)
-        filmDao.deleteOneMarkedFilm(film)
-    }
+    fun getAllBrowsingFilmsFromDB() = filmDao.getCashedBrowsingFilms()
+    //endregion
 }

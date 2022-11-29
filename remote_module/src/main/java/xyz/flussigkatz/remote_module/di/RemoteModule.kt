@@ -7,7 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import xyz.flussigkatz.remote_module.ApiConstantsRemote
+import xyz.flussigkatz.remote_module.ConstantsRemote
 import xyz.flussigkatz.remote_module.BuildConfig
 import xyz.flussigkatz.remote_module.TmdbApi
 import java.util.concurrent.TimeUnit
@@ -30,7 +30,7 @@ class RemoteModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(ApiConstantsRemote.BASE_URL)
+        .baseUrl(ConstantsRemote.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .client(okHttpClient)

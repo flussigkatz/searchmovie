@@ -1,12 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_fragment_history"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/root_fragment_history"
+android:background="@color/transparent"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true"
+tools:context=".view.fragments.HistoryFragment"
+tools:visibility="visible">
+
+<com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/history_appbar"
     android:background="@color/transparent"
+    app:elevation="0dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.fragments.HistoryFragment"
-    tools:visibility="visible">
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.CollapsingToolbarLayout
+        android:id="@+id/history_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_scrollFlags="scroll|snap|enterAlways"
+        app:toolbarId="@+id/history_toolbar">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/history_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/home_search_view_height"
+            android:background="@color/black_alpha_20"
+            android:queryHint="Search"
+            app:iconifiedByDefault="false" />
 
 
-</FrameLayout>
+    </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+</com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/film_item" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
