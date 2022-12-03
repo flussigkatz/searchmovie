@@ -5,7 +5,6 @@ import xyz.flussigkatz.core_api.AppProvider
 import xyz.flussigkatz.core_api.db.DatabaseProvider
 import xyz.flussigkatz.remote_module.RemoteProvider
 import xyz.flussigkatz.searchmovie.di.modules.DomainModule
-import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.viewmodel.*
 import javax.inject.Singleton
 
@@ -16,7 +15,7 @@ import javax.inject.Singleton
 )
 
 interface MainComponent {
-    fun inject(mainActivity: MainActivity)
+    fun inject(mainActivityViewModel: MainActivityViewModel)
     fun inject(homeFragmentViewModel: HomeFragmentViewModel)
     fun inject(markedFragmentViewModel: MarkedFragmentViewModel)
     fun inject(settingsFragmentViewModel: SettingsFragmentViewModel)
