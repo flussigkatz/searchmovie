@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.CheckBox
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -12,6 +13,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
@@ -31,19 +33,18 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        autoDisposable.bindTo(lifecycle)
         return binding.rootFragmentHome
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        autoDisposable.bindTo(lifecycle)
         initRecycler()
         initPullToRefresh()
         initEventMessage()
@@ -51,35 +52,38 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        viewModel.filmListData
-            .subscribeOn(Schedulers.io())
+        viewModel.filmListData.observeOn(AndroidSchedulers.mainThread())
             .filter { !it.isNullOrEmpty() }
-            .doOnError { println("eventMessage: ${it.localizedMessage}") }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ filmsAdapter.updateData(it) },
-                { println("$TAG viewModel.filmListData onError: ${it.localizedMessage}") })
-            .addTo(autoDisposable)
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { filmsAdapter.updateData(it) }
+            ).addTo(autoDisposable)
+
         binding.homeRecycler.apply {
-            filmsAdapter =
-                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
+            filmsAdapter = FilmListRecyclerAdapter(
+                object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: AbstractFilmEntity) {
-                        val bundle = Bundle()
-                        bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-                        (requireActivity() as MainActivity).navController.navigate(
-                            R.id.action_homeFragment_to_detailsFragment, bundle
-                        )
+                        Bundle().apply {
+                            putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                            (requireActivity() as MainActivity).navController.navigate(
+                                R.id.action_homeFragment_to_detailsFragment, this
+                            )
+                        }
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
                     override fun click(film: AbstractFilmEntity, view: CheckBox) {
-                        film.fav_state = view.isChecked
-                        if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
-                        else viewModel.removeFavoriteFilmFromList(film.id)
+                        view.isChecked.let {
+                            film.fav_state = it
+                            if (it) viewModel.addFavoriteFilmToList(film.id)
+                            else viewModel.removeFavoriteFilmFromList(film.id)
+                        }
                     }
-                })
+                }
+            )
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            val decorator = SpacingItemDecoration(5)
-            addItemDecoration(decorator)
+            addItemDecoration(SpacingItemDecoration(5))
         }
     }
 
@@ -89,21 +93,23 @@ class HomeFragment : Fragment() {
             binding.homeSearchView.clearFocus()
             viewModel.getFilms()
             viewModel.refreshState
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ binding.homeRefresh.isRefreshing = it },
-                    { println("$TAG initPullToRefresh onError: ${it.localizedMessage}") })
-                .addTo(autoDisposable)
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onError = { Timber.d(it) },
+                    onNext = { binding.homeRefresh.isRefreshing = it }
+                ).addTo(autoDisposable)
         }
     }
 
     private fun initEventMessage() {
         viewModel.eventMessage
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ Toast.makeText(context, it, Toast.LENGTH_SHORT).show() },
-                { println("$TAG initEventMessage onError: ${it.localizedMessage}") })
-            .addTo(autoDisposable)
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() },
+            ).addTo(autoDisposable)
     }
 
     private fun initSearchView() {
@@ -113,7 +119,7 @@ class HomeFragment : Fragment() {
         }
         Observable.create(ObservableOnSubscribe<String> { sub ->
             binding.homeSearchView.setOnQueryTextListener(
-                object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         if (query.isNullOrBlank()) sub.onNext("") else sub.onNext(query)
                         return false
@@ -125,21 +131,16 @@ class HomeFragment : Fragment() {
                     }
 
                 })
-        }).subscribeOn(Schedulers.io())
+        }).observeOn(AndroidSchedulers.mainThread())
             .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
             .map { it.lowercase().trim() }
             .flatMap {
                 if (it.isNullOrBlank()) viewModel.getFilmsFromDB()
                 else viewModel.getSearchedFilms(it)
-
-            }.observeOn(AndroidSchedulers.mainThread())
+            }.subscribeOn(Schedulers.io())
             .subscribeBy(
-                onError = { println("$TAG initSearchView onError: ${it.localizedMessage}") },
+                onError = { Timber.d(it) },
                 onNext = { if (!binding.homeSearchView.isIconified) filmsAdapter.updateData(it) }
             ).addTo(autoDisposable)
-    }
-
-    companion object {
-        private const val TAG = "HomeFragment"
     }
 }

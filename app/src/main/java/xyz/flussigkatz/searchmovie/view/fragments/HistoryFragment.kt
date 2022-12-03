@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.databinding.FragmentHistoryBinding
@@ -31,48 +33,44 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
+        autoDisposable.bindTo(lifecycle)
         return binding.rootFragmentHistory
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        autoDisposable.bindTo(lifecycle)
         initRecycler()
     }
 
     private fun initRecycler() {
         viewModel.browsingFilmListData
-            .subscribeOn(Schedulers.io())
-            .filter { !it.isNullOrEmpty() }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ filmsAdapter.updateData(it) },
-                { println("$TAG viewModel.browsingFilmListData onError: ${it.localizedMessage}") })
-            .addTo(autoDisposable)
+            .filter { !it.isNullOrEmpty() }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { filmsAdapter.updateData(it) }
+            ).addTo(autoDisposable)
         binding.historyRecycler.apply {
-            filmsAdapter =
-                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: AbstractFilmEntity) {
-                        val bundle = Bundle()
-                        bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-                        (requireActivity() as MainActivity).navController.navigate(
-                            R.id.action_historyFragment_to_detailsFragment, bundle
-                        )
-                    }
-                }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: AbstractFilmEntity, view: CheckBox) {
-                        if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
-                        else viewModel.removeFavoriteFilmFromList(film.id)
-                    }
-                })
+            val onItemClickListener = object : FilmListRecyclerAdapter.OnItemClickListener {
+                override fun click(film: AbstractFilmEntity) {
+                    val bundle = Bundle()
+                    bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                    (requireActivity() as MainActivity).navController.navigate(
+                        R.id.action_historyFragment_to_detailsFragment, bundle
+                    )
+                }
+            }
+            val onCheckboxClickListener = object : FilmListRecyclerAdapter.OnCheckboxClickListener {
+                override fun click(film: AbstractFilmEntity, view: CheckBox) {
+                    if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
+                    else viewModel.removeFavoriteFilmFromList(film.id)
+                }
+            }
+            filmsAdapter = FilmListRecyclerAdapter(onItemClickListener, onCheckboxClickListener)
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            val decorator = SpacingItemDecoration(5)
-            addItemDecoration(decorator)
+            addItemDecoration(SpacingItemDecoration(5))
         }
     }
-
-    companion object {
-        private const val TAG = "HistoryFragment"
-    }
-
 }

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
@@ -25,10 +26,9 @@ class DetailsFragmentViewModel : ViewModel() {
     suspend fun loadFilmPoster(urlAddress: String): Bitmap? {
         return suspendCoroutine {
             val bitmap: Bitmap? = try {
-                val url = URL(urlAddress)
-                BitmapFactory.decodeStream(url.openConnection().getInputStream())
+                BitmapFactory.decodeStream(URL(urlAddress).openConnection().getInputStream())
             } catch (e: IOException) {
-                println(e)
+                Timber.d(e)
                 null
             }
             it.resume(bitmap)

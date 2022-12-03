@@ -1,12 +1,14 @@
 package xyz.flussigkatz.searchmovie.domain
 
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.core_api.entity.MarkedFilm
@@ -42,8 +44,8 @@ class Interactor(
             getDefaultCategoryFromPreferences(),
             API_KEY,
             language,
-            page)
-            .subscribeOn(Schedulers.io())
+            page
+        )
             .filter { it.tmdbFilms.isNotEmpty() }
             .map { convertToFilmFromApi(it.tmdbFilms) }
             .doOnSubscribe { refreshState.onNext(true) }
@@ -51,26 +53,24 @@ class Interactor(
             .doOnError {
                 refreshState.onNext(false)
                 eventMessage.onNext(getText(R.string.error_upload_message))
-            }.subscribe(
-                {
+            }.subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = {
                     repository.clearCashedFilmsDB()
                     repository.putFilmsToDB(it)
-                },
-                { println("$TAG getFilmsFromApi onError: ${it.localizedMessage}") }
+                }
             )
     }
 
     fun getSearchedFilmsFromApi(search_query: String, page: Int): Observable<List<Film>> {
         return retrofitService.getSearchedFilms(
-            API_KEY,
-            language,
-            search_query,
-            page
-        ).map {
-            convertToFilmFromApi(it.tmdbFilms)
-        }.doOnError {
-            eventMessage.onNext(getText(R.string.error_upload_message))
-        }
+            api_key = API_KEY,
+            language = language,
+            query = search_query,
+            page = page
+        ).map { convertToFilmFromApi(it.tmdbFilms) }
+            .doOnError { eventMessage.onNext(getText(R.string.error_upload_message)) }
     }
 
     fun getMarkedFilmsFromApi() {
@@ -89,20 +89,18 @@ class Interactor(
                     fav_state = true
                 )
             }
-        }.doOnSubscribe {
-            refreshState.onNext(true)
-        }.doOnComplete {
-            refreshState.onNext(false)
-        }.doOnError {
-            refreshState.onNext(false)
-            eventMessage.onNext(getText(R.string.error_upload_message))
-        }.subscribeOn(Schedulers.io())
-            .subscribe(
-                {
+        }.doOnSubscribe { refreshState.onNext(true) }
+            .doOnComplete { refreshState.onNext(false) }
+            .doOnError {
+                refreshState.onNext(false)
+                eventMessage.onNext(getText(R.string.error_upload_message))
+            }.subscribeOn(Schedulers.io()).subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = {
                     repository.clearMarkedFilmsDB()
                     repository.putMarkedFilmToDB(it)
-                },
-                { println("$TAG getMarkedFilmsFromApi onError: ${it.localizedMessage}") })
+                }
+            )
     }
 
     fun getFilmMarkStatusFromApi(id: Int) = retrofitService.getFilmMarkStatus(
@@ -127,14 +125,13 @@ class Interactor(
         ).enqueue(object : Callback<FavoriteMovieInfoDto> {
             override fun onFailure(call: Call<FavoriteMovieInfoDto>, t: Throwable) {
                 eventMessage.onNext(getText(R.string.error_add_to_favorite_message))
-                println("$TAG addFavoriteFilmToList onFailure: ${t.localizedMessage}")
+                Timber.d(t)
             }
 
             override fun onResponse(
                 call: Call<FavoriteMovieInfoDto>,
                 response: Response<FavoriteMovieInfoDto>,
             ) {
-                println("$TAG addFavoriteFilmToList onResponse: ${response.body()}")
             }
         })
     }
@@ -148,14 +145,13 @@ class Interactor(
         ).enqueue(object : Callback<FavoriteMovieInfoDto> {
             override fun onFailure(call: Call<FavoriteMovieInfoDto>, t: Throwable) {
                 eventMessage.onNext(getText(R.string.error_remove_from_favorite_message))
-                println("$TAG removeFavoriteFilmToList onFailure: ${t.localizedMessage}")
+                Timber.d(t)
             }
 
             override fun onResponse(
                 call: Call<FavoriteMovieInfoDto>,
                 response: Response<FavoriteMovieInfoDto>,
             ) {
-                println("$TAG removeFavoriteFilmToList onResponse: ${response.body()}")
             }
         })
     }
@@ -196,34 +192,32 @@ class Interactor(
         preferences.setPlaySplashScreenState(state)
     }
 
-    fun getSplashScreenStateFromPreferences(): Boolean {
-        return preferences.getPlaySplashScreenState()
-    }
+    fun getSplashScreenStateFromPreferences() = preferences.getPlaySplashScreenState()
 
     private fun getFavoriteListIdFromPreferences(): Int {
         val id = preferences.getFavoriteFilmListId()
         if (id == DEFAULT_LIST_ID) {
             getFilmListsFromApi().map { it.results }
-                .doOnError {
-                    eventMessage.onNext(getText(R.string.error_upload_message))
-                }
                 .subscribeOn(Schedulers.io())
-                .subscribe(
-                    { resultList ->
+                .subscribeBy(
+                    onError = { Timber.d(it) },
+                    onNext = { resultList ->
                         resultList.find { it.name == FAVORITE_FILM_LIST_NAME }.let {
-                            if (it != null) {
-                                preferences.setFavoriteFilmListId(it.id)
-                            } else {
+                            if (it != null) preferences.setFavoriteFilmListId(it.id)
+                            else {
                                 retrofitService.createFavoriteFilmList(
                                     api_key = API_KEY,
                                     session_id = SESSION_ID,
-                                    listInfo = ListInfo(description = "",
+                                    listInfo = ListInfo(
+                                        description = "",
                                         language = "",
-                                        name = FAVORITE_FILM_LIST_NAME)).execute()
+                                        name = FAVORITE_FILM_LIST_NAME
+                                    )
+                                ).execute()
                             }
                         }
-                    },
-                    { println("$TAG getFavoriteListId onError: ${it.localizedMessage}") })
+                    }
+                )
         }
         return id
     }
@@ -241,7 +235,7 @@ class Interactor(
         return App.instance.getText(resId).toString()
     }
 
-    fun convertToFilmFromApi(list: List<TmdbFilm>) = list.map {
+    private fun convertToFilmFromApi(list: List<TmdbFilm>) = list.map {
         Film(
             id = it.id,
             title = it.title,
@@ -250,9 +244,5 @@ class Interactor(
             rating = (it.voteAverage * 10).toInt(),
             fav_state = false
         )
-    }
-
-    companion object {
-        private const val TAG = "Interactor"
     }
 }

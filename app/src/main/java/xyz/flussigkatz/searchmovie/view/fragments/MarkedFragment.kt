@@ -14,6 +14,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
@@ -38,12 +39,12 @@ class MarkedFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentMarkedBinding.inflate(inflater, container, false)
+        autoDisposable.bindTo(lifecycle)
         return binding.rootFragmentMarked
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        autoDisposable.bindTo(lifecycle)
         initRecycler()
         initPullToRefresh()
         initSearchView()
@@ -51,28 +52,32 @@ class MarkedFragment : Fragment() {
 
     private fun initRecycler() {
         viewModel.markedFilmListData
-            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .filter { !it.isNullOrEmpty() }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ filmsAdapter.updateData(it) },
-                { println("$TAG viewModel.markedFilmListData onError: ${it.localizedMessage}") })
-            .addTo(autoDisposable)
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { filmsAdapter.updateData(it) }
+            ).addTo(autoDisposable)
+
         binding.markedRecycler.apply {
-            filmsAdapter =
-                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: AbstractFilmEntity) {
-                        val bundle = Bundle()
-                        bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-                        (requireActivity() as MainActivity).navController.navigate(
-                            R.id.action_markedFragment_to_detailsFragment, bundle
-                        )
-                    }
-                }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: AbstractFilmEntity, view: CheckBox) {
-                        if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
-                        else viewModel.removeFavoriteFilmFromList(film.id)
-                    }
-                })
+            val onItemClickListener = object : FilmListRecyclerAdapter.OnItemClickListener {
+                override fun click(film: AbstractFilmEntity) {
+                    val bundle = Bundle()
+                    bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                    (requireActivity() as MainActivity).navController.navigate(
+                        R.id.action_markedFragment_to_detailsFragment, bundle
+                    )
+                }
+            }
+            val onCheckboxClickListener = object : FilmListRecyclerAdapter.OnCheckboxClickListener {
+                override fun click(film: AbstractFilmEntity, view: CheckBox) {
+                    if (view.isChecked) viewModel.addFavoriteFilmToList(film.id)
+                    else viewModel.removeFavoriteFilmFromList(film.id)
+                }
+            }
+            filmsAdapter = FilmListRecyclerAdapter(onItemClickListener, onCheckboxClickListener)
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
             val decorator = SpacingItemDecoration(5)
@@ -99,16 +104,16 @@ class MarkedFragment : Fragment() {
                     }
 
                 })
-        }).subscribeOn(Schedulers.io())
+        }).observeOn(AndroidSchedulers.mainThread())
             .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
             .map { it.lowercase().trim() }
             .flatMap {
                 if (it.isNullOrBlank()) viewModel.getMarkedFilmsFromDB()
                 else viewModel.getSearchedMarkedFilms(it)
             }
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
             .subscribeBy(
-                onError = { println("$TAG initSearchView onError: ${it.localizedMessage}") },
+                onError = { Timber.d(it) },
                 onNext = { if (!binding.markedSearchView.isIconified) filmsAdapter.updateData(it) }
             ).addTo(autoDisposable)
     }
@@ -118,16 +123,12 @@ class MarkedFragment : Fragment() {
             binding.markedSearchView.setQuery("", false)
             binding.markedSearchView.clearFocus()
             viewModel.getMarkedFilms()
-            viewModel.refreshState
+            viewModel.refreshState.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ binding.markedRefresh.isRefreshing = it },
-                    { println("$TAG initPullToRefresh onError: ${it.localizedMessage}") })
-                .addTo(autoDisposable)
+                .subscribeBy(
+                    onError = { Timber.d(it) },
+                    onNext = { binding.markedRefresh.isRefreshing = it }
+                ).addTo(autoDisposable)
         }
-    }
-
-    companion object {
-        private const val TAG = "MarkedFragment"
     }
 }
