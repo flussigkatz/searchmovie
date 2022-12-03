@@ -1,9 +1,13 @@
 package xyz.flussigkatz.searchmovie.util
 
 import androidx.recyclerview.widget.DiffUtil
-import xyz.flussigkatz.searchmovie.data.entity.Film
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 
-class FilmDiff(var oldList: ArrayList<Film>, val newList: ArrayList<Film>) : DiffUtil.Callback() {
+class FilmDiff(
+    private var oldList: List<AbstractFilmEntity>,
+    private val newList: List<AbstractFilmEntity>,
+) :
+    DiffUtil.Callback() {
 
 
     override fun getOldListSize(): Int {
@@ -19,10 +23,10 @@ class FilmDiff(var oldList: ArrayList<Film>, val newList: ArrayList<Film>) : Dif
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].title == newList[newItemPosition].title&&
-        oldList[oldItemPosition].posterId == newList[newItemPosition].posterId&&
-        oldList[oldItemPosition].description == newList[newItemPosition].description&&
-        oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state&&
-        oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state
+        return oldList[oldItemPosition].title == newList[newItemPosition].title &&
+                oldList[oldItemPosition].posterId == newList[newItemPosition].posterId &&
+                oldList[oldItemPosition].description == newList[newItemPosition].description &&
+                oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state &&
+                oldList[oldItemPosition].fav_state == newList[newItemPosition].fav_state
     }
 }

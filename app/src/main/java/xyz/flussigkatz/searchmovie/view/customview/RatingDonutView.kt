@@ -1,22 +1,22 @@
 package xyz.flussigkatz.searchmovie.view.customview
 
-import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.databinding.BindingAdapter
 import xyz.flussigkatz.searchmovie.R
+import kotlin.math.min
 
 private const val RATING_DONUT_ANIMATION = 400L
 
 class RatingDonutView @JvmOverloads constructor(
     context: Context,
-    attributeSet: AttributeSet? = null
+    attributeSet: AttributeSet? = null,
 ) : View(context, attributeSet) {
 
-    private val oval  = RectF()
+    private val oval = RectF()
 
     private var radius: Float = 0f
     private var centerX: Float = 0f
@@ -31,7 +31,6 @@ class RatingDonutView @JvmOverloads constructor(
     private lateinit var strokePaint: Paint
     private lateinit var digitPaint: Paint
     private lateinit var circlePaint: Paint
-
 
     init {
         val a = context.theme.obtainStyledAttributes(
@@ -48,11 +47,8 @@ class RatingDonutView @JvmOverloads constructor(
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        radius = if(width > height){
-            height.div(2f)
-        } else {
-            width.div(2f)
-        }
+        radius = if (width > height) height.div(2f)
+        else width.div(2f)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -65,7 +61,7 @@ class RatingDonutView @JvmOverloads constructor(
         val chosenWidth = chooseDimension(widthMode, widthSize)
         val chosenHeight = chooseDimension(heightMode, heightSize)
 
-        val minSide = Math.min(chosenWidth, chosenHeight)
+        val minSide = min(chosenWidth, chosenHeight)
         centerX = minSide.div(2f)
         centerY = minSide.div(2f)
 
@@ -79,9 +75,9 @@ class RatingDonutView @JvmOverloads constructor(
         }
     }
 
-    private fun chooseDimension(mode: Int, size: Int) = when(mode) {
+    private fun chooseDimension(mode: Int, size: Int) = when (mode) {
         MeasureSpec.AT_MOST, MeasureSpec.EXACTLY -> size
-        else ->300
+        else -> 300
     }
 
     private fun drawRating(canvas: Canvas) {
@@ -90,7 +86,13 @@ class RatingDonutView @JvmOverloads constructor(
         canvas.translate(centerX, centerY)
         oval.set(0f - scale, 0f - scale, scale, scale)
         canvas.drawCircle(0f, 0f, radius, circlePaint)
-        canvas.drawArc(oval, -90f, convertProgressToDegrees(progress), false, strokePaint)
+        canvas.drawArc(
+            oval,
+            -90f,
+            convertProgressToDegrees(progress),
+            false,
+            strokePaint
+        )
         canvas.restore()
     }
 
@@ -114,44 +116,39 @@ class RatingDonutView @JvmOverloads constructor(
             isAntiAlias = true
         }
 
-          digitPaint = Paint().apply {
-              style = Paint.Style.FILL_AND_STROKE
-              strokeWidth = 2f
-              setShadowLayer(5f, 0f, 0f, Color.DKGRAY)
-              textSize = scaleSize
-              typeface = Typeface.SANS_SERIF
-              color = getPaintColor(progress)
-              isAntiAlias = true
-          }
-
-        circlePaint = Paint().apply {
-            style = Paint.Style.FILL
-            color = Color.DKGRAY
+        digitPaint = Paint().apply {
+            style = Paint.Style.FILL_AND_STROKE
+            strokeWidth = 2f
+            setShadowLayer(5f, 0f, 0f, Color.DKGRAY)
+            textSize = scaleSize
+            typeface = Typeface.SANS_SERIF
+            color = getPaintColor(progress)
+            isAntiAlias = true
+        }
+        if(!this::circlePaint.isInitialized) {
+            circlePaint = Paint().apply {
+                style = Paint.Style.FILL
+                color = Color.DKGRAY
+            }
         }
     }
 
-    private fun getPaintColor(progress: Int): Int = when(progress) {
-        in 0 .. 25 -> Color.parseColor("#e84258")
-        in 26 .. 50 -> Color.parseColor("#fd8060")
-        in 51 .. 75 -> Color.parseColor("#fee191")
+    private fun getPaintColor(progress: Int): Int = when (progress) {
+        in 0..25 -> Color.parseColor("#e84258")
+        in 26..50 -> Color.parseColor("#fd8060")
+        in 51..75 -> Color.parseColor("#fee191")
         else -> Color.parseColor("#b0d8a4")
     }
 
-    fun setProgress(p: Int) {
-        progress = p
-        initPaint()
-        invalidate()
-    }
-
-    companion object {
-        @BindingAdapter("rating")
-        @JvmStatic
-        fun animationRatingDonut(view: RatingDonutView, rating: Int) {
-            ObjectAnimator.ofInt(view, "progress", rating).apply {
-                duration = RATING_DONUT_ANIMATION
-                interpolator = DecelerateInterpolator()
-                start()
+    fun setProgress(rating: Int) {
+        ValueAnimator.ofInt(0, rating).apply {
+            duration = RATING_DONUT_ANIMATION
+            interpolator = DecelerateInterpolator()
+            addUpdateListener {
+                progress = it.animatedValue as Int
+                initPaint()
+                invalidate()
             }
-        }
+        }.start()
     }
 }

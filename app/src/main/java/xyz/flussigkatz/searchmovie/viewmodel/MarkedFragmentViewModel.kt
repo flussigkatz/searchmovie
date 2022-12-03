@@ -3,8 +3,8 @@ package xyz.flussigkatz.searchmovie.viewmodel
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import xyz.flussigkatz.core_api.entity.MarkedFilm
 import xyz.flussigkatz.searchmovie.App
-import xyz.flussigkatz.searchmovie.data.entity.MarkedFilm
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
@@ -13,21 +13,28 @@ class MarkedFragmentViewModel : ViewModel() {
     lateinit var interactor: Interactor
     val markedFilmListData: Observable<List<MarkedFilm>>
     val refreshState: BehaviorSubject<Boolean>
-//    val favoriteFilmListData: Observable<List<Film>>
 
 
     init {
         App.instance.dagger.inject(this)
-        getMarkedFilms()
-        markedFilmListData = interactor.getMarkedFilmsFromDB()
+        markedFilmListData = getMarkedFilmsFromDB()
         refreshState = interactor.getRefreshState()
+        getMarkedFilms()
     }
 
     fun getMarkedFilms() {
-        interactor.getMarkedFilmsFromApi(1)
+        interactor.getMarkedFilmsFromApi()
     }
 
-    fun deleteMarkedFilmFromDB(id: Int) {
-        interactor.deleteMarkedFilmFromDB(id)
+    fun getMarkedFilmsFromDB() = interactor.getMarkedFilmsFromDB()
+
+    fun removeFavoriteFilmFromList(id: Int){
+         interactor.removeFavoriteFilmFromList(id)
     }
+
+    fun addFavoriteFilmToList(id: Int){
+         interactor.addFavoriteFilmToList(id)
+    }
+
+    fun getSearchedMarkedFilms(query: String) = interactor.getSearchedMarkedFilms(query)
 }

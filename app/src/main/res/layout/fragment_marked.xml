@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_fragment_marked"
-    style="@style/FragmentBackground"
+    android:background="@color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:visibility="invisible"
     tools:context=".view.fragments.MarkedFragment"
     tools:visibility="visible">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/marked_appbar"
-        style="@style/AppBar"
+        android:background="@color/transparent"
+        app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
@@ -22,20 +22,16 @@
             android:id="@+id/marked_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:collapsedTitleTextAppearance="@style/AppBar"
-            app:expandedTitleTextAppearance="@style/AppBar"
             app:layout_scrollFlags="scroll|snap|enterAlways"
             app:toolbarId="@+id/marked_toolbar">
 
-            <SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/marked_search_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/marked_search_view_height"
-                android:layout_marginStart="@dimen/marked_search_view_margin_start"
-                android:layout_marginTop="@dimen/marked_search_view_margin_top"
-                android:layout_marginEnd="@dimen/marked_search_view_margin_end"
-                android:background="@drawable/search_view_shape"
-                android:queryHint="Search" />
+                android:layout_height="@dimen/home_search_view_height"
+                android:background="@color/black_alpha_20"
+                android:queryHint="Search"
+                app:iconifiedByDefault="false" />
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -54,20 +50,9 @@
             android:id="@+id/marked_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/film_item" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/marked_bottom_toolbar"
-        style="@style/BottomToolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        app:menu="@menu/bottom_app_bar" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

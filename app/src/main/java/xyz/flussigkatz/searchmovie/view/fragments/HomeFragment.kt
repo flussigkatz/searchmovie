@@ -2,26 +2,27 @@ package xyz.flussigkatz.searchmovie.view.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.widget.CheckBox
 import androidx.fragment.app.Fragment
-import android.widget.SearchView
 import android.widget.Toast
-import androidx.core.view.doOnAttach
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.checkbox.MaterialCheckBox
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
+import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
-import xyz.flussigkatz.searchmovie.data.entity.Film
-import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.addTo
+import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.TopSpasingItemDecoration
+import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
 import java.util.concurrent.TimeUnit
 
@@ -31,8 +32,6 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
-    private var filmDataBase = mutableListOf<Film>()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,155 +39,108 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        autoDisposable.bindTo(lifecycle)
         return binding.rootFragmentHome
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        autoDisposable.bindTo(lifecycle)
-
-        viewModel.filmListData
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                filmDataBase.addAll(it)
-                filmsAdapter.addItems(it)
-            }.addTo(autoDisposable)
-
-        view.doOnAttach { AnimationHelper.revealAnimation(view) }
-
+        initRecycler()
         initPullToRefresh()
-
         initEventMessage()
-
         initSearchView()
+    }
 
+    private fun initRecycler() {
+        viewModel.filmListData.observeOn(AndroidSchedulers.mainThread())
+            .filter { !it.isNullOrEmpty() }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { filmsAdapter.updateData(it) }
+            ).addTo(autoDisposable)
 
         binding.homeRecycler.apply {
-            filmsAdapter =
-                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: Film) {
-                        val bundle = Bundle()
-                        bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
-                        AnimationHelper.coverAnimation(
-                            binding.rootFragmentHome,
-                            requireActivity(),
-                            R.id.action_global_detailsFragment,
-                            bundle
-                        )
+            filmsAdapter = FilmListRecyclerAdapter(
+                object : FilmListRecyclerAdapter.OnItemClickListener {
+                    override fun click(film: AbstractFilmEntity) {
+                        Bundle().apply {
+                            putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                            (requireActivity() as MainActivity).navController.navigate(
+                                R.id.action_homeFragment_to_detailsFragment, this
+                            )
+                        }
                     }
                 }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: Film, view: View) {
-//                        filmsAdapter.items[position].fav_state = state
-                        film.fav_state = (view as MaterialCheckBox).isChecked
+                    override fun click(film: AbstractFilmEntity, view: CheckBox) {
+                        view.isChecked.let {
+                            film.fav_state = it
+                            if (it) viewModel.addFavoriteFilmToList(film.id)
+                            else viewModel.removeFavoriteFilmFromList(film.id)
+                        }
                     }
-                })
+                }
+            )
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            val decorator = TopSpasingItemDecoration(5)
-            addItemDecoration(decorator)
+            addItemDecoration(SpacingItemDecoration(5))
         }
-
-        binding.homeBottomToolbar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home_page -> {
-                    Toast.makeText(context, "Already", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.history -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_historyFragment
-                    )
-                    true
-                }
-                R.id.marked -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_markedFragment
-                    )
-                    true
-                }
-                R.id.settings -> {
-                    AnimationHelper.coverAnimation(
-                        view,
-                        requireActivity(),
-                        R.id.action_global_settingsFragment
-                    )
-                    true
-                }
-                else -> false
-            }
-        }
-
     }
 
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
+            binding.homeSearchView.setQuery("", false)
             binding.homeSearchView.clearFocus()
             viewModel.getFilms()
             viewModel.refreshState
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { binding.homeRefresh.isRefreshing = it }
-                .addTo(autoDisposable)
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onError = { Timber.d(it) },
+                    onNext = { binding.homeRefresh.isRefreshing = it }
+                ).addTo(autoDisposable)
         }
     }
 
     private fun initEventMessage() {
         viewModel.eventMessage
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-            .addTo(autoDisposable)
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() },
+            ).addTo(autoDisposable)
     }
 
     private fun initSearchView() {
-//        binding.homeSearchView.isIconifiedByDefault = false
-//        binding.homeSearchView.setOnClickListener { binding.homeSearchView.isIconified = false
-//            println("!!!cache")
-//        }
-//        binding.homeSearchView.setOnCloseListener {
-//            binding.homeSearchView.clearFocus()
-//            true
-//        }
-        //TODO: Deal with isIconified and filmDataBase
+        binding.homeSearchView.setOnCloseListener {
+            binding.homeSearchView.clearFocus()
+            true
+        }
         Observable.create(ObservableOnSubscribe<String> { sub ->
-            binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
+            binding.homeSearchView.setOnQueryTextListener(
+                object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        if (query.isNullOrBlank()) sub.onNext("") else sub.onNext(query)
+                        return false
+                    }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    sub.onNext(newText!!)
-                    return false
-                }
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        if (newText.isNullOrBlank()) sub.onNext("") else sub.onNext(newText)
+                        return false
+                    }
 
-            })
-        }).observeOn(Schedulers.io())
+                })
+        }).observeOn(AndroidSchedulers.mainThread())
+            .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
             .map { it.lowercase().trim() }
-            .debounce(1, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter {
-                if (it.isNullOrBlank()) {
-                    filmsAdapter.addItems(filmDataBase)
-                    filmDataBase.clear()
-                }
-                it.isNotEmpty()
-            }.observeOn(Schedulers.io())
             .flatMap {
-                viewModel.getSearchedFilms(it)
-            }.observeOn(AndroidSchedulers.mainThread())
+                if (it.isNullOrBlank()) viewModel.getFilmsFromDB()
+                else viewModel.getSearchedFilms(it)
+            }.subscribeOn(Schedulers.io())
             .subscribeBy(
-                onError = {
-                    println(it.localizedMessage)
-                },
-                onNext = {
-                    filmsAdapter.addItems(it)
-                }
+                onError = { Timber.d(it) },
+                onNext = { if (!binding.homeSearchView.isIconified) filmsAdapter.updateData(it) }
             ).addTo(autoDisposable)
     }
 }

@@ -1,126 +1,177 @@
 package xyz.flussigkatz.searchmovie.domain
 
-import android.text.format.DateFormat
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import timber.log.Timber
+import xyz.flussigkatz.core_api.entity.Film
+import xyz.flussigkatz.core_api.entity.BrowsingFilm
+import xyz.flussigkatz.core_api.entity.MarkedFilm
 import xyz.flussigkatz.remote_module.TmdbApi
+import xyz.flussigkatz.remote_module.entity.FavoriteMovieInfoDto
+import xyz.flussigkatz.remote_module.entity.ListInfo
+import xyz.flussigkatz.remote_module.entity.TmdbResultDto.TmdbFilm
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID
 import xyz.flussigkatz.searchmovie.data.Api.API_KEY
 import xyz.flussigkatz.searchmovie.data.Api.SESSION_ID
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DEFAULT_LIST_ID
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.FAVORITE_FILM_LIST_NAME
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
-import xyz.flussigkatz.searchmovie.data.entity.Film
-import xyz.flussigkatz.searchmovie.data.entity.MarkedFilm
-import xyz.flussigkatz.searchmovie.util.Converter
 import java.util.*
 
 class Interactor(
-    private val repo: MainRepository,
+    private val repository: MainRepository,
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider,
     private val refreshState: BehaviorSubject<Boolean>,
     private val eventMessage: PublishSubject<String>,
 ) {
+    private val language = Locale.getDefault().run {
+        "$language-$country"
+    }
 
-    //TODO: Dispose observable
-
+    //region Api
     fun getFilmsFromApi(page: Int) {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
-        if (checkUploadInterval()) {
-            retrofitService.getFilms(
-                getDefaultCategoryFromPreferences(),
-                API_KEY,
-                lang,
-                page).map {
-                Converter.convertToFilmFromApi(it.tmdbFilms)
-            }.doOnSubscribe {
-                refreshState.onNext(true)
-                do {
-                    repo.clearDB()
-                } while (repo.clearDB() != 0)
-            }.doOnComplete {
-                refreshState.onNext(false)
-                preferences.saveLoadFromApiTimeInterval(System.currentTimeMillis())
-            }.doOnError {
+        retrofitService.getFilms(
+            getDefaultCategoryFromPreferences(),
+            API_KEY,
+            language,
+            page
+        )
+            .filter { it.tmdbFilms.isNotEmpty() }
+            .map { convertToFilmFromApi(it.tmdbFilms) }
+            .doOnSubscribe { refreshState.onNext(true) }
+            .doOnComplete { refreshState.onNext(false) }
+            .doOnError {
                 refreshState.onNext(false)
                 eventMessage.onNext(getText(R.string.error_upload_message))
             }.subscribeOn(Schedulers.io())
-                .subscribe {
-                    repo.putFilmToDB(it)
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = {
+                    repository.clearCashedFilmsDB()
+                    repository.putFilmsToDB(it)
                 }
-        } else {
-            refreshState.onNext(false)
-            eventMessage.onNext(
-                timeFormatter() + getText(R.string.upload_time_interval_massage)
             )
-        }
-    }
-    fun getSpecificFilmFromApi(id: String): Observable<Film> {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
-        return retrofitService.getSpecificFilm(id, API_KEY, lang)
-            .filter {it != null}
-            .map { Converter.convertToFilmFromApi(it) }
-            .doOnError {
-                println(it.message)
-            }.observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
     }
 
-    //TODO: При введении "вен" ошибка
     fun getSearchedFilmsFromApi(search_query: String, page: Int): Observable<List<Film>> {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
         return retrofitService.getSearchedFilms(
-            API_KEY,
-            lang,
-            search_query,
-            page
-        ).map {
-            Converter.convertToFilmFromApi(it.tmdbFilms)
-        }.doOnError {
-            eventMessage.onNext(getText(R.string.error_upload_message))
-        }
+            api_key = API_KEY,
+            language = language,
+            query = search_query,
+            page = page
+        ).map { convertToFilmFromApi(it.tmdbFilms) }
+            .doOnError { eventMessage.onNext(getText(R.string.error_upload_message)) }
     }
 
-    fun getMarkedFilmsFromApi(page: Int) {
-        val lang = Locale.getDefault().run {
-            "$language-$country"
-        }
-        retrofitService.getFavoriteFilms(
-            ACCOUNT_ID,
-            API_KEY,
-            SESSION_ID,
-            lang,
-            xyz.flussigkatz.searchmovie.data.ApiConstantsApp.FAVORITE_SORT_BY_CREATED_AT_DESC,
-            page
-        ).map {
-            Converter.convertToMarkedFilmFromApi(it.tmdbFilms)
-        }.doOnSubscribe {
-            refreshState.onNext(true)
-        }.doOnComplete {
-            refreshState.onNext(false)
-        }.doOnError {
-            refreshState.onNext(false)
-            eventMessage.onNext(getText(R.string.error_upload_message))
-        }.subscribeOn(Schedulers.io())
-            .subscribe {
-                repo.putMarkedFilmToDB(it)
+    fun getMarkedFilmsFromApi() {
+        retrofitService.getMarkedFilms(
+            list_id = getFavoriteListIdFromPreferences(),
+            api_key = API_KEY,
+            language = language,
+        ).map { favoriteMovieListDto ->
+            favoriteMovieListDto.favoriteListItems.map {
+                MarkedFilm(
+                    id = it.id,
+                    title = it.title ?: it.name,
+                    posterId = it.posterPath ?: "",
+                    description = it.overview,
+                    rating = (it.voteAverage * 10).toInt(),
+                    fav_state = true
+                )
             }
+        }.doOnSubscribe { refreshState.onNext(true) }
+            .doOnComplete { refreshState.onNext(false) }
+            .doOnError {
+                refreshState.onNext(false)
+                eventMessage.onNext(getText(R.string.error_upload_message))
+            }.subscribeOn(Schedulers.io()).subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = {
+                    repository.clearMarkedFilmsDB()
+                    repository.putMarkedFilmToDB(it)
+                }
+            )
     }
 
-    fun deleteMarkedFilmFromDB(id: Int) {
-        repo.deleteMarkedFilmFromDB(id)
+    fun getFilmMarkStatusFromApi(id: Int) = retrofitService.getFilmMarkStatus(
+        list_id = getFavoriteListIdFromPreferences(),
+        api_key = API_KEY,
+        movie_id = id
+    )
+
+    private fun getFilmListsFromApi() = retrofitService.getFilmLists(
+        account_id = ACCOUNT_ID,
+        api_key = API_KEY,
+        session_id = SESSION_ID,
+        language = language
+    )
+
+    fun addFavoriteFilmToList(id: Int) {
+        retrofitService.addFavoriteFilmToList(
+            list_id = getFavoriteListIdFromPreferences(),
+            api_key = API_KEY,
+            session_id = SESSION_ID,
+            favoriteMovieInfo = FavoriteMovieInfoDto(mediaId = id)
+        ).enqueue(object : Callback<FavoriteMovieInfoDto> {
+            override fun onFailure(call: Call<FavoriteMovieInfoDto>, t: Throwable) {
+                eventMessage.onNext(getText(R.string.error_add_to_favorite_message))
+                Timber.d(t)
+            }
+
+            override fun onResponse(
+                call: Call<FavoriteMovieInfoDto>,
+                response: Response<FavoriteMovieInfoDto>,
+            ) {
+            }
+        })
     }
 
+    fun removeFavoriteFilmFromList(id: Int) {
+        retrofitService.removeFavoriteFilmFromList(
+            list_id = getFavoriteListIdFromPreferences(),
+            api_key = API_KEY,
+            session_id = SESSION_ID,
+            favoriteMovieInfo = FavoriteMovieInfoDto(mediaId = id)
+        ).enqueue(object : Callback<FavoriteMovieInfoDto> {
+            override fun onFailure(call: Call<FavoriteMovieInfoDto>, t: Throwable) {
+                eventMessage.onNext(getText(R.string.error_remove_from_favorite_message))
+                Timber.d(t)
+            }
+
+            override fun onResponse(
+                call: Call<FavoriteMovieInfoDto>,
+                response: Response<FavoriteMovieInfoDto>,
+            ) {
+            }
+        })
+    }
+    //endregion
+
+    //region DB
+    fun putBrowsingFilmToDB(film: BrowsingFilm) {
+        repository.putBrowsingFilmToDB(film)
+    }
+
+    fun getFilmsFromDB() = repository.getAllFilmsFromDB()
+
+    fun getMarkedFilmsFromDB() = repository.getAllMarkedFilmsFromDB()
+
+    fun getSearchedMarkedFilms(query: String) = repository.getSearchedMarkedFilms(query)
+
+    fun getCashedBrowsingFilmsFromDB() = repository.getAllBrowsingFilmsFromDB()
+    //endregion
+
+    //region Preferences
     fun saveDefaultCategoryToPreferences(category: String) {
         preferences.saveDefaultCategory(category)
     }
@@ -129,37 +180,48 @@ class Interactor(
         return preferences.getDefaultCategory()
     }
 
-    fun setDefaultTheme(theme: Int) {
-        preferences.saveDefaultTheme(theme)
-        xyz.flussigkatz.searchmovie.App.instance.initTheme(theme)
+    fun saveNightModeToPreferences(mode: Int) {
+        preferences.saveNightMode(mode)
     }
 
-    fun getDefaultThemeFromPreferences(): Int {
-        return preferences.getDefaultTheme()
+    fun getNightModeFromPreferences(): Int {
+        return preferences.getNightMode()
     }
 
     fun setSplashScreenState(state: Boolean) {
         preferences.setPlaySplashScreenState(state)
     }
 
-    fun getSplashScreenStateFromPreferences(): Boolean {
-        return preferences.getPlaySplashScreenState()
-    }
+    fun getSplashScreenStateFromPreferences() = preferences.getPlaySplashScreenState()
 
-    fun getFilmsFromDB(): Observable<List<Film>> {
-        return repo.getAllFilmsFromDB()
+    private fun getFavoriteListIdFromPreferences(): Int {
+        val id = preferences.getFavoriteFilmListId()
+        if (id == DEFAULT_LIST_ID) {
+            getFilmListsFromApi().map { it.results }
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onError = { Timber.d(it) },
+                    onNext = { resultList ->
+                        resultList.find { it.name == FAVORITE_FILM_LIST_NAME }.let {
+                            if (it != null) preferences.setFavoriteFilmListId(it.id)
+                            else {
+                                retrofitService.createFavoriteFilmList(
+                                    api_key = API_KEY,
+                                    session_id = SESSION_ID,
+                                    listInfo = ListInfo(
+                                        description = "",
+                                        language = "",
+                                        name = FAVORITE_FILM_LIST_NAME
+                                    )
+                                ).execute()
+                            }
+                        }
+                    }
+                )
+        }
+        return id
     }
-    fun getMarkedFilmsFromDB(): Observable<List<MarkedFilm>> {
-        return repo.getAllMarkedFilmsFromDB()
-    }
-
-    fun getMarkedFilmsFromDBToList(): Observable<List<MarkedFilm>>? {
-        return repo.getAllMarkedFilmsDBToList()
-    }
-
-//    fun setFavoriteMark(id: Int) {
-    //TODO: create setFavoriteMark
-//    }
+    //endregion
 
     fun getRefreshState(): BehaviorSubject<Boolean> {
         return refreshState
@@ -169,43 +231,18 @@ class Interactor(
         return eventMessage
     }
 
-    fun checkUploadInterval(): Boolean {
-        var res = false
-        val realTime = System.currentTimeMillis()
-        val lastLoadTime = preferences.getLoadFromApiTimeInterval()
-        if (lastLoadTime + TIME_INTERVAL < realTime) {
-            res = true
-        }
-        return res
-    }
-
-    private fun timeFormatter(): String {
-        val realTime = System.currentTimeMillis()
-        val lastLoadTime = preferences.getLoadFromApiTimeInterval()
-        val time = realTime - lastLoadTime
-        val min = DateFormat.format("mm", time)
-        val sec = DateFormat.format("ss", time)
-        val arr = arrayOf(min, sec).map {
-            if (it[0].toString().equals("0")) {
-                it[1].toString()
-            } else it
-        }
-        var res = ""
-
-        if (time >= ONE_MIN) {
-            res = "${arr[0]} ${getText(R.string.min)} "
-        }
-        res += "${arr[1]} ${getText(R.string.sec)} "
-
-        return res
-    }
-
     private fun getText(resId: Int): String {
-        return xyz.flussigkatz.searchmovie.App.instance.getText(resId).toString()
+        return App.instance.getText(resId).toString()
     }
 
-    companion object {
-        private const val TIME_INTERVAL = 600000L
-        private const val ONE_MIN = 60000L
+    private fun convertToFilmFromApi(list: List<TmdbFilm>) = list.map {
+        Film(
+            id = it.id,
+            title = it.title,
+            posterId = it.posterPath ?: "",
+            description = it.overview,
+            rating = (it.voteAverage * 10).toInt(),
+            fav_state = false
+        )
     }
 }

@@ -2,32 +2,50 @@ package xyz.flussigkatz.searchmovie.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import timber.log.Timber
+import xyz.flussigkatz.core_api.entity.BrowsingFilm
+import xyz.flussigkatz.searchmovie.App
+import xyz.flussigkatz.searchmovie.domain.Interactor
 import java.io.IOException
-import java.lang.Exception
 import java.net.URL
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class DetailsFragmentViewModel : ViewModel() {
-    val progressBarState = BehaviorSubject.create<Boolean>()
+    @Inject
+    lateinit var interactor: Interactor
+    val progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
-    suspend fun loadFilmPoster(url: String): Bitmap? {
+    init {
+        App.instance.dagger.inject(this)
+    }
+
+    suspend fun loadFilmPoster(urlAddress: String): Bitmap? {
         return suspendCoroutine {
-            var bitmap: Bitmap?
-            try {
-                val url = URL(url)
-                //TODO If you press the download with the Internet disconnected
-                // immediately after a successful download, then the coroutine freezes
-                // in anticipation of the result.
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            val bitmap: Bitmap? = try {
+                BitmapFactory.decodeStream(URL(urlAddress).openConnection().getInputStream())
             } catch (e: IOException) {
-                println(e)
-                bitmap = null
+                Timber.d(e)
+                null
             }
             it.resume(bitmap)
         }
+    }
+
+    fun removeFavoriteFilmFromList(id: Int){
+        interactor.removeFavoriteFilmFromList(id)
+    }
+
+    fun addFavoriteFilmToList(id: Int){
+        interactor.addFavoriteFilmToList(id)
+    }
+
+    fun getFilmMarkStatusFromApi(id: Int) = interactor.getFilmMarkStatusFromApi(id)
+
+    fun putBrowsingFilmToDB(film: BrowsingFilm) {
+        interactor.putBrowsingFilmToDB(film)
     }
 }

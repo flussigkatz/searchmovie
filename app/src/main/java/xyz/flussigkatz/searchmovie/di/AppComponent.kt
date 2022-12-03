@@ -1,32 +1,31 @@
 package xyz.flussigkatz.searchmovie.di
 
+import android.app.Application
+import android.content.Context
+import dagger.BindsInstance
 import dagger.Component
-import xyz.flussigkatz.remote_module.RemoteProvider
-import xyz.flussigkatz.searchmovie.di.modules.DatabaseModule
-import xyz.flussigkatz.searchmovie.di.modules.DomainModule
-import xyz.flussigkatz.searchmovie.view.MainActivity
-import xyz.flussigkatz.searchmovie.viewmodel.DetailsFragmentViewModel
-import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
-import xyz.flussigkatz.searchmovie.viewmodel.MarkedFragmentViewModel
-import xyz.flussigkatz.searchmovie.viewmodel.SettingsFragmentViewModel
+import xyz.flussigkatz.core_api.AppProvider
 import javax.inject.Singleton
 
 @Singleton
-@Component(
-    dependencies = [RemoteProvider::class],
-    modules = [DatabaseModule::class, DomainModule::class]
-)
+@Component
+interface AppComponent : AppProvider {
+    companion object {
+        private var appComponent: AppProvider? = null
+        fun create(application: Application): AppProvider {
+            return appComponent ?: DaggerAppComponent
+                .builder()
+                .application(application.applicationContext)
+                .build().also {
+                    appComponent = it
+                }
+        }
+    }
 
-interface AppComponent {
-//    fun inject(app: App)
-
-    fun inject(mainActivity: MainActivity)
-
-    fun inject(homeFragmentViewModel: HomeFragmentViewModel)
-
-    fun inject(markedFragmentViewModel: MarkedFragmentViewModel)
-
-    fun inject(settingsFragmentViewModel: SettingsFragmentViewModel)
-
-    fun inject(detailsFragmentViewModel: DetailsFragmentViewModel)
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        fun application(context: Context): Builder
+        fun build(): AppComponent
+    }
 }

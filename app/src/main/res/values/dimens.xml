@@ -9,23 +9,23 @@
     <!--    fragment_details-->
     <dimen name="details_favorite_check_box_margin">20dp</dimen>
     <dimen name="details_favorite_check_box_size">30dp</dimen>
-    <dimen name="details_poster_heigth">500dp</dimen>
-    <dimen name="details_fab_margin">20dp</dimen>
+    <dimen name="details_poster_height">600dp</dimen>
+    <dimen name="details_fab_margin_end">4dp</dimen>
     <dimen name="details_description_margin">5dp</dimen>
     <dimen name="details_progress_bar_size">50dp</dimen>
+    <dimen name="details_progress_bar_translation_z">10dp</dimen>
+    <dimen name="details_title_padding_top">28dp</dimen>
+    <dimen name="details_fab_download_poster_layout_margin_end">64dp</dimen>
+    <dimen name="details_fab_favorite_layout_margin_end">124dp</dimen>
 
     <!--    film_item-->
     <dimen name="film_item_favorite_check_box_margin">2dp</dimen>
     <dimen name="film_item_favorite_check_box_size">30dp</dimen>
-    <dimen name="film_item_root_width">150dp</dimen>
+    <dimen name="film_item_root_height">150dp</dimen>
     <dimen name="film_item_rating_donut_size">40dp</dimen>
     <dimen name="film_item_rating_donut_translation_z">5dp</dimen>
-    <dimen name="film_item_cardview_margins">10dp</dimen>
-    <dimen name="film_item_cardview_corner_radius">10dp</dimen>
+    <dimen name="film_item_container_margins">10dp</dimen>
     <dimen name="film_item_textview_description_padding">8dp</dimen>
-    <dimen name="film_item_textview_description_width">0dp</dimen>
-    <dimen name="film_item_textview_description_height">0dp</dimen>
-    <dimen name="film_item_textview_title_width">0dp</dimen>
     <dimen name="film_item_textview_title_padding">8dp</dimen>
     <dimen name="film_item_imageview_poster_width">110dp</dimen>
 
@@ -42,5 +42,6 @@
     <dimen name="marked_search_view_margin_end">10dp</dimen>
 
     <!--    fragment_settings-->
-    <dimen name="title_margin">8dp</dimen>
+    <dimen name="settings_title_margin">8dp</dimen>
+    <dimen name="settings_menu_margin_top">5dp</dimen>
 </resources>
