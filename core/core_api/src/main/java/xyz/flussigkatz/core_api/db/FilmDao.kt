@@ -29,6 +29,9 @@ interface FilmDao {
     @Query("SELECT * FROM marked_films")
     fun getCashedMarkedFilmsToList(): List<MarkedFilm>
 
+    @Query("SELECT id FROM marked_films")
+    fun getIdsMarkedFilmsToList(): Observable<MutableList<Int>>
+
     @Query("SELECT * FROM marked_films WHERE id LIKE :id")
     fun getCashedOneMarkedFilm(id: Int): MarkedFilm
 

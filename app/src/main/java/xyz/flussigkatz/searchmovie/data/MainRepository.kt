@@ -25,6 +25,8 @@ class MainRepository(private val filmDao: FilmDao) {
 
     fun getAllMarkedFilmsFromDB() = filmDao.getCashedMarkedFilms()
 
+    fun getIdsMarkedFilmsToListFromDB() = filmDao.getIdsMarkedFilmsToList()
+
     fun clearMarkedFilmsDB() = filmDao.deleteMarkedFilms(filmDao.getCashedMarkedFilmsToList())
     //endregion
 

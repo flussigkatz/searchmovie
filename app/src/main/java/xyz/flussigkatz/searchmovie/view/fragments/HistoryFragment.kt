@@ -14,6 +14,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.databinding.FragmentHistoryBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.addTo
@@ -55,7 +56,7 @@ class HistoryFragment : Fragment() {
             val onItemClickListener = object : FilmListRecyclerAdapter.OnItemClickListener {
                 override fun click(film: AbstractFilmEntity) {
                     val bundle = Bundle()
-                    bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                    bundle.putParcelable(DETAILS_FILM_KEY, film)
                     (requireActivity() as MainActivity).navController.navigate(
                         R.id.action_historyFragment_to_detailsFragment, bundle
                     )

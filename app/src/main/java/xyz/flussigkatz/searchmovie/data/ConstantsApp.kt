@@ -8,4 +8,5 @@ object ConstantsApp {
     const val FAVORITE_FILM_LIST_NAME = "SearchMovieFavoriteList"
     const val SEARCH_DEBOUNCE_TIME_MILLISECONDS = 1000L
     const val DEFAULT_LIST_ID = -1
+    const val DETAILS_FILM_KEY = "details_film"
 }

@@ -22,12 +22,12 @@ import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.SearchMovieReceiver
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.util.AnimationHelper
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.NavigationHelper
 import xyz.flussigkatz.searchmovie.util.addTo
-import xyz.flussigkatz.searchmovie.view.fragments.DetailsFragment
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants
 import xyz.flussigkatz.searchmovie.viewmodel.MainActivityViewModel
 
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
         intentBoringKillerAlarm.action = NotificationConstants.BORING_KILLER_NOTIFICATION_ALARM
         bundle.putParcelable(
-            DetailsFragment.DETAILS_FILM_KEY,
+            DETAILS_FILM_KEY,
             film
         )
         intentBoringKillerAlarm.putExtra(

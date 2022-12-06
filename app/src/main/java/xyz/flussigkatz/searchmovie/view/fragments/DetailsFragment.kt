@@ -27,6 +27,7 @@ import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_ORIGINAL
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_W500
@@ -239,9 +240,5 @@ class DetailsFragment : Fragment() {
     override fun onDestroy() {
         scope.cancel()
         super.onDestroy()
-    }
-
-    companion object {
-        const val DETAILS_FILM_KEY = "details_film"
     }
 }
