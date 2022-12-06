@@ -1,19 +1,16 @@
 package xyz.flussigkatz.remote_module
 
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-import xyz.flussigkatz.remote_module.entity.FavoriteMovieInfoDto
-import xyz.flussigkatz.remote_module.entity.FavoriteMovieListDto.FavoriteMovieListDto
-import xyz.flussigkatz.remote_module.entity.FilmListsDto.FilmListsDto
-import xyz.flussigkatz.remote_module.entity.ListInfo
-import xyz.flussigkatz.remote_module.entity.MarkFimStatusDto
-import xyz.flussigkatz.remote_module.entity.TmdbResultDto.TmdbResultsDto
+import xyz.flussigkatz.remote_module.entity.*
+import xyz.flussigkatz.remote_module.entity.favorite_movie_list_dto.FavoriteMovieListDto
+import xyz.flussigkatz.remote_module.entity.film_lists_dto.FilmListsDto
+import xyz.flussigkatz.remote_module.entity.tmdb_result_dto.TmdbResultsDto
 
 interface TmdbApi {
     //region GET
@@ -63,7 +60,7 @@ interface TmdbApi {
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Body listInfo: ListInfo,
-    ): Call<ListInfo>
+    ): Observable<CreateFavoriteListResponseDto>
 
     @Headers("Content-Type: application/json;charset=utf-8")
     @POST("list/{list_id}/add_item")
@@ -72,7 +69,7 @@ interface TmdbApi {
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Body favoriteMovieInfo: FavoriteMovieInfoDto,
-    ): Call<FavoriteMovieInfoDto>
+    ): Observable<FavoriteFilmAddingRemovingResponse>
 
     @Headers("Content-Type: application/json;charset=utf-8")
     @POST("list/{list_id}/remove_item")
@@ -81,6 +78,6 @@ interface TmdbApi {
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Body favoriteMovieInfo: FavoriteMovieInfoDto,
-    ): Call<FavoriteMovieInfoDto>
+    ): Observable<FavoriteFilmAddingRemovingResponse>
     //endregion
 }

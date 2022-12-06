@@ -5,9 +5,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
@@ -15,7 +12,7 @@ import xyz.flussigkatz.core_api.entity.MarkedFilm
 import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussigkatz.remote_module.entity.FavoriteMovieInfoDto
 import xyz.flussigkatz.remote_module.entity.ListInfo
-import xyz.flussigkatz.remote_module.entity.TmdbResultDto.TmdbFilm
+import xyz.flussigkatz.remote_module.entity.tmdb_result_dto.TmdbFilm
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID
@@ -34,8 +31,13 @@ class Interactor(
     private val refreshState: BehaviorSubject<Boolean>,
     private val eventMessage: PublishSubject<String>,
 ) {
-    private val language = Locale.getDefault().run {
-        "$language-$country"
+    private val language = Locale.getDefault().run { "$language-$country" }
+    private var listIdsMarkedFilms = mutableListOf<Int>()
+
+    init {
+        checkFavoriteListIdStatus()
+        getMarkedFilmsFromApi()
+        initListIdsMarkedFilms()
     }
 
     //region Api
@@ -45,8 +47,7 @@ class Interactor(
             API_KEY,
             language,
             page
-        )
-            .filter { it.tmdbFilms.isNotEmpty() }
+        ).filter { it.tmdbFilms.isNotEmpty() }
             .map { convertToFilmFromApi(it.tmdbFilms) }
             .doOnSubscribe { refreshState.onNext(true) }
             .doOnComplete { refreshState.onNext(false) }
@@ -122,18 +123,12 @@ class Interactor(
             api_key = API_KEY,
             session_id = SESSION_ID,
             favoriteMovieInfo = FavoriteMovieInfoDto(mediaId = id)
-        ).enqueue(object : Callback<FavoriteMovieInfoDto> {
-            override fun onFailure(call: Call<FavoriteMovieInfoDto>, t: Throwable) {
-                eventMessage.onNext(getText(R.string.error_add_to_favorite_message))
-                Timber.d(t)
-            }
-
-            override fun onResponse(
-                call: Call<FavoriteMovieInfoDto>,
-                response: Response<FavoriteMovieInfoDto>,
-            ) {
-            }
-        })
+        ).filter { it.success }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { listIdsMarkedFilms.add(id) }
+            )
     }
 
     fun removeFavoriteFilmFromList(id: Int) {
@@ -142,18 +137,29 @@ class Interactor(
             api_key = API_KEY,
             session_id = SESSION_ID,
             favoriteMovieInfo = FavoriteMovieInfoDto(mediaId = id)
-        ).enqueue(object : Callback<FavoriteMovieInfoDto> {
-            override fun onFailure(call: Call<FavoriteMovieInfoDto>, t: Throwable) {
-                eventMessage.onNext(getText(R.string.error_remove_from_favorite_message))
-                Timber.d(t)
-            }
+        ).filter { it.success }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { listIdsMarkedFilms.add(id) }
+            )
+    }
 
-            override fun onResponse(
-                call: Call<FavoriteMovieInfoDto>,
-                response: Response<FavoriteMovieInfoDto>,
-            ) {
-            }
-        })
+    private fun createFavoriteFilmList() {
+        retrofitService.createFavoriteFilmList(
+            api_key = API_KEY,
+            session_id = SESSION_ID,
+            listInfo = ListInfo(
+                description = "",
+                language = "",
+                name = FAVORITE_FILM_LIST_NAME
+            )
+        ).filter { it.success }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { preferences.setFavoriteFilmListId(it.listId) }
+            )
     }
     //endregion
 
@@ -165,6 +171,8 @@ class Interactor(
     fun getFilmsFromDB() = repository.getAllFilmsFromDB()
 
     fun getMarkedFilmsFromDB() = repository.getAllMarkedFilmsFromDB()
+
+    private fun getIdsMarkedFilmsToListFromDB() = repository.getIdsMarkedFilmsToListFromDB()
 
     fun getSearchedMarkedFilms(query: String) = repository.getSearchedMarkedFilms(query)
 
@@ -184,9 +192,7 @@ class Interactor(
         preferences.saveNightMode(mode)
     }
 
-    fun getNightModeFromPreferences(): Int {
-        return preferences.getNightMode()
-    }
+    fun getNightModeFromPreferences() = preferences.getNightMode()
 
     fun setSplashScreenState(state: Boolean) {
         preferences.setPlaySplashScreenState(state)
@@ -194,46 +200,22 @@ class Interactor(
 
     fun getSplashScreenStateFromPreferences() = preferences.getPlaySplashScreenState()
 
-    private fun getFavoriteListIdFromPreferences(): Int {
-        val id = preferences.getFavoriteFilmListId()
-        if (id == DEFAULT_LIST_ID) {
-            getFilmListsFromApi().map { it.results }
-                .subscribeOn(Schedulers.io())
-                .subscribeBy(
-                    onError = { Timber.d(it) },
-                    onNext = { resultList ->
-                        resultList.find { it.name == FAVORITE_FILM_LIST_NAME }.let {
-                            if (it != null) preferences.setFavoriteFilmListId(it.id)
-                            else {
-                                retrofitService.createFavoriteFilmList(
-                                    api_key = API_KEY,
-                                    session_id = SESSION_ID,
-                                    listInfo = ListInfo(
-                                        description = "",
-                                        language = "",
-                                        name = FAVORITE_FILM_LIST_NAME
-                                    )
-                                ).execute()
-                            }
-                        }
-                    }
-                )
-        }
-        return id
-    }
+    private fun getFavoriteListIdFromPreferences() = preferences.getFavoriteFilmListId()
     //endregion
 
-    fun getRefreshState(): BehaviorSubject<Boolean> {
-        return refreshState
+    private fun initListIdsMarkedFilms() {
+        getIdsMarkedFilmsToListFromDB().subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { listIdsMarkedFilms = it }
+            )
     }
 
-    fun getEventMessage(): PublishSubject<String> {
-        return eventMessage
-    }
+    fun getRefreshState() = refreshState
 
-    private fun getText(resId: Int): String {
-        return App.instance.getText(resId).toString()
-    }
+    fun getEventMessage() = eventMessage
+
+    private fun getText(resId: Int) = App.instance.getText(resId).toString()
 
     private fun convertToFilmFromApi(list: List<TmdbFilm>) = list.map {
         Film(
@@ -242,7 +224,22 @@ class Interactor(
             posterId = it.posterPath ?: "",
             description = it.overview,
             rating = (it.voteAverage * 10).toInt(),
-            fav_state = false
+            fav_state = listIdsMarkedFilms.contains(it.id)
         )
+    }
+
+    private fun checkFavoriteListIdStatus() {
+        if (preferences.getFavoriteFilmListId() == DEFAULT_LIST_ID) {
+            getFilmListsFromApi().map { it.results }
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onError = { Timber.d(it) },
+                    onNext = { resultList ->
+                        resultList.find { it.name == FAVORITE_FILM_LIST_NAME }?.let {
+                            preferences.setFavoriteFilmListId(it.id)
+                        } ?: createFavoriteFilmList()
+                    }
+                )
+        }
     }
 }

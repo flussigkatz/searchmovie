@@ -1,21 +1,23 @@
-package xyz.flussigkatz.remote_module.entity.FilmListsDto
+package xyz.flussigkatz.remote_module.entity.favorite_movie_list_dto
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class FavoriteMovieListDto(
+    @SerializedName("created_by")
+    val createdBy: String,
     @SerializedName("description")
     val description: String,
     @SerializedName("favorite_count")
     val favoriteCount: Int,
     @SerializedName("id")
-    val id: Int,
+    val id: String,
     @SerializedName("iso_639_1")
     val iso6391: String,
     @SerializedName("item_count")
     val itemCount: Int,
-    @SerializedName("list_type")
-    val listType: String,
+    @SerializedName("items")
+    val favoriteListItems: List<FavoriteListItem>,
     @SerializedName("name")
     val name: String,
     @SerializedName("poster_path")

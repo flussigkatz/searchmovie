@@ -1,4 +1,4 @@
-package xyz.flussigkatz.remote_module.entity.FilmListsDto
+package xyz.flussigkatz.remote_module.entity.film_lists_dto
 
 
 import com.google.gson.annotations.SerializedName

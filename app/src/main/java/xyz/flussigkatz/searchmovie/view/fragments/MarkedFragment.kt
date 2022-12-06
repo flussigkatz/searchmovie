@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
@@ -65,7 +66,7 @@ class MarkedFragment : Fragment() {
             val onItemClickListener = object : FilmListRecyclerAdapter.OnItemClickListener {
                 override fun click(film: AbstractFilmEntity) {
                     val bundle = Bundle()
-                    bundle.putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                    bundle.putParcelable(DETAILS_FILM_KEY, film)
                     (requireActivity() as MainActivity).navController.navigate(
                         R.id.action_markedFragment_to_detailsFragment, bundle
                     )

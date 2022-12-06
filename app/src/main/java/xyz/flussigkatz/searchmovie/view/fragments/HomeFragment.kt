@@ -16,6 +16,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.*
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
                 object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: AbstractFilmEntity) {
                         Bundle().apply {
-                            putParcelable(DetailsFragment.DETAILS_FILM_KEY, film)
+                            putParcelable(DETAILS_FILM_KEY, film)
                             (requireActivity() as MainActivity).navController.navigate(
                                 R.id.action_homeFragment_to_detailsFragment, this
                             )

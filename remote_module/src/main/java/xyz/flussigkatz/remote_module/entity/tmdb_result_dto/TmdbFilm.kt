@@ -1,4 +1,4 @@
-package xyz.flussigkatz.remote_module.entity.TmdbResultDto
+package xyz.flussigkatz.remote_module.entity.tmdb_result_dto
 
 
 import com.google.gson.annotations.SerializedName

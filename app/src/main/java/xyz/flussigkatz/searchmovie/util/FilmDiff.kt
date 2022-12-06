@@ -6,10 +6,7 @@ import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 class FilmDiff(
     private var oldList: List<AbstractFilmEntity>,
     private val newList: List<AbstractFilmEntity>,
-) :
-    DiffUtil.Callback() {
-
-
+) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
     }
