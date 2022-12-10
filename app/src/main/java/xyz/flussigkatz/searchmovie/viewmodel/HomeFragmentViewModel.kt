@@ -3,7 +3,6 @@ package xyz.flussigkatz.searchmovie.viewmodel
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
 import xyz.flussigkatz.core_api.entity.Film
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
@@ -11,7 +10,6 @@ import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
     val refreshState: BehaviorSubject<Boolean>
-    val eventMessage: PublishSubject<String>
     val filmListData: Observable<List<Film>>
 
     @Inject
@@ -19,17 +17,12 @@ class HomeFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
-        filmListData = interactor.getFilmsFromDB()
+        filmListData = interactor.getSearchedFilmsFromDB()
         refreshState = interactor.getRefreshState()
-        eventMessage = interactor.getEventMessage()
-        getFilms()
     }
 
-    fun getFilms() {
-        interactor.getFilmsFromApi(1)
-    }
-    fun getFilmsFromDB(): Observable<List<Film>> {
-        return interactor.getFilmsFromDB()
+    fun getFilms(category: String, page: Int) {
+        interactor.getFilmsFromApi(category, page)
     }
 
     fun removeFavoriteFilmFromList(id: Int){
@@ -40,8 +33,11 @@ class HomeFragmentViewModel : ViewModel() {
         interactor.addFavoriteFilmToList(id)
     }
 
-    fun getSearchedFilms(search_query: String): Observable<List<Film>> {
-        return interactor.getSearchedFilmsFromApi(search_query, 1)
+    fun getSearchedFilms(search_query: String) {
+        interactor.getSearchedFilmsFromApi(search_query, 1)
     }
 
+    fun clearSearchedFilmDB() {
+        interactor.clearSearchedFilmDB()
+    }
 }

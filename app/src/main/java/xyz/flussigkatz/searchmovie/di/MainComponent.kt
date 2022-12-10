@@ -21,4 +21,8 @@ interface MainComponent {
     fun inject(settingsFragmentViewModel: SettingsFragmentViewModel)
     fun inject(detailsFragmentViewModel: DetailsFragmentViewModel)
     fun inject(historyFragmentViewModel: HistoryFragmentViewModel)
+    fun inject(popularFilmsFragmentViewModel: PopularFilmsFragmentViewModel)
+    fun inject(topRatedFilmsFragmentViewModel: TopRatedFilmsFragmentViewModel)
+    fun inject(upcomingFilmsFragmentViewModel: UpcomingFilmsFragmentViewModel)
+    fun inject(nowPlayingFilmsFragmentViewModel: NowPlayingFilmsFragmentViewModel)
 }

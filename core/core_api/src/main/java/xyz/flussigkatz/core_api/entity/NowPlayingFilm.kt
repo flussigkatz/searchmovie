@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "marked_films", indices = [Index(value = ["title"], unique = true)])
-data class MarkedFilm(
+@Entity(tableName = "cashed_now_playing_films", indices = [Index(value = ["title"], unique = true)])
+data class NowPlayingFilm(
     @PrimaryKey override val id: Int,
     @ColumnInfo(name = "title") override val title: String,
     @ColumnInfo(name = "poster_path") override val posterId: String,

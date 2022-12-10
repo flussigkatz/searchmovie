@@ -15,18 +15,9 @@ class PreferenceProvider(context: Context) {
 
     init {
         if (preference.getBoolean(KEY_FIRST_LAUNCH, false)) {
-            preference.edit() { putString(KEY_DEFAULT_CATEGORY, DEFAULT_CATEGORY) }
             preference.edit() { putInt(KEY_DEFAULT_THEME, AppCompatDelegate.getDefaultNightMode()) }
             preference.edit() { putBoolean(KEY_FIRST_LAUNCH, false) }
         }
-    }
-
-    fun saveDefaultCategory(category: String) {
-        preference.edit() { putString(KEY_DEFAULT_CATEGORY, category) }
-    }
-
-    fun getDefaultCategory(): String {
-        return preference.getString(KEY_DEFAULT_CATEGORY, DEFAULT_CATEGORY) ?: DEFAULT_CATEGORY
     }
 
     fun saveNightMode(mode: Int) {
@@ -52,9 +43,7 @@ class PreferenceProvider(context: Context) {
     companion object {
         private const val KEY_FIRST_LAUNCH = "first_launch"
         private const val KEY_PLAY_SPLASH_SCREEN = "splash_screen"
-        private const val KEY_DEFAULT_CATEGORY = "default_category"
         private const val KEY_FAVORITE_FILM_LIST_ID = "favorite_film_list_id"
         private const val KEY_DEFAULT_THEME = "default_theme"
-        private const val DEFAULT_CATEGORY = "popular"
     }
 }

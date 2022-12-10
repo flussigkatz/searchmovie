@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_fragment_home"
-    android:background="@color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transparent"
     tools:context=".view.fragments.HomeFragment"
     tools:visibility="visible">
 
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/home_appbar"
-        android:background="@color/transparent"
-        app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:background="@color/transparent"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/home_toolbar_layout"
@@ -27,11 +27,12 @@
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/home_search_view"
+                style="@style/SearchViewStyle"
                 android:layout_width="match_parent"
-                app:iconifiedByDefault="false"
                 android:layout_height="@dimen/home_search_view_height"
-                android:background="@color/black_alpha_20"
-                android:queryHint="Search" />
+                android:queryHint="Search"
+                android:theme="@style/SearchViewTextStyle"
+                app:iconifiedByDefault="false" />
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -39,15 +40,36 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/home_refresh"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/home_recycler"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/home_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/film_item" />
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/home_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/home_recycler_view_start_height"
+                tools:listitem="@layout/film_item" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/home_tab_layout"
+                style="@style/TabLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="scrollable" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/home_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

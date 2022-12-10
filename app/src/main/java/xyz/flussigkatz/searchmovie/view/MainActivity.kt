@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         initReceiver()
         initAnimationHelper()
         initNavigation()
+        initEventMessage()
     }
 
     override fun onBackPressed() {
@@ -105,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startDetailsMarkedFilm(intent: Intent?) {
         intent?.getBundleExtra(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)?.let {
-            navController.navigate(R.id.action_global_detailsFragment, it)
+            navController.navigate(R.id.action_markedFragment_to_detailsFragment, it)
         }
     }
 
@@ -148,6 +150,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun initTheme() {
         AppCompatDelegate.setDefaultNightMode(viewModel.getNightModeStatus())
+    }
+
+    private fun initEventMessage() {
+        viewModel.eventMessage
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = { Timber.d(it) },
+                onNext = { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() },
+            ).addTo(autoDisposable)
     }
 
     private inner class Receiver : BroadcastReceiver() {

@@ -119,9 +119,7 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/detailsFragment"
-            app:popUpToInclusive="true" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -135,7 +133,9 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/historyFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_historyFragment_to_markedFragment"
             app:destination="@id/markedFragment"
@@ -143,7 +143,8 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/historyFragment" />
+            app:popUpTo="@id/historyFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_historyFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
@@ -151,7 +152,8 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/historyFragment" />
+            app:popUpTo="@id/historyFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_historyFragment_to_detailsFragment"
             app:destination="@id/detailsFragment"
@@ -204,11 +206,4 @@
             app:popUpTo="@id/detailsFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <action
-        android:id="@+id/action_global_detailsFragment"
-        app:destination="@id/detailsFragment"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 </navigation>
