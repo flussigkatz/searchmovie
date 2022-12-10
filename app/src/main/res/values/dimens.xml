@@ -34,6 +34,7 @@
     <dimen name="home_search_view_margin_start">10dp</dimen>
     <dimen name="home_search_view_margin_top">5dp</dimen>
     <dimen name="home_search_view_margin_end">10dp</dimen>
+    <dimen name="home_recycler_view_start_height">0dp</dimen>
 
     <!--    fragment_marked-->
     <dimen name="marked_search_view_height">60dp</dimen>

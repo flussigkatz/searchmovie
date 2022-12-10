@@ -1,19 +1,17 @@
 package xyz.flussigkatz.searchmovie.data
 
 import xyz.flussigkatz.core_api.db.FilmDao
-import xyz.flussigkatz.core_api.entity.Film
-import xyz.flussigkatz.core_api.entity.MarkedFilm
-import xyz.flussigkatz.core_api.entity.BrowsingFilm
+import xyz.flussigkatz.core_api.entity.*
 
 class MainRepository(private val filmDao: FilmDao) {
     //region Film
-    fun putFilmsToDB(films: List<Film>) {
-        filmDao.insertAllFilms(films)
+    fun putSearchedFilmsToDB(films: List<Film>) {
+        filmDao.insertAllSearchedFilms(films)
     }
 
-    fun getAllFilmsFromDB() = filmDao.getCashedFilms()
+    fun getAllSearchedFilmsFromDB() = filmDao.getCashedSearchedFilms()
 
-    fun clearCashedFilmsDB() = filmDao.deleteFilms(filmDao.getCashedFilmsToList())
+    fun clearCashedSearchedFilmsDB() = filmDao.deleteSearchedFilms(filmDao.getCashedSearchedFilmsToList())
     //endregion
 
     //region MarkedFilm
@@ -36,5 +34,49 @@ class MainRepository(private val filmDao: FilmDao) {
     }
 
     fun getAllBrowsingFilmsFromDB() = filmDao.getCashedBrowsingFilms()
+    //endregion
+
+    //region PopularFilm
+    fun putPopularFilmsToDB(films: List<PopularFilm>) {
+        filmDao.insertAllPopularFilms(films)
+    }
+
+    fun getAllPopularFilmsFromDB() = filmDao.getCashedPopularFilms()
+
+    fun clearCashedPopularFilmsDB() =
+        filmDao.deletePopularFilms(filmDao.getCashedPopularFilmsToList())
+    //endregion
+
+    //region TopRatedFilm
+    fun putTopRatedFilmsToDB(films: List<TopRatedFilm>) {
+        filmDao.insertAllTopRatedFilms(films)
+    }
+
+    fun getAllTopRatedFilmsFromDB() = filmDao.getCashedTopRatedFilms()
+
+    fun clearCashedTopRatedFilmsDB() =
+        filmDao.deleteTopRatedFilms(filmDao.getCashedTopRatedFilmsToList())
+    //endregion
+
+    //region UpcomingFilm
+    fun putUpcomingFilmsToDB(films: List<UpcomingFilm>) {
+        filmDao.insertAllUpcomingFilms(films)
+    }
+
+    fun getAllUpcomingFilmsFromDB() = filmDao.getCashedUpcomingFilms()
+
+    fun clearCashedUpcomingFilmsDB() =
+        filmDao.deleteUpcomingFilms(filmDao.getCashedUpcomingFilmsToList())
+    //endregion
+
+    //region NowPlayingFilm
+    fun putNowPlayingFilmsToDB(films: List<NowPlayingFilm>) {
+        filmDao.insertAllNowPlayingFilms(films)
+    }
+
+    fun getAllNowPlayingFilmsFromDB() = filmDao.getCashedNowPlayingFilms()
+
+    fun clearCashedNowPlayingFilmsDB() =
+        filmDao.deleteNowPlayingFilms(filmDao.getCashedNowPlayingFilmsToList())
     //endregion
 }

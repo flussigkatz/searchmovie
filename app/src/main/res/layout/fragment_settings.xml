@@ -10,55 +10,6 @@
     android:orientation="vertical"
     tools:context=".view.fragments.SettingsFragment">
 
-
-    <RadioGroup
-        android:id="@+id/settings_radio_group_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/settings_menu_margin_top"
-        android:background="@color/black_alpha_20"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|start"
-            android:layout_margin="@dimen/settings_title_margin"
-            android:text="@string/category_radio_group_header"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/white" />
-
-        <RadioButton
-            android:id="@+id/radio_popular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_popular"
-            android:textColor="@color/white" />
-
-        <RadioButton
-            android:id="@+id/radio_top_rated"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_top_rated"
-            android:textColor="@color/white" />
-
-        <RadioButton
-            android:id="@+id/radio_upcoming"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_upcoming"
-            android:textColor="@color/white" />
-
-        <RadioButton
-            android:id="@+id/radio_in_cinemas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_now_playing"
-            android:textColor="@color/white" />
-
-    </RadioGroup>
-
-
     <RadioGroup
         android:id="@+id/settings_radio_group_theme"
         android:layout_width="match_parent"

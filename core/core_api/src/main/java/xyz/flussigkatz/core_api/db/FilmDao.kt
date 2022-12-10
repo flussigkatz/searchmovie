@@ -2,24 +2,78 @@ package xyz.flussigkatz.core_api.db
 
 import androidx.room.*
 import io.reactivex.rxjava3.core.Observable
-import xyz.flussigkatz.core_api.entity.Film
-import xyz.flussigkatz.core_api.entity.MarkedFilm
-import xyz.flussigkatz.core_api.entity.BrowsingFilm
+import xyz.flussigkatz.core_api.entity.*
 
 @Dao
 interface FilmDao {
-    //region Film
+    //region SearchedFilm
     @Query("SELECT * FROM cashed_films")
-    fun getCashedFilms(): Observable<List<Film>>
+    fun getCashedSearchedFilms(): Observable<List<Film>>
 
     @Query("SELECT * FROM cashed_films")
-    fun getCashedFilmsToList(): List<Film>
+    fun getCashedSearchedFilmsToList(): List<Film>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllFilms(list: List<Film>)
+    fun insertAllSearchedFilms(list: List<Film>)
 
     @Delete
-    fun deleteFilms(films: List<Film>): Int
+    fun deleteSearchedFilms(films: List<Film>): Int
+    //endregion
+
+    // region PopularFilm
+    @Query("SELECT * FROM cashed_popular_films")
+    fun getCashedPopularFilms(): Observable<List<PopularFilm>>
+
+    @Query("SELECT * FROM cashed_popular_films")
+    fun getCashedPopularFilmsToList(): List<PopularFilm>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllPopularFilms(list: List<PopularFilm>)
+
+    @Delete
+    fun deletePopularFilms(films: List<PopularFilm>): Int
+    //endregion
+
+    // region TopRatedFilm
+    @Query("SELECT * FROM cashed_top_rated_films")
+    fun getCashedTopRatedFilms(): Observable<List<TopRatedFilm>>
+
+    @Query("SELECT * FROM cashed_top_rated_films")
+    fun getCashedTopRatedFilmsToList(): List<TopRatedFilm>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllTopRatedFilms(list: List<TopRatedFilm>)
+
+    @Delete
+    fun deleteTopRatedFilms(films: List<TopRatedFilm>): Int
+    //endregion
+
+    // region UpcomingFilm
+    @Query("SELECT * FROM cashed_upcoming_films")
+    fun getCashedUpcomingFilms(): Observable<List<UpcomingFilm>>
+
+    @Query("SELECT * FROM cashed_upcoming_films")
+    fun getCashedUpcomingFilmsToList(): List<UpcomingFilm>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllUpcomingFilms(list: List<UpcomingFilm>)
+
+    @Delete
+    fun deleteUpcomingFilms(films: List<UpcomingFilm>): Int
+    //endregion
+
+    // region NowPlayingFilm
+    @Query("SELECT * FROM cashed_now_playing_films")
+    fun getCashedNowPlayingFilms(): Observable<List<NowPlayingFilm>>
+
+    @Query("SELECT * FROM cashed_now_playing_films")
+    fun getCashedNowPlayingFilmsToList(): List<NowPlayingFilm>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllNowPlayingFilms(list: List<NowPlayingFilm>)
+
+    @Delete
+    fun deleteNowPlayingFilms(films: List<NowPlayingFilm>): Int
     //endregion
 
     //region MarkedFilm

@@ -45,4 +45,19 @@
         <item name="android:background">@color/dark_gray</item>
     </style>
 
+    <style name="TabLayoutStyle" parent="Theme.SearchMovie">
+        <item name="android:background">@color/transparent</item>
+        <item name="tabBackground">@color/black_alpha_20</item>
+        <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="SearchViewTextStyle" parent="Theme.SearchMovie">
+        <item name="android:editTextColor">@color/black</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Theme.SearchMovie">
+        <item name="android:background">@color/black_alpha_20</item>
+        <item name="queryBackground">@color/transparent</item>
+    </style>
 </resources>

@@ -1,13 +1,22 @@
 package xyz.flussigkatz.searchmovie.view.fragments
 
+import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.animation.DecelerateInterpolator
+import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
-import androidx.fragment.app.Fragment
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayoutMediator
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
@@ -15,12 +24,29 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
-import xyz.flussigkatz.searchmovie.*
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
+import xyz.flussigkatz.searchmovie.R
+import xyz.flussigkatz.searchmovie.R.dimen.home_recycler_view_start_height
+import xyz.flussigkatz.searchmovie.data.ConstantsApp
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.FIRST_PAGE
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_NUMBER
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_TITLE
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY_TAB_NUMBER
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY_TAB_TITLE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY_TAB_NUMBER
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY_TAB_TITLE
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY_TAB_NUMBER
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY_TAB_TITLE
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.addTo
+import xyz.flussigkatz.searchmovie.view.HomeFragmentViewPagerAdapter
 import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
 import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
@@ -41,20 +67,19 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         autoDisposable.bindTo(lifecycle)
-        return binding.rootFragmentHome
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
         initPullToRefresh()
-        initEventMessage()
         initSearchView()
+        initViewPager()
     }
 
     private fun initRecycler() {
         viewModel.filmListData.observeOn(AndroidSchedulers.mainThread())
-            .filter { !it.isNullOrEmpty() }
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onError = { Timber.d(it) },
@@ -66,7 +91,7 @@ class HomeFragment : Fragment() {
                 object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: AbstractFilmEntity) {
                         Bundle().apply {
-                            putParcelable(DETAILS_FILM_KEY, film)
+                            putParcelable(ConstantsApp.DETAILS_FILM_KEY, film)
                             (requireActivity() as MainActivity).navController.navigate(
                                 R.id.action_homeFragment_to_detailsFragment, this
                             )
@@ -84,15 +109,33 @@ class HomeFragment : Fragment() {
             )
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            addItemDecoration(SpacingItemDecoration(5))
+            addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
         }
     }
 
     private fun initPullToRefresh() {
         binding.homeRefresh.setOnRefreshListener {
-            binding.homeSearchView.setQuery("", false)
             binding.homeSearchView.clearFocus()
-            viewModel.getFilms()
+            if (binding.homeSearchView.query.isNullOrBlank()) {
+                when (binding.homeViewpager.currentItem) {
+                    POPULAR_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
+                        POPULAR_CATEGORY,
+                        FIRST_PAGE
+                    )
+                    TOP_RATED_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
+                        TOP_RATED_CATEGORY,
+                        FIRST_PAGE
+                    )
+                    UPCOMING_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
+                        UPCOMING_CATEGORY,
+                        FIRST_PAGE
+                    )
+                    NOW_PLAYING_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
+                        NOW_PLAYING_CATEGORY,
+                        FIRST_PAGE
+                    )
+                }
+            } else viewModel.getSearchedFilms(binding.homeSearchView.query.toString())
             viewModel.refreshState
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -103,45 +146,88 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initEventMessage() {
-        viewModel.eventMessage
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribeBy(
-                onError = { Timber.d(it) },
-                onNext = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() },
-            ).addTo(autoDisposable)
-    }
-
     private fun initSearchView() {
-        binding.homeSearchView.setOnCloseListener {
-            binding.homeSearchView.clearFocus()
-            true
+        val windowManager =
+            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayHeight = windowManager.currentWindowMetrics.bounds.run { top + bottom }
+        val recyclerHeightDimension =
+            requireContext().resources.getDimension(home_recycler_view_start_height).toInt()
+        var homeRecyclerCollapsedState = binding.homeRecycler.height <= recyclerHeightDimension
+        val anim = ValueAnimator.ofInt(recyclerHeightDimension, displayHeight).apply {
+            addUpdateListener {
+                val layoutParams = binding.homeRecycler.layoutParams
+                layoutParams.height = it.animatedValue as Int
+                binding.homeRecycler.layoutParams = layoutParams
+            }
+            doOnEnd {
+                homeRecyclerCollapsedState =
+                    binding.homeRecycler.height <= displayHeight / HALF_RATIO
+            }
+            duration = HOME_RECYCLER_ANIMATION_DURATION
+            interpolator = DecelerateInterpolator()
+        }
+        binding.homeSearchView.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) hideSoftKeyboard(v)
+        }
+        binding.homeSearchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus && homeRecyclerCollapsedState) anim.start()
+            else if (binding.homeSearchView.query.isNullOrBlank() &&
+                !homeRecyclerCollapsedState && !hasFocus
+            ) {
+                anim.reverse()
+            }
         }
         Observable.create(ObservableOnSubscribe<String> { sub ->
             binding.homeSearchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        if (query.isNullOrBlank()) sub.onNext("") else sub.onNext(query)
-                        return false
+                        if (binding.homeSearchView.hasFocus()) sub.onNext(query.orEmpty())
+                        return true
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        if (newText.isNullOrBlank()) sub.onNext("") else sub.onNext(newText)
-                        return false
+                        if (binding.homeSearchView.hasFocus()) sub.onNext(newText.orEmpty())
+                        return true
                     }
-
                 })
-        }).observeOn(AndroidSchedulers.mainThread())
-            .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
+        }).debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
             .map { it.lowercase().trim() }
-            .flatMap {
-                if (it.isNullOrBlank()) viewModel.getFilmsFromDB()
-                else viewModel.getSearchedFilms(it)
-            }.subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onError = { Timber.d(it) },
-                onNext = { if (!binding.homeSearchView.isIconified) filmsAdapter.updateData(it) }
+                onNext = {
+                    if (it.isBlank()) viewModel.clearSearchedFilmDB()
+                    else viewModel.getSearchedFilms(it)
+                }
             ).addTo(autoDisposable)
+    }
+
+    private fun initViewPager() {
+        binding.homeViewpager.adapter = HomeFragmentViewPagerAdapter(this)
+        initTabs()
+    }
+
+    private fun initTabs() {
+        TabLayoutMediator(
+            binding.homeTabLayout,
+            binding.homeViewpager
+        ) { tab, position ->
+            when (position) {
+                POPULAR_CATEGORY_TAB_NUMBER -> tab.text = POPULAR_CATEGORY_TAB_TITLE
+                TOP_RATED_CATEGORY_TAB_NUMBER -> tab.text = TOP_RATED_CATEGORY_TAB_TITLE
+                UPCOMING_CATEGORY_TAB_NUMBER -> tab.text = UPCOMING_CATEGORY_TAB_TITLE
+                NOW_PLAYING_CATEGORY_TAB_NUMBER -> tab.text = NOW_PLAYING_CATEGORY_TAB_TITLE
+            }
+        }.attach()
+    }
+
+    private fun hideSoftKeyboard(view: View) {
+        val inputMethodManager = getSystemService(requireContext(), InputMethodManager::class.java)
+        inputMethodManager?.hideSoftInputFromWindow(view.windowToken, HIDE_KEYBOARD_FLAG)
+    }
+
+    companion object {
+        private const val HALF_RATIO = 2
+        private const val HOME_RECYCLER_ANIMATION_DURATION = 500L
     }
 }

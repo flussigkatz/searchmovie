@@ -10,24 +10,13 @@ import javax.inject.Inject
 class SettingsFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
-    val categoryPropertyLifeData: MutableLiveData<String> = MutableLiveData()
     val themePropertyLifeData: MutableLiveData<Int> = MutableLiveData()
     val splashScreenPropertyLifeData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         App.instance.dagger.inject(this)
-        getCategoryProperty()
         getNightMode()
         getSplashScreenProperty()
-    }
-
-    private fun getCategoryProperty() {
-        categoryPropertyLifeData.value = interactor.getDefaultCategoryFromPreferences()
-    }
-
-    fun putCategoryProperty(category: String) {
-        interactor.saveDefaultCategoryToPreferences(category)
-        getCategoryProperty()
     }
 
     private fun getNightMode() {

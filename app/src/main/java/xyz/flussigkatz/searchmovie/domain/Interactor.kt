@@ -1,18 +1,14 @@
 package xyz.flussigkatz.searchmovie.domain
 
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import timber.log.Timber
-import xyz.flussigkatz.core_api.entity.Film
-import xyz.flussigkatz.core_api.entity.BrowsingFilm
-import xyz.flussigkatz.core_api.entity.MarkedFilm
+import xyz.flussigkatz.core_api.entity.*
 import xyz.flussigkatz.remote_module.TmdbApi
 import xyz.flussigkatz.remote_module.entity.FavoriteMovieInfoDto
 import xyz.flussigkatz.remote_module.entity.ListInfo
-import xyz.flussigkatz.remote_module.entity.tmdb_result_dto.TmdbFilm
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.Api.ACCOUNT_ID
@@ -20,8 +16,13 @@ import xyz.flussigkatz.searchmovie.data.Api.API_KEY
 import xyz.flussigkatz.searchmovie.data.Api.SESSION_ID
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DEFAULT_LIST_ID
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.FAVORITE_FILM_LIST_NAME
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
+import xyz.flussigkatz.searchmovie.util.Converter
 import java.util.*
 
 class Interactor(
@@ -41,14 +42,13 @@ class Interactor(
     }
 
     //region Api
-    fun getFilmsFromApi(page: Int) {
+    fun getFilmsFromApi(category: String, page: Int) {
         retrofitService.getFilms(
-            getDefaultCategoryFromPreferences(),
+            category,
             API_KEY,
             language,
             page
         ).filter { it.tmdbFilms.isNotEmpty() }
-            .map { convertToFilmFromApi(it.tmdbFilms) }
             .doOnSubscribe { refreshState.onNext(true) }
             .doOnComplete { refreshState.onNext(false) }
             .doOnError {
@@ -58,20 +58,71 @@ class Interactor(
             .subscribeBy(
                 onError = { Timber.d(it) },
                 onNext = {
-                    repository.clearCashedFilmsDB()
-                    repository.putFilmsToDB(it)
+                    when (category) {
+                        POPULAR_CATEGORY -> {
+                            repository.clearCashedPopularFilmsDB()
+                            repository.putPopularFilmsToDB(
+                                Converter.convertToPopularFilmFromApi(
+                                    it.tmdbFilms,
+                                    listIdsMarkedFilms
+                                )
+                            )
+                        }
+                        TOP_RATED_CATEGORY -> {
+                            repository.clearCashedTopRatedFilmsDB()
+                            repository.putTopRatedFilmsToDB(
+                                Converter.convertToTopRatedFilmFromApi(
+                                    it.tmdbFilms,
+                                    listIdsMarkedFilms
+                                )
+                            )
+                        }
+                        UPCOMING_CATEGORY -> {
+                            repository.clearCashedUpcomingFilmsDB()
+                            repository.putUpcomingFilmsToDB(
+                                Converter.convertToUpcomingFilmFromApi(
+                                    it.tmdbFilms,
+                                    listIdsMarkedFilms
+                                )
+                            )
+                        }
+                        NOW_PLAYING_CATEGORY -> {
+                            repository.clearCashedNowPlayingFilmsDB()
+                            repository.putNowPlayingFilmsToDB(
+                                Converter.convertToNowPlayingFilmFromApi(
+                                    it.tmdbFilms,
+                                    listIdsMarkedFilms
+                                )
+                            )
+                        }
+                        else -> throw IllegalArgumentException("Wrong film category")
+                    }
                 }
             )
     }
 
-    fun getSearchedFilmsFromApi(search_query: String, page: Int): Observable<List<Film>> {
-        return retrofitService.getSearchedFilms(
+    fun getSearchedFilmsFromApi(search_query: String, page: Int) {
+        retrofitService.getSearchedFilms(
             api_key = API_KEY,
             language = language,
             query = search_query,
             page = page
-        ).map { convertToFilmFromApi(it.tmdbFilms) }
-            .doOnError { eventMessage.onNext(getText(R.string.error_upload_message)) }
+        ).filter { it.tmdbFilms.isNotEmpty() }
+            .map { Converter.convertToFilmFromApi(it.tmdbFilms, listIdsMarkedFilms) }
+            .doOnSubscribe { refreshState.onNext(true) }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onError = {
+                    refreshState.onNext(false)
+                    eventMessage.onNext(getText(R.string.error_upload_message))
+                    Timber.d(it)
+                },
+                onComplete = { refreshState.onNext(false) },
+                onNext = {
+                    repository.clearCashedSearchedFilmsDB()
+                    repository.putSearchedFilmsToDB(it)
+                }
+            )
     }
 
     fun getMarkedFilmsFromApi() {
@@ -168,26 +219,30 @@ class Interactor(
         repository.putBrowsingFilmToDB(film)
     }
 
-    fun getFilmsFromDB() = repository.getAllFilmsFromDB()
+    fun getSearchedFilmsFromDB() = repository.getAllSearchedFilmsFromDB()
 
     fun getMarkedFilmsFromDB() = repository.getAllMarkedFilmsFromDB()
 
-    private fun getIdsMarkedFilmsToListFromDB() = repository.getIdsMarkedFilmsToListFromDB()
+    fun getPopularFilmsFromDB() = repository.getAllPopularFilmsFromDB()
+
+    fun getTopRatedFilmsFromDB() = repository.getAllTopRatedFilmsFromDB()
+
+    fun getUpcomingFilmsFromDB() = repository.getAllUpcomingFilmsFromDB()
+
+    fun getNowPlayingFilmsFromDB() = repository.getAllNowPlayingFilmsFromDB()
 
     fun getSearchedMarkedFilms(query: String) = repository.getSearchedMarkedFilms(query)
 
     fun getCashedBrowsingFilmsFromDB() = repository.getAllBrowsingFilmsFromDB()
+
+    private fun getIdsMarkedFilmsToListFromDB() = repository.getIdsMarkedFilmsToListFromDB()
+
+    fun clearSearchedFilmDB() {
+        repository.clearCashedSearchedFilmsDB()
+    }
     //endregion
 
     //region Preferences
-    fun saveDefaultCategoryToPreferences(category: String) {
-        preferences.saveDefaultCategory(category)
-    }
-
-    fun getDefaultCategoryFromPreferences(): String {
-        return preferences.getDefaultCategory()
-    }
-
     fun saveNightModeToPreferences(mode: Int) {
         preferences.saveNightMode(mode)
     }
@@ -216,17 +271,6 @@ class Interactor(
     fun getEventMessage() = eventMessage
 
     private fun getText(resId: Int) = App.instance.getText(resId).toString()
-
-    private fun convertToFilmFromApi(list: List<TmdbFilm>) = list.map {
-        Film(
-            id = it.id,
-            title = it.title,
-            posterId = it.posterPath ?: "",
-            description = it.overview,
-            rating = (it.voteAverage * 10).toInt(),
-            fav_state = listIdsMarkedFilms.contains(it.id)
-        )
-    }
 
     private fun checkFavoriteListIdStatus() {
         if (preferences.getFavoriteFilmListId() == DEFAULT_LIST_ID) {
