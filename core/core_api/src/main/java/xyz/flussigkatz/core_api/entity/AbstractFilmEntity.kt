@@ -4,6 +4,7 @@ import android.os.Parcelable
 
 
 abstract class AbstractFilmEntity(
+    open val localId: Int,
     open val id: Int,
     open val title: String,
     open val posterId: String,

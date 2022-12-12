@@ -16,6 +16,7 @@ import xyz.flussigkatz.searchmovie.data.Api.API_KEY
 import xyz.flussigkatz.searchmovie.data.Api.SESSION_ID
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DEFAULT_LIST_ID
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.FAVORITE_FILM_LIST_NAME
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.FIRST_PAGE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
@@ -60,7 +61,7 @@ class Interactor(
                 onNext = {
                     when (category) {
                         POPULAR_CATEGORY -> {
-                            repository.clearCashedPopularFilmsDB()
+                            if (page == FIRST_PAGE) repository.clearCashedPopularFilmsDB()
                             repository.putPopularFilmsToDB(
                                 Converter.convertToPopularFilmFromApi(
                                     it.tmdbFilms,
@@ -69,7 +70,7 @@ class Interactor(
                             )
                         }
                         TOP_RATED_CATEGORY -> {
-                            repository.clearCashedTopRatedFilmsDB()
+                            if (page == FIRST_PAGE) repository.clearCashedTopRatedFilmsDB()
                             repository.putTopRatedFilmsToDB(
                                 Converter.convertToTopRatedFilmFromApi(
                                     it.tmdbFilms,
@@ -78,7 +79,7 @@ class Interactor(
                             )
                         }
                         UPCOMING_CATEGORY -> {
-                            repository.clearCashedUpcomingFilmsDB()
+                            if (page == FIRST_PAGE) repository.clearCashedUpcomingFilmsDB()
                             repository.putUpcomingFilmsToDB(
                                 Converter.convertToUpcomingFilmFromApi(
                                     it.tmdbFilms,
@@ -87,7 +88,7 @@ class Interactor(
                             )
                         }
                         NOW_PLAYING_CATEGORY -> {
-                            repository.clearCashedNowPlayingFilmsDB()
+                            if (page == FIRST_PAGE) repository.clearCashedNowPlayingFilmsDB()
                             repository.putNowPlayingFilmsToDB(
                                 Converter.convertToNowPlayingFilmFromApi(
                                     it.tmdbFilms,
@@ -119,7 +120,7 @@ class Interactor(
                 },
                 onComplete = { refreshState.onNext(false) },
                 onNext = {
-                    repository.clearCashedSearchedFilmsDB()
+                    if (page == FIRST_PAGE) repository.clearCashedSearchedFilmsDB()
                     repository.putSearchedFilmsToDB(it)
                 }
             )

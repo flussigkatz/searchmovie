@@ -77,7 +77,7 @@ interface FilmDao {
     //endregion
 
     //region MarkedFilm
-    @Query("SELECT * FROM marked_films")
+    @Query("SELECT * FROM marked_films ORDER BY localId DESC")
     fun getCashedMarkedFilms(): Observable<List<MarkedFilm>>
 
     @Query("SELECT * FROM marked_films")
@@ -100,7 +100,7 @@ interface FilmDao {
     //endregion
 
     //region BrowsingFilm
-    @Query("SELECT * FROM browsing_films")
+    @Query("SELECT * FROM browsing_films ORDER BY localId DESC")
     fun getCashedBrowsingFilms(): Observable<List<BrowsingFilm>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

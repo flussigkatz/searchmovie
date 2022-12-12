@@ -24,4 +24,7 @@ object ConstantsApp {
     const val FIRST_PAGE = 1
     const val SPACING_ITEM_DECORATION_IN_DP = 5
     const val HIDE_KEYBOARD_FLAG = 0
+    const val REMAINDER_OF_ELEMENTS = 2
+    const val IS_SCROLL_FLAG = 0
+
 }

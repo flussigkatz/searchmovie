@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_fragment_marked"
-    android:background="@color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transparent"
     android:fitsSystemWindows="true"
     tools:context=".view.fragments.MarkedFragment"
     tools:visibility="visible">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/marked_appbar"
-        android:background="@color/transparent"
-        app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:background="@color/transparent"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/marked_toolbar_layout"
@@ -27,6 +27,7 @@
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/marked_search_view"
+                style="@style/SearchViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/home_search_view_height"
                 android:background="@color/black_alpha_20"
@@ -53,6 +54,5 @@
             tools:listitem="@layout/film_item" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -26,15 +27,17 @@ import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.R.dimen.home_recycler_view_start_height
-import xyz.flussigkatz.searchmovie.data.ConstantsApp
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.FIRST_PAGE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.IS_SCROLL_FLAG
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_TITLE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY_TAB_TITLE
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.REMAINDER_OF_ELEMENTS
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
@@ -59,6 +62,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
+    private var isLoadingFromApi = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,7 +95,7 @@ class HomeFragment : Fragment() {
                 object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: AbstractFilmEntity) {
                         Bundle().apply {
-                            putParcelable(ConstantsApp.DETAILS_FILM_KEY, film)
+                            putParcelable(DETAILS_FILM_KEY, film)
                             (requireActivity() as MainActivity).navController.navigate(
                                 R.id.action_homeFragment_to_detailsFragment, this
                             )
@@ -108,8 +112,24 @@ class HomeFragment : Fragment() {
                 }
             )
             adapter = filmsAdapter
-            layoutManager = LinearLayoutManager(context)
+            val mLayoutManager = LinearLayoutManager(context)
+            layoutManager = mLayoutManager
             addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
+            val scrollListener = object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy != IS_SCROLL_FLAG) {
+                        hideSoftKeyboard(recyclerView)
+                        binding.homeSearchView.clearFocus()
+                    }
+                    if (dy > IS_SCROLL_FLAG && !isLoadingFromApi) paginationCheck(
+                        mLayoutManager.childCount,
+                        mLayoutManager.itemCount,
+                        mLayoutManager.findFirstVisibleItemPosition()
+                    )
+                }
+            }
+            addOnScrollListener(scrollListener)
         }
     }
 
@@ -118,24 +138,15 @@ class HomeFragment : Fragment() {
             binding.homeSearchView.clearFocus()
             if (binding.homeSearchView.query.isNullOrBlank()) {
                 when (binding.homeViewpager.currentItem) {
-                    POPULAR_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
-                        POPULAR_CATEGORY,
-                        FIRST_PAGE
-                    )
-                    TOP_RATED_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
-                        TOP_RATED_CATEGORY,
-                        FIRST_PAGE
-                    )
-                    UPCOMING_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
-                        UPCOMING_CATEGORY,
-                        FIRST_PAGE
-                    )
-                    NOW_PLAYING_CATEGORY_TAB_NUMBER -> viewModel.getFilms(
-                        NOW_PLAYING_CATEGORY,
-                        FIRST_PAGE
-                    )
+                    POPULAR_CATEGORY_TAB_NUMBER -> viewModel.getFilms(POPULAR_CATEGORY)
+                    TOP_RATED_CATEGORY_TAB_NUMBER -> viewModel.getFilms(TOP_RATED_CATEGORY)
+                    UPCOMING_CATEGORY_TAB_NUMBER -> viewModel.getFilms(UPCOMING_CATEGORY)
+                    NOW_PLAYING_CATEGORY_TAB_NUMBER -> viewModel.getFilms(NOW_PLAYING_CATEGORY)
                 }
-            } else viewModel.getSearchedFilms(binding.homeSearchView.query.toString())
+            } else {
+                viewModel.nextPage = FIRST_PAGE
+                viewModel.getSearchedFilms(binding.homeSearchView.query.toString())
+            }
             viewModel.refreshState
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -224,6 +235,13 @@ class HomeFragment : Fragment() {
     private fun hideSoftKeyboard(view: View) {
         val inputMethodManager = getSystemService(requireContext(), InputMethodManager::class.java)
         inputMethodManager?.hideSoftInputFromWindow(view.windowToken, HIDE_KEYBOARD_FLAG)
+    }
+
+    private fun paginationCheck(visibleItemCount: Int, totalItemCount: Int, pastVisibleItems: Int) {
+        if (totalItemCount - (visibleItemCount + pastVisibleItems) <= REMAINDER_OF_ELEMENTS) {
+            isLoadingFromApi = true
+            viewModel.getSearchedFilms(binding.homeSearchView.query.toString())
+        }
     }
 
     companion object {

@@ -15,8 +15,8 @@ class SettingsFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
-        getNightMode()
         getSplashScreenProperty()
+        getNightMode()
     }
 
     private fun getNightMode() {
@@ -24,11 +24,10 @@ class SettingsFragmentViewModel : ViewModel() {
     }
 
     fun setNightMode(mode: Int, activity: Activity) {
-        val mMode = interactor.getNightModeFromPreferences()
-        if (mMode != mode) {
+        if (interactor.getNightModeFromPreferences() != mode) {
             interactor.saveNightModeToPreferences(mode)
-            activity.recreate()
             getNightMode()
+            activity.recreate()
         }
     }
 

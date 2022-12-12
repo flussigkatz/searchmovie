@@ -76,9 +76,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initAnimationHelper() {
         viewModel.getSplashScreenStateStatus().let {
-            val viewHomeFragment = findViewById<CoordinatorLayout>(R.id.root_fragment_home)
-            if (it) AnimationHelper.initSplashScreen(binding.splashScreen, viewHomeFragment)
-            else AnimationHelper.firstStartAnimation(viewHomeFragment)
+            findViewById<CoordinatorLayout>(R.id.root_fragment_home)?.let { view ->
+                if (it) AnimationHelper.initSplashScreen(binding.splashScreen, view)
+                else AnimationHelper.firstStartAnimation(view)
+            }
         }
     }
 

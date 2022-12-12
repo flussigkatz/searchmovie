@@ -9,13 +9,15 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "cashed_films", indices = [Index(value = ["title"], unique = true)])
 data class Film(
-    @PrimaryKey override val id: Int,
+    @PrimaryKey(autoGenerate = true) override val localId: Int = 0,
+    @ColumnInfo(name = "id") override val id: Int,
     @ColumnInfo(name = "title") override val title: String,
     @ColumnInfo(name = "poster_path") override val posterId: String,
     @ColumnInfo(name = "overview") override val description: String,
     @ColumnInfo(name = "vote_average") override var rating: Int,
     @ColumnInfo(name = "marked") override var fav_state: Boolean,
 ) : AbstractFilmEntity(
+    localId = localId,
     id = id,
     title = title,
     posterId = posterId,

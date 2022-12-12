@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -30,6 +31,8 @@ class TopRatedFilmsFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private val viewModel: TopRatedFilmsFragmentViewModel by activityViewModels()
     private val autoDisposable = AutoDisposable()
+    private var isLoadingFromApi = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,10 +79,29 @@ class TopRatedFilmsFragment : Fragment() {
                 }
             )
             adapter = filmsAdapter
-            layoutManager = LinearLayoutManager(context)
+            val mLayoutManager = LinearLayoutManager(context)
+            layoutManager = mLayoutManager
             addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
+            val scrollListener = object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > ConstantsApp.IS_SCROLL_FLAG && !isLoadingFromApi) paginationCheck(
+                        mLayoutManager.childCount,
+                        mLayoutManager.itemCount,
+                        mLayoutManager.findFirstVisibleItemPosition()
+                    )
+                }
+            }
+            addOnScrollListener(scrollListener)
         }
         viewModel.getFilms(FIRST_PAGE)
+    }
+
+    private fun paginationCheck(visibleItemCount: Int, totalItemCount: Int, pastVisibleItems: Int) {
+        if (totalItemCount - (visibleItemCount + pastVisibleItems) <= ConstantsApp.REMAINDER_OF_ELEMENTS) {
+            isLoadingFromApi = true
+            viewModel.getFilms()
+        }
     }
 
 }
