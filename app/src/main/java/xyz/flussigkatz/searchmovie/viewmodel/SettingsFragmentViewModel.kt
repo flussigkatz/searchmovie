@@ -1,26 +1,33 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
 import android.app.Activity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.ExperimentalPagingApi
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 class SettingsFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
-    val themePropertyLifeData: MutableLiveData<Int> = MutableLiveData()
-    val splashScreenPropertyLifeData: MutableLiveData<Boolean> = MutableLiveData()
+    private val mutableThemePropertyLifeData = MutableLiveData<Int>()
+    val themePropertyLifeData: LiveData<Int>
+        get() = mutableThemePropertyLifeData
+    private val mutableSplashScreenPropertyLifeData = MutableLiveData<Boolean>()
+    val splashScreenPropertyLifeData: LiveData<Boolean>
+        get() = mutableSplashScreenPropertyLifeData
 
     init {
         App.instance.dagger.inject(this)
-        getSplashScreenProperty()
+        getSplashScreenState()
         getNightMode()
     }
 
     private fun getNightMode() {
-        themePropertyLifeData.value = interactor.getNightModeFromPreferences()
+        mutableThemePropertyLifeData.postValue(interactor.getNightModeFromPreferences())
     }
 
     fun setNightMode(mode: Int, activity: Activity) {
@@ -31,12 +38,12 @@ class SettingsFragmentViewModel : ViewModel() {
         }
     }
 
-    private fun getSplashScreenProperty() {
-        splashScreenPropertyLifeData.value = interactor.getSplashScreenStateFromPreferences()
+    private fun getSplashScreenState() {
+        mutableSplashScreenPropertyLifeData.postValue(interactor.getSplashScreenStateFromPreferences())
     }
 
     fun putSplashScreenProperty(state: Boolean) {
         interactor.setSplashScreenState(state)
-        getSplashScreenProperty()
+        getSplashScreenState()
     }
 }

@@ -8,11 +8,11 @@ plugins {
 apply from: "$project.rootDir/dependencies.gradle"
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         minSdk 21
-        targetSdk 31
+        targetSdk 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -51,6 +51,6 @@ dependencies {
     //Room
     implementation room_runtime
     implementation room_ktx
-    implementation room_rxjava3
+    implementation room_paging
     kapt room_compiler
 }

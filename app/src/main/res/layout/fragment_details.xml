@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="xyz.flussigkatz.core_api.entity.AbstractFilmEntity" />
+        <import type="xyz.flussigkatz.searchmovie.data.model.FilmUiModel" />
 
         <variable
             name="film"
-            type="AbstractFilmEntity" />
+            type="FilmUiModel" />
 
     </data>
 

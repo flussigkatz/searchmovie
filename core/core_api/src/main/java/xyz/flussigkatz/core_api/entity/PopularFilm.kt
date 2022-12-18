@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "cashed_popular_films", indices = [Index(value = ["title"], unique = true)])
+@Entity(tableName = "popular_films", indices = [Index(value = ["title"], unique = true)])
 data class PopularFilm(
     @PrimaryKey(autoGenerate = true) override val localId: Int = 0,
     @ColumnInfo(name = "id") override val id: Int,
@@ -15,13 +15,14 @@ data class PopularFilm(
     @ColumnInfo(name = "poster_path") override val posterId: String,
     @ColumnInfo(name = "overview") override val description: String,
     @ColumnInfo(name = "vote_average") override var rating: Int,
-    @ColumnInfo(name = "marked") override var fav_state: Boolean,
-) : AbstractFilmEntity(
-    localId = localId,
-    id = id,
-    title = title,
-    posterId = posterId,
-    description = description,
-    rating = rating,
-    fav_state = fav_state
-)
+    @ColumnInfo(name = "marked") override var favState: Boolean,
+) : IFilm {
+    constructor(film: IFilm, favState: Boolean? = null) : this(
+        id = film.id,
+        title = film.title,
+        posterId = film.posterId,
+        description = film.description,
+        rating = film.rating,
+        favState = favState ?: film.favState
+    )
+}

@@ -1,82 +1,60 @@
 package xyz.flussigkatz.searchmovie.data
 
+import androidx.paging.*
+import kotlinx.coroutines.flow.map
 import xyz.flussigkatz.core_api.db.FilmDao
 import xyz.flussigkatz.core_api.entity.*
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.BROWSING_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.MARKED_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCHED_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY
+import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 
-class MainRepository(private val filmDao: FilmDao) {
-    //region Film
-    fun putSearchedFilmsToDB(films: List<Film>) {
-        filmDao.insertAllSearchedFilms(films)
-    }
-
-    fun getAllSearchedFilmsFromDB() = filmDao.getCashedSearchedFilms()
-
-    fun clearCashedSearchedFilmsDB() = filmDao.deleteSearchedFilms(filmDao.getCashedSearchedFilmsToList())
-    //endregion
-
-    //region MarkedFilm
-    fun putMarkedFilmToDB(films: List<MarkedFilm>) {
-        filmDao.insertAllMarkedFilms(films)
-    }
-
-    fun getSearchedMarkedFilms(query: String) = filmDao.getSearchedMarkedFilm(query)
-
-    fun getAllMarkedFilmsFromDB() = filmDao.getCashedMarkedFilms()
-
-    fun getIdsMarkedFilmsToListFromDB() = filmDao.getIdsMarkedFilmsToList()
-
-    fun clearMarkedFilmsDB() = filmDao.deleteMarkedFilms(filmDao.getCashedMarkedFilmsToList())
-    //endregion
-
-    //region BrowsingFilm
-    fun putBrowsingFilmToDB(film: BrowsingFilm) {
+@ExperimentalPagingApi
+class MainRepository(
+    private val filmDao: FilmDao,
+    private val remoteMediatorFactory: FilmRemoteMediator.Factory
+) {
+    suspend fun insertBrowsingFilm(film: BrowsingFilm) {
         filmDao.insertBrowsingFilm(film)
     }
 
-    fun getAllBrowsingFilmsFromDB() = filmDao.getCashedBrowsingFilms()
-    //endregion
-
-    //region PopularFilm
-    fun putPopularFilmsToDB(films: List<PopularFilm>) {
-        filmDao.insertAllPopularFilms(films)
+    suspend fun insertMarkedFilms(films: List<MarkedFilm>) {
+        filmDao.insertMarkedFilms(films)
     }
 
-    fun getAllPopularFilmsFromDB() = filmDao.getCashedPopularFilms()
+    fun getFilms(category: String, query: String?) = Pager(
+        config = PagingConfig(
+            pageSize = PAGE_SIZE,
+            prefetchDistance = PREFETCH_DISTANCE
+        ),
+        remoteMediator = getRemoteMediator(category, query),
+        pagingSourceFactory = {
+            when (category) {
+                POPULAR_CATEGORY -> filmDao.getPopularFilms()
+                TOP_RATED_CATEGORY -> filmDao.getTopRatedFilms()
+                UPCOMING_CATEGORY -> filmDao.getUpcomingFilms()
+                NOW_PLAYING_CATEGORY -> filmDao.getNowPlayingFilms()
+                SEARCHED_CATEGORY -> filmDao.getSearchedFilms()
+                MARKED_CATEGORY -> filmDao.getMarkedFilms(query.orEmpty())
+                BROWSING_CATEGORY -> filmDao.getBrowsingFilms(query.orEmpty())
+                else -> throw IllegalArgumentException(EXCEPTION_MESSAGE)
+            } as PagingSource<Int, IFilm>
 
-    fun clearCashedPopularFilmsDB() =
-        filmDao.deletePopularFilms(filmDao.getCashedPopularFilmsToList())
-    //endregion
+        }
+    ).flow.map { pagingData -> pagingData.map { FilmUiModel(it) } }
 
-    //region TopRatedFilm
-    fun putTopRatedFilmsToDB(films: List<TopRatedFilm>) {
-        filmDao.insertAllTopRatedFilms(films)
+    private fun getRemoteMediator(category: String, query: String?) = when(category) {
+        MARKED_CATEGORY, BROWSING_CATEGORY -> null
+        else -> remoteMediatorFactory.create(category, query)
     }
 
-    fun getAllTopRatedFilmsFromDB() = filmDao.getCashedTopRatedFilms()
-
-    fun clearCashedTopRatedFilmsDB() =
-        filmDao.deleteTopRatedFilms(filmDao.getCashedTopRatedFilmsToList())
-    //endregion
-
-    //region UpcomingFilm
-    fun putUpcomingFilmsToDB(films: List<UpcomingFilm>) {
-        filmDao.insertAllUpcomingFilms(films)
+    companion object {
+        private const val PAGE_SIZE = 20
+        private const val PREFETCH_DISTANCE = 2
+        private const val EXCEPTION_MESSAGE = "Wrong film category"
     }
-
-    fun getAllUpcomingFilmsFromDB() = filmDao.getCashedUpcomingFilms()
-
-    fun clearCashedUpcomingFilmsDB() =
-        filmDao.deleteUpcomingFilms(filmDao.getCashedUpcomingFilmsToList())
-    //endregion
-
-    //region NowPlayingFilm
-    fun putNowPlayingFilmsToDB(films: List<NowPlayingFilm>) {
-        filmDao.insertAllNowPlayingFilms(films)
-    }
-
-    fun getAllNowPlayingFilmsFromDB() = filmDao.getCashedNowPlayingFilms()
-
-    fun clearCashedNowPlayingFilmsDB() =
-        filmDao.deleteNowPlayingFilms(filmDao.getCashedNowPlayingFilmsToList())
-    //endregion
 }

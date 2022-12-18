@@ -7,34 +7,27 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
-import timber.log.Timber
-import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.FIRST_PAGE
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.IS_SCROLL_FLAG
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.REMAINDER_OF_ELEMENTS
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
+import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.databinding.FragmentNowPlayingFilmsBinding
-import xyz.flussigkatz.searchmovie.util.AutoDisposable
-import xyz.flussigkatz.searchmovie.util.Converter
-import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.MainActivity
-import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
+import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmPagingAdapter
 import xyz.flussigkatz.searchmovie.viewmodel.NowPlayingFilmsFragmentViewModel
+
+@ExperimentalPagingApi
 
 class NowPlayingFilmsFragment : Fragment() {
     private lateinit var binding: FragmentNowPlayingFilmsBinding
-    private lateinit var filmsAdapter: FilmListRecyclerAdapter
+    private lateinit var filmsAdapter: FilmPagingAdapter
     private val viewModel: NowPlayingFilmsFragmentViewModel by activityViewModels()
-    private val autoDisposable = AutoDisposable()
-    private var isLoadingFromApi = false
 
 
     override fun onCreateView(
@@ -42,7 +35,6 @@ class NowPlayingFilmsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNowPlayingFilmsBinding.inflate(inflater, container, false)
-        autoDisposable.bindTo(lifecycle)
         return binding.root
     }
 
@@ -52,19 +44,10 @@ class NowPlayingFilmsFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        viewModel.filmListData.observeOn(AndroidSchedulers.mainThread())
-            .filter { !it.isNullOrEmpty() }
-            .map { Converter.convertToFilmUiModel(it) }
-            .subscribeOn(Schedulers.io())
-            .subscribeBy(
-                onError = { Timber.d(it) },
-                onNext = { filmsAdapter.updateData(it) }
-            ).addTo(autoDisposable)
-
         binding.nowPlayingRecycler.apply {
-            filmsAdapter = FilmListRecyclerAdapter(
-                object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: AbstractFilmEntity) {
+            filmsAdapter = FilmPagingAdapter(
+                object : FilmPagingAdapter.OnItemClickListener {
+                    override fun click(film: FilmUiModel) {
                         Bundle().apply {
                             putParcelable(DETAILS_FILM_KEY, film)
                             (requireActivity() as MainActivity).navController.navigate(
@@ -72,39 +55,23 @@ class NowPlayingFilmsFragment : Fragment() {
                             )
                         }
                     }
-                }, object : FilmListRecyclerAdapter.OnCheckboxClickListener {
-                    override fun click(film: AbstractFilmEntity, view: CheckBox) {
-                        view.isChecked.let {
-                            film.fav_state = it
-                            if (it) viewModel.addFavoriteFilmToList(film.id)
-                            else viewModel.removeFavoriteFilmFromList(film.id)
+                }, object : FilmPagingAdapter.OnCheckboxClickListener {
+                    override fun click(film: FilmUiModel, view: CheckBox) {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            view.isChecked.run { viewModel.changeFavoriteMark(film.id, this) }
                         }
                     }
                 }
             )
             adapter = filmsAdapter
-            val mLayoutManager = LinearLayoutManager(context)
-            layoutManager = mLayoutManager
-            addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
-            val scrollListener = object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (dy > IS_SCROLL_FLAG && !isLoadingFromApi) paginationCheck(
-                        mLayoutManager.childCount,
-                        mLayoutManager.itemCount,
-                        mLayoutManager.findFirstVisibleItemPosition()
-                    )
+            layoutManager = LinearLayoutManager(context)
+        }
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.filmFlow.collectLatest {
+                withContext(Dispatchers.Main) {
+                    filmsAdapter.submitData(it)
                 }
             }
-            addOnScrollListener(scrollListener)
-        }
-        viewModel.getFilms(FIRST_PAGE)
-    }
-
-    private fun paginationCheck(visibleItemCount: Int, totalItemCount: Int, pastVisibleItems: Int) {
-        if (totalItemCount - (visibleItemCount + pastVisibleItems) <= REMAINDER_OF_ELEMENTS) {
-            isLoadingFromApi = true
-            viewModel.getFilms()
         }
     }
 }

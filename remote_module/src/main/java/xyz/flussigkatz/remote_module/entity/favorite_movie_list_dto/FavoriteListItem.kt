@@ -2,7 +2,11 @@ package xyz.flussigkatz.remote_module.entity.favorite_movie_list_dto
 
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+import xyz.flussigkatz.core_api.entity.IFilm
 
+@Parcelize
 data class FavoriteListItem(
     @SerializedName("adult")
     val adult: Boolean,
@@ -13,7 +17,7 @@ data class FavoriteListItem(
     @SerializedName("genre_ids")
     val genreIds: List<Int>,
     @SerializedName("id")
-    val id: Int,
+    val idApi: Int,
     @SerializedName("media_type")
     val mediaType: String,
     @SerializedName("name")
@@ -35,11 +39,20 @@ data class FavoriteListItem(
     @SerializedName("release_date")
     val releaseDate: String,
     @SerializedName("title")
-    val title: String?,
+    val titleApi: String?,
     @SerializedName("video")
     val video: Boolean,
     @SerializedName("vote_average")
     val voteAverage: Double,
     @SerializedName("vote_count")
     val voteCount: Int
-)
+) : IFilm {
+    override val localId: Int get() = 0
+    override val id: Int get() = idApi
+    override val title: String get() = titleApi.orEmpty()
+    override val posterId: String get() = posterPath.orEmpty()
+    override val description: String get() = overview
+    override val rating: Int get() = (voteAverage * 10).toInt()
+    @IgnoredOnParcel
+    override var favState = false
+}

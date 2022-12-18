@@ -9,9 +9,9 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import com.airbnb.lottie.LottieAnimationView
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.HALF_RATIO
 import kotlin.math.hypot
 
-private const val HALF_DIVIDER = 2
 private const val LOTTIE_ANIMATION_SPEED = 0.7F
 private const val CIRCULAR_ANIMATION_DELAY = 200L
 private const val CIRCULAR_ANIMATION_DURATION = 500L
@@ -41,8 +41,8 @@ object AnimationHelper {
         var revealAnimationIsStarted = false
         val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                val x: Int = view.width.div(HALF_DIVIDER)
-                val y: Int = view.height.div(HALF_DIVIDER)
+                val x: Int = view.width.div(HALF_RATIO)
+                val y: Int = view.height.div(HALF_RATIO)
                 val startRadius = 0
                 val endRadius = hypot(view.width.toDouble(), view.height.toDouble())
                 ViewAnimationUtils.createCircularReveal(
@@ -68,8 +68,8 @@ object AnimationHelper {
     }
 
     private fun revealAnimation(view: View) {
-        val x: Int = view.width.div(HALF_DIVIDER)
-        val y: Int = view.height.div(HALF_DIVIDER)
+        val x: Int = view.width.div(HALF_RATIO)
+        val y: Int = view.height.div(HALF_RATIO)
         val startRadius = 0
         val endRadius = hypot(view.width.toDouble(), view.height.toDouble())
         ViewAnimationUtils.createCircularReveal(
@@ -88,8 +88,8 @@ object AnimationHelper {
 
     fun lottieCoverAnimation(coverView: View, revealView: View) {
         revealView.visibility = View.INVISIBLE
-        val x: Int = coverView.width.div(HALF_DIVIDER)
-        val y: Int = coverView.height.div(HALF_DIVIDER)
+        val x: Int = coverView.width.div(HALF_RATIO)
+        val y: Int = coverView.height.div(HALF_RATIO)
         val startRadius = hypot(coverView.width.toDouble(), coverView.height.toDouble())
         val endRadius = 0
         ViewAnimationUtils.createCircularReveal(

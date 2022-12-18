@@ -2,8 +2,9 @@ package xyz.flussigkatz.searchmovie.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import androidx.paging.ExperimentalPagingApi
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.searchmovie.App
@@ -14,10 +15,10 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@ExperimentalPagingApi
 class DetailsFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
-    val progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     init {
         App.instance.dagger.inject(this)
@@ -35,17 +36,15 @@ class DetailsFragmentViewModel : ViewModel() {
         }
     }
 
-    fun removeFavoriteFilmFromList(id: Int){
-        interactor.removeFavoriteFilmFromList(id)
+    suspend fun changeFavoriteMark(id: Int, flag: Boolean) = interactor.changeFavoriteMark(id, flag)
+
+    suspend fun getFilmMarkStatus(id: Int) = interactor.getFilmMarkStatus(id)
+
+    suspend fun insertBrowsingFilm(film: BrowsingFilm) {
+        interactor.insertBrowsingFilm(film)
     }
 
-    fun addFavoriteFilmToList(id: Int){
-        interactor.addFavoriteFilmToList(id)
-    }
-
-    fun getFilmMarkStatusFromApi(id: Int) = interactor.getFilmMarkStatusFromApi(id)
-
-    fun putBrowsingFilmToDB(film: BrowsingFilm) {
-        interactor.putBrowsingFilmToDB(film)
+    fun postMessage(@StringRes message: Int) {
+        interactor.postMessage(message)
     }
 }

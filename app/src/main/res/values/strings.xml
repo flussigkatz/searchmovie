@@ -16,7 +16,7 @@
     <string name="radio_system">System follow</string>
     <string name="radio_battery">Battery auto</string>
     <string name="exit_message">Back again to exit</string>
-    <string name="error_upload_message">Error upload. Check internet connection.</string>
+    <string name="error_upload_message">Some error. Check internet.</string>
     <string name="error_add_to_favorite_message">Error ,maybe later?</string>
     <string name="error_remove_from_favorite_message">Error ,maybe later?</string>
     <string name="open">Open</string>

@@ -1,7 +1,5 @@
 package xyz.flussigkatz.searchmovie.view
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -16,22 +14,15 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
-import timber.log.Timber
-import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
+import androidx.paging.ExperimentalPagingApi
 import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.SearchMovieReceiver
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.databinding.ActivityMainBinding
 import xyz.flussigkatz.searchmovie.util.AnimationHelper
-import xyz.flussigkatz.searchmovie.util.AutoDisposable
 import xyz.flussigkatz.searchmovie.util.NavigationHelper
-import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants
 import xyz.flussigkatz.searchmovie.viewmodel.MainActivityViewModel
 
+@ExperimentalPagingApi
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var notificationManager: NotificationManagerCompat
@@ -39,14 +30,12 @@ class MainActivity : AppCompatActivity() {
     private val receiver = Receiver()
     lateinit var navController: NavController
     private var backPressedTime = 0L
-    private val autoDisposable = AutoDisposable()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         initTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        autoDisposable.bindTo(lifecycle)
         setContentView(binding.rootActivityMain)
         initReceiver()
         initAnimationHelper()
@@ -69,9 +58,9 @@ class MainActivity : AppCompatActivity() {
         startDetailsMarkedFilm(intent)
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         unregisterReceiver(receiver)
-        super.onDestroy()
+        super.onStop()
     }
 
     private fun initAnimationHelper() {
@@ -95,49 +84,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initBoringNotification() {
-        notificationManager = NotificationManagerCompat.from(this)
-        viewModel.getMarkedFilmsFromDB()
-            .filter { !it.isNullOrEmpty() }
-            .subscribeOn(Schedulers.io())
-            .subscribeBy(
-                onError = { Timber.d(it) },
-                onNext = { setWatchFilmReminder(this@MainActivity, it.random()) }
-            ).addTo(autoDisposable)
-    }
-
     private fun startDetailsMarkedFilm(intent: Intent?) {
         intent?.getBundleExtra(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)?.let {
             navController.navigate(R.id.action_markedFragment_to_detailsFragment, it)
         }
-    }
-
-    private fun setWatchFilmReminder(context: Context, film: AbstractFilmEntity) {
-        val bundle = Bundle()
-        val intentBoringKillerAlarm = Intent(
-            context,
-            SearchMovieReceiver::class.java
-        )
-        val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
-        intentBoringKillerAlarm.action = NotificationConstants.BORING_KILLER_NOTIFICATION_ALARM
-        bundle.putParcelable(
-            DETAILS_FILM_KEY,
-            film
-        )
-        intentBoringKillerAlarm.putExtra(
-            NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY, bundle
-        )
-        val pendingIntentAlarm = PendingIntent.getBroadcast(
-            context,
-            NotificationConstants.PENDINGINTENT_ALARM_REQUEST_CODE,
-            intentBoringKillerAlarm,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        alarmManager.set(
-            AlarmManager.RTC,
-            System.currentTimeMillis() + 10,
-            pendingIntentAlarm
-        )
     }
 
     private fun initReceiver() {
@@ -145,7 +95,6 @@ class MainActivity : AppCompatActivity() {
             addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY)
             addAction(NotificationConstants.BORING_KILLER_NOTIFICATION_OFF_KEY)
         }
-
         registerReceiver(receiver, filter)
     }
 
@@ -154,13 +103,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initEventMessage() {
-        viewModel.eventMessage
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribeBy(
-                onError = { Timber.d(it) },
-                onNext = { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() },
-            ).addTo(autoDisposable)
+        viewModel.eventMessage.observe(this) {
+            Toast.makeText(this, getText(it), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private inner class Receiver : BroadcastReceiver() {

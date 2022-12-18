@@ -5,19 +5,19 @@
 
     <data>
 
-        <import type="xyz.flussigkatz.core_api.entity.AbstractFilmEntity" />
+        <import type="xyz.flussigkatz.searchmovie.data.model.FilmUiModel" />
 
         <variable
             name="film"
-            type="AbstractFilmEntity" />
+            type="FilmUiModel" />
 
     </data>
 
     <FrameLayout
         android:id="@+id/root_film_item"
         android:layout_width="match_parent"
-        android:layout_marginEnd="5dp"
-        android:layout_height="@dimen/film_item_root_height">
+        android:layout_height="@dimen/film_item_root_height"
+        android:layout_marginEnd="5dp">
 
 
         <xyz.flussigkatz.searchmovie.view.customview.RatingDonutView
@@ -26,8 +26,8 @@
             android:layout_height="@dimen/film_item_rating_donut_size"
             android:layout_gravity="bottom|start"
             android:translationZ="@dimen/film_item_rating_donut_translation_z"
-            app:scaleSize="45"
             app:progress="@{film.rating}"
+            app:scaleSize="45"
             app:stroke="10" />
 
 
@@ -41,11 +41,11 @@
                 style="@style/CommonBackground"
                 android:layout_width="@dimen/film_item_imageview_poster_width"
                 android:layout_height="match_parent"
-                android:scaleType="centerInside"
                 android:layout_marginStart="5dp"
+                android:contentDescription="@string/film_item_poster_description"
+                android:scaleType="centerInside"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/film_item_poster_description" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
@@ -53,12 +53,12 @@
                 style="@style/CommonTextColor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:padding="@dimen/film_item_textview_title_padding"
                 android:paddingEnd="@dimen/film_item_favorite_check_box_size"
                 android:text="@{film.title}"
                 android:textAlignment="center"
-                android:maxLines="2"
-                android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/poster"
@@ -70,10 +70,10 @@
                 style="@style/CommonTextColor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:ellipsize="end"
+                android:maxLines="4"
                 android:padding="@dimen/film_item_textview_description_padding"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:maxLines="4"
-                android:ellipsize="end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/poster"
@@ -87,7 +87,7 @@
                 android:layout_margin="@dimen/film_item_favorite_check_box_margin"
                 android:background="@drawable/favorite_selector"
                 android:button="@null"
-                android:checked="@{film.fav_state}"
+                android:checked="@{film.favState}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

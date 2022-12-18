@@ -13,6 +13,9 @@ object ConstantsApp {
     const val TOP_RATED_CATEGORY = "top_rated"
     const val UPCOMING_CATEGORY = "upcoming"
     const val NOW_PLAYING_CATEGORY = "now_playing"
+    const val BROWSING_CATEGORY = "browsing"
+    const val MARKED_CATEGORY = "marked"
+    const val SEARCHED_CATEGORY = "searched"
     const val POPULAR_CATEGORY_TAB_NUMBER = 0
     const val TOP_RATED_CATEGORY_TAB_NUMBER = 1
     const val UPCOMING_CATEGORY_TAB_NUMBER = 2
@@ -21,10 +24,11 @@ object ConstantsApp {
     const val TOP_RATED_CATEGORY_TAB_TITLE = "top rated"
     const val UPCOMING_CATEGORY_TAB_TITLE = "upcoming"
     const val NOW_PLAYING_CATEGORY_TAB_TITLE = "now playing"
-    const val FIRST_PAGE = 1
     const val SPACING_ITEM_DECORATION_IN_DP = 5
     const val HIDE_KEYBOARD_FLAG = 0
-    const val REMAINDER_OF_ELEMENTS = 2
     const val IS_SCROLL_FLAG = 0
-
+    const val HOME_VIEW_PAGER_TAB_COUNT = 4
+    const val EMPTY_QUERY = ""
+    const val HALF_RATIO = 2
+    const val LOAD_STATE_DEBOUNCE = 100L
 }

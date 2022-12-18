@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import timber.log.Timber
-import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp
+import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.databinding.FilmItemBinding
-import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
+import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmPagingAdapter.OnCheckboxClickListener
+import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmPagingAdapter.OnItemClickListener
 
 class FilmViewHolder(private val binding: FilmItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val callbackPicasso = object : Callback {
@@ -24,9 +25,9 @@ class FilmViewHolder(private val binding: FilmItemBinding) : RecyclerView.ViewHo
     }
 
     fun bind(
-        film: AbstractFilmEntity,
-        clickListener: FilmListRecyclerAdapter.OnItemClickListener,
-        checkboxClickListener: FilmListRecyclerAdapter.OnCheckboxClickListener,
+        film: FilmUiModel,
+        clickListener: OnItemClickListener,
+        checkboxClickListener: OnCheckboxClickListener,
     ) {
         binding.film = film
         binding.favoriteCheckBox.setOnClickListener {

@@ -1,6 +1,7 @@
 package xyz.flussigkatz.searchmovie
 
 import android.app.Application
+import androidx.paging.ExperimentalPagingApi
 import timber.log.Timber
 import xyz.flussigkatz.core.CoreProvidersFactory
 import xyz.flussigkatz.remote_module.di.DaggerRemoteComponent
@@ -10,6 +11,7 @@ import xyz.flussigkatz.searchmovie.di.DaggerMainComponent
 import xyz.flussigkatz.searchmovie.di.modules.DomainModule
 import xyz.flussigkatz.searchmovie.view.notification.NotificationHelper
 
+@ExperimentalPagingApi
 class App : Application() {
     lateinit var dagger: MainComponent
 

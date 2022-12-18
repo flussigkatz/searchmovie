@@ -1,49 +1,42 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import xyz.flussigkatz.core_api.entity.Film
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.cachedIn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import xyz.flussigkatz.searchmovie.App
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.FIRST_PAGE
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCHED_CATEGORY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@ExperimentalPagingApi
 class HomeFragmentViewModel : ViewModel() {
-    val refreshState: BehaviorSubject<Boolean>
-    val filmListData: Observable<List<Film>>
-    var nextPage = FIRST_PAGE
-
-
     @Inject
     lateinit var interactor: Interactor
+    private val searchQueryLiveData = MutableLiveData(EMPTY_QUERY)
 
     init {
         App.instance.dagger.inject(this)
-        filmListData = interactor.getSearchedFilmsFromDB()
-        refreshState = interactor.getRefreshState()
     }
 
-    fun getFilms(category: String) {
-        interactor.getFilmsFromApi(category, FIRST_PAGE)
-        nextPage++
-    }
+    @OptIn(FlowPreview::class)
+    val filmFlow = searchQueryLiveData.asFlow()
+        .distinctUntilChanged()
+        .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS)
+        .flatMapLatest { interactor.getFilms(SEARCHED_CATEGORY, it.lowercase().trim()) }
+        .cachedIn(viewModelScope)
 
-    fun removeFavoriteFilmFromList(id: Int){
-        interactor.removeFavoriteFilmFromList(id)
-    }
+    suspend fun changeFavoriteMark(id: Int, flag: Boolean) = interactor.changeFavoriteMark(id, flag)
 
-    fun addFavoriteFilmToList(id: Int){
-        interactor.addFavoriteFilmToList(id)
-    }
-
-    fun getSearchedFilms(search_query: String, page: Int? = null) {
-        page?.let { nextPage = it }
-        interactor.getSearchedFilmsFromApi(search_query, nextPage)
-        nextPage++
-    }
-
-    fun clearSearchedFilmDB() {
-        interactor.clearSearchedFilmDB()
+    fun setSearchQuery(query: String) {
+        searchQueryLiveData.postValue(query)
     }
 }

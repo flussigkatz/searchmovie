@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.fragment.app.activityViewModels
+import androidx.paging.ExperimentalPagingApi
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.databinding.FragmentSettingsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.SettingsFragmentViewModel
 import java.lang.IllegalArgumentException
+@ExperimentalPagingApi
 
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding

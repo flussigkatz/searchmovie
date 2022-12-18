@@ -1,36 +1,27 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.core.Observable
-import xyz.flussigkatz.core_api.entity.PopularFilm
+import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import kotlinx.coroutines.flow.Flow
 import xyz.flussigkatz.searchmovie.App
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.FIRST_PAGE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY
+import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 class PopularFilmsFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
-    val filmListData: Observable<List<PopularFilm>>
-    var nextPage = FIRST_PAGE
+    val filmFlow: Flow<PagingData<FilmUiModel>>
 
     init {
         App.instance.dagger.inject(this)
-        filmListData = interactor.getPopularFilmsFromDB()
+        filmFlow = interactor.getFilms(POPULAR_CATEGORY).cachedIn(viewModelScope)
     }
 
-    fun getFilms(page: Int? = null) {
-        page?.let { nextPage = it }
-        interactor.getFilmsFromApi(POPULAR_CATEGORY, nextPage)
-        nextPage++
-    }
-
-    fun removeFavoriteFilmFromList(id: Int) {
-        interactor.removeFavoriteFilmFromList(id)
-    }
-
-    fun addFavoriteFilmToList(id: Int) {
-        interactor.addFavoriteFilmToList(id)
-    }
+    suspend fun changeFavoriteMark(id: Int, flag: Boolean) = interactor.changeFavoriteMark(id, flag)
 }
