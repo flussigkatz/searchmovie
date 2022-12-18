@@ -2,6 +2,7 @@ package xyz.flussigkatz.searchmovie.util
 
 import xyz.flussigkatz.core_api.entity.*
 import xyz.flussigkatz.remote_module.entity.tmdb_result_dto.TmdbFilm
+import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 
 object Converter {
     fun convertToFilmFromApi(
@@ -71,6 +72,18 @@ object Converter {
             description = it.overview,
             rating = (it.voteAverage * 10).toInt(),
             fav_state = listIdsMarkedFilms.contains(it.id)
+        )
+    }
+
+    fun convertToFilmUiModel(list: List<AbstractFilmEntity>, ) = list.map {
+        FilmUiModel(
+            localId = it.localId,
+            id = it.id,
+            title = it.title,
+            posterId = it.posterId,
+            description = it.description,
+            rating = it.rating,
+            fav_state = it.fav_state
         )
     }
 }

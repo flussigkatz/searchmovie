@@ -48,6 +48,7 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY_TAB_NUMBE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY_TAB_TITLE
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
+import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.HomeFragmentViewPagerAdapter
 import xyz.flussigkatz.searchmovie.view.MainActivity
@@ -85,6 +86,7 @@ class HomeFragment : Fragment() {
     private fun initRecycler() {
         viewModel.filmListData.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
+            .map { Converter.convertToFilmUiModel(it) }
             .subscribeBy(
                 onError = { Timber.d(it) },
                 onNext = { filmsAdapter.updateData(it) }

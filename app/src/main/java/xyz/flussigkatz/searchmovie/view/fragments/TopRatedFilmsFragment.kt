@@ -20,6 +20,7 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.FIRST_PAGE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
 import xyz.flussigkatz.searchmovie.databinding.FragmentTopRatedFilmsBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
+import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
@@ -51,6 +52,7 @@ class TopRatedFilmsFragment : Fragment() {
     private fun initRecycler() {
         viewModel.filmListData.observeOn(AndroidSchedulers.mainThread())
             .filter { !it.isNullOrEmpty() }
+            .map { Converter.convertToFilmUiModel(it) }
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onError = { Timber.d(it) },

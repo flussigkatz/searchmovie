@@ -21,6 +21,7 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussigkatz.searchmovie.util.AutoDisposable
+import xyz.flussigkatz.searchmovie.util.Converter
 import xyz.flussigkatz.searchmovie.util.addTo
 import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmListRecyclerAdapter
@@ -55,7 +56,7 @@ class MarkedFragment : Fragment() {
         viewModel.markedFilmListData
             .observeOn(AndroidSchedulers.mainThread())
             .filter { !it.isNullOrEmpty() }
-            .observeOn(AndroidSchedulers.mainThread())
+            .map { Converter.convertToFilmUiModel(it) }
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onError = { Timber.d(it) },
