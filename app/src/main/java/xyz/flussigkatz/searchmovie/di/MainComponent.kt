@@ -1,5 +1,6 @@
 package xyz.flussigkatz.searchmovie.di
 
+import androidx.paging.ExperimentalPagingApi
 import dagger.Component
 import xyz.flussigkatz.core_api.AppProvider
 import xyz.flussigkatz.core_api.db.DatabaseProvider
@@ -13,7 +14,7 @@ import javax.inject.Singleton
     dependencies = [AppProvider::class, RemoteProvider::class, DatabaseProvider::class],
     modules = [DomainModule::class]
 )
-
+@ExperimentalPagingApi
 interface MainComponent {
     fun inject(mainActivityViewModel: MainActivityViewModel)
     fun inject(homeFragmentViewModel: HomeFragmentViewModel)

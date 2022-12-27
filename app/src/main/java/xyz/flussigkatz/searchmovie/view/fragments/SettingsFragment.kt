@@ -5,11 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.fragment.app.activityViewModels
+import androidx.paging.ExperimentalPagingApi
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.databinding.FragmentSettingsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.SettingsFragmentViewModel
+import java.lang.IllegalArgumentException
+@ExperimentalPagingApi
 
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
@@ -28,34 +31,24 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.themePropertyLifeData.observe(viewLifecycleOwner) {
             when (it) {
-                AppCompatDelegate.MODE_NIGHT_NO ->
-                    binding.settingsRadioGroupTheme.check(R.id.radio_light)
-                AppCompatDelegate.MODE_NIGHT_YES ->
-                    binding.settingsRadioGroupTheme.check(R.id.radio_dark)
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM ->
-                    binding.settingsRadioGroupTheme.check(R.id.radio_system)
-                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY ->
-                    binding.settingsRadioGroupTheme.check(R.id.radio_battery)
+                MODE_NIGHT_NO -> binding.settingsRadioGroupTheme.check(R.id.radio_light)
+                MODE_NIGHT_YES -> binding.settingsRadioGroupTheme.check(R.id.radio_dark)
+                MODE_NIGHT_FOLLOW_SYSTEM -> binding.settingsRadioGroupTheme.check(R.id.radio_system)
+                MODE_NIGHT_AUTO_BATTERY -> binding.settingsRadioGroupTheme.check(R.id.radio_battery)
             }
         }
         viewModel.splashScreenPropertyLifeData.observe(viewLifecycleOwner) {
             binding.settingsSplashScreen.isChecked = it
         }
         binding.settingsRadioGroupTheme.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.radio_light ->
-                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_NO,
-                        requireActivity())
-                R.id.radio_dark ->
-                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_YES,
-                        requireActivity())
-                R.id.radio_system ->
-                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
-                        requireActivity())
-                R.id.radio_battery ->
-                    viewModel.setNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY,
-                        requireActivity())
+            val mode = when (checkedId) {
+                R.id.radio_light -> MODE_NIGHT_NO
+                R.id.radio_dark -> MODE_NIGHT_YES
+                R.id.radio_system -> MODE_NIGHT_FOLLOW_SYSTEM
+                R.id.radio_battery -> MODE_NIGHT_AUTO_BATTERY
+                else -> throw IllegalArgumentException("Wrong argument for night mode")
             }
+            viewModel.setNightMode(mode, requireActivity())
         }
         binding.settingsSplashScreen.setOnCheckedChangeListener { _, checkedId ->
             viewModel.putSplashScreenProperty(checkedId)

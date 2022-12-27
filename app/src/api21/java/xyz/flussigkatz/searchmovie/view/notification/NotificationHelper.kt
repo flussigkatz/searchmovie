@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.NotificationManagerCompat
-import xyz.flussigkatz.core_api.entity.AbstractFilmEntity
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
+import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 
 object NotificationHelper {
     lateinit var notification: Notification.Builder
@@ -18,7 +18,7 @@ object NotificationHelper {
     }
 
     fun createBoringKillerNotification(context: Context, bundle: Bundle) {
-        val film = bundle.getParcelable<AbstractFilmEntity>(DETAILS_FILM_KEY)
+        val film = bundle.getParcelable<FilmUiModel>(DETAILS_FILM_KEY)
         if (film != null) {
             val notificationManager = NotificationManagerCompat.from(context)
             val intentBoringKillerInit = Intent()

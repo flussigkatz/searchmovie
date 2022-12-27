@@ -7,7 +7,7 @@ import xyz.flussigkatz.core_api.entity.*
 
 @Database(
     entities = [
-        Film::class,
+        SearchedFilm::class,
         PopularFilm::class,
         TopRatedFilm::class,
         UpcomingFilm::class,

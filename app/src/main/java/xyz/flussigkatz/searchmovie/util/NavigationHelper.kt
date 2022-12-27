@@ -14,8 +14,6 @@ object NavigationHelper {
         when (onScreenFragmentId) {
             R.id.homeFragment -> {
                 when (menuItemId) {
-                    R.id.home_page -> {
-                    }
                     R.id.history -> {
                         navController.navigate(R.id.action_homeFragment_to_historyFragment)
                     }
@@ -31,8 +29,6 @@ object NavigationHelper {
                 when (menuItemId) {
                     R.id.home_page -> {
                         navController.navigate(R.id.action_historyFragment_to_homeFragment)
-                    }
-                    R.id.history -> {
                     }
                     R.id.marked -> {
                         navController.navigate(R.id.action_historyFragment_to_markedFragment)
@@ -50,8 +46,6 @@ object NavigationHelper {
                     R.id.history -> {
                         navController.navigate(R.id.action_markedFragment_to_historyFragment)
                     }
-                    R.id.marked -> {
-                    }
                     R.id.settings -> {
                         navController.navigate(R.id.action_markedFragment_to_settingsFragment)
                     }
@@ -67,8 +61,6 @@ object NavigationHelper {
                     }
                     R.id.marked -> {
                         navController.navigate(R.id.action_settingsFragment_to_markedFragment)
-                    }
-                    R.id.settings -> {
                     }
                 }
             }

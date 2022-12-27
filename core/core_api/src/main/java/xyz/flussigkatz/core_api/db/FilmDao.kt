@@ -1,109 +1,124 @@
 package xyz.flussigkatz.core_api.db
 
+import androidx.paging.PagingSource
 import androidx.room.*
-import io.reactivex.rxjava3.core.Observable
 import xyz.flussigkatz.core_api.entity.*
 
 @Dao
 interface FilmDao {
     //region SearchedFilm
-    @Query("SELECT * FROM cashed_films")
-    fun getCashedSearchedFilms(): Observable<List<Film>>
-
-    @Query("SELECT * FROM cashed_films")
-    fun getCashedSearchedFilmsToList(): List<Film>
+    @Query("SELECT * FROM searched_films ORDER BY localId DESC")
+    fun getSearchedFilms(): PagingSource<Int, SearchedFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllSearchedFilms(list: List<Film>)
+    suspend fun insertSearchedFilms(list: List<SearchedFilm>)
 
-    @Delete
-    fun deleteSearchedFilms(films: List<Film>): Int
+    @Query("DELETE FROM searched_films")
+    suspend fun deleteSearchedFilms()
+
+    @Transaction
+    suspend fun refreshSearchedFilms(films: List<SearchedFilm>) {
+        deleteSearchedFilms()
+        insertSearchedFilms(films)
+    }
     //endregion
 
     // region PopularFilm
-    @Query("SELECT * FROM cashed_popular_films")
-    fun getCashedPopularFilms(): Observable<List<PopularFilm>>
-
-    @Query("SELECT * FROM cashed_popular_films")
-    fun getCashedPopularFilmsToList(): List<PopularFilm>
+    @Query("SELECT * FROM popular_films")
+    fun getPopularFilms(): PagingSource<Int, PopularFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllPopularFilms(list: List<PopularFilm>)
+    suspend fun insertPopularFilms(list: List<PopularFilm>)
 
-    @Delete
-    fun deletePopularFilms(films: List<PopularFilm>): Int
+    @Query("DELETE FROM popular_films")
+    suspend fun deletePopularFilms()
+
+    @Transaction
+    suspend fun refreshPopularFilms(films: List<PopularFilm>) {
+        deletePopularFilms()
+        insertPopularFilms(films)
+    }
     //endregion
 
     // region TopRatedFilm
-    @Query("SELECT * FROM cashed_top_rated_films")
-    fun getCashedTopRatedFilms(): Observable<List<TopRatedFilm>>
-
-    @Query("SELECT * FROM cashed_top_rated_films")
-    fun getCashedTopRatedFilmsToList(): List<TopRatedFilm>
+    @Query("SELECT * FROM top_rated_films")
+    fun getTopRatedFilms(): PagingSource<Int, TopRatedFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllTopRatedFilms(list: List<TopRatedFilm>)
+    suspend fun insertTopRatedFilms(list: List<TopRatedFilm>)
 
-    @Delete
-    fun deleteTopRatedFilms(films: List<TopRatedFilm>): Int
+    @Query("DELETE FROM top_rated_films")
+    suspend fun deleteTopRatedFilms()
+
+    @Transaction
+    suspend fun refreshTopRatedFilms(films: List<TopRatedFilm>) {
+        deleteTopRatedFilms()
+        insertTopRatedFilms(films)
+    }
     //endregion
 
     // region UpcomingFilm
-    @Query("SELECT * FROM cashed_upcoming_films")
-    fun getCashedUpcomingFilms(): Observable<List<UpcomingFilm>>
-
-    @Query("SELECT * FROM cashed_upcoming_films")
-    fun getCashedUpcomingFilmsToList(): List<UpcomingFilm>
+    @Query("SELECT * FROM upcoming_films")
+    fun getUpcomingFilms(): PagingSource<Int, UpcomingFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllUpcomingFilms(list: List<UpcomingFilm>)
+    suspend fun insertUpcomingFilms(list: List<UpcomingFilm>)
 
-    @Delete
-    fun deleteUpcomingFilms(films: List<UpcomingFilm>): Int
+    @Query("DELETE FROM upcoming_films")
+    suspend fun deleteUpcomingFilms()
+
+    @Transaction
+    suspend fun refreshUpcomingFilms(films: List<UpcomingFilm>) {
+        deleteUpcomingFilms()
+        insertUpcomingFilms(films)
+    }
     //endregion
 
     // region NowPlayingFilm
-    @Query("SELECT * FROM cashed_now_playing_films")
-    fun getCashedNowPlayingFilms(): Observable<List<NowPlayingFilm>>
-
-    @Query("SELECT * FROM cashed_now_playing_films")
-    fun getCashedNowPlayingFilmsToList(): List<NowPlayingFilm>
+    @Query("SELECT * FROM now_playing_films")
+    fun getNowPlayingFilms(): PagingSource<Int, NowPlayingFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllNowPlayingFilms(list: List<NowPlayingFilm>)
+    suspend fun insertNowPlayingFilms(list: List<NowPlayingFilm>)
 
-    @Delete
-    fun deleteNowPlayingFilms(films: List<NowPlayingFilm>): Int
+    @Query("DELETE FROM now_playing_films")
+    suspend fun deleteNowPlayingFilms()
+
+    @Transaction
+    suspend fun refreshNowPlayingFilms(films: List<NowPlayingFilm>) {
+        deleteNowPlayingFilms()
+        insertNowPlayingFilms(films)
+    }
     //endregion
 
     //region MarkedFilm
-    @Query("SELECT * FROM marked_films")
-    fun getCashedMarkedFilms(): Observable<List<MarkedFilm>>
-
-    @Query("SELECT * FROM marked_films")
-    fun getCashedMarkedFilmsToList(): List<MarkedFilm>
+    @Query("SELECT * FROM marked_films WHERE title LIKE '%' || :query || '%' ORDER BY localId DESC")
+    fun getMarkedFilms(query: String): PagingSource<Int, MarkedFilm>
 
     @Query("SELECT id FROM marked_films")
-    fun getIdsMarkedFilmsToList(): Observable<MutableList<Int>>
-
-    @Query("SELECT * FROM marked_films WHERE id LIKE :id")
-    fun getCashedOneMarkedFilm(id: Int): MarkedFilm
+    fun getIdsMarkedFilms(): List<Int>
 
     @Query("SELECT * FROM marked_films WHERE title LIKE '%' || :query || '%'")
-    fun getSearchedMarkedFilm(query: String): Observable<List<MarkedFilm>>
+    fun getSearchedMarkedFilm(query: String): PagingSource<Int, MarkedFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllMarkedFilms(list: List<MarkedFilm>)
+    suspend fun insertMarkedFilms(list: List<MarkedFilm>)
 
-    @Delete
-    fun deleteMarkedFilms(films: List<MarkedFilm>): Int
+    @Query("DELETE FROM marked_films")
+    suspend fun deleteMarkedFilms()
+
+    @Transaction
+    suspend fun refreshMarkedFilms(films: List<MarkedFilm>) {
+        deleteMarkedFilms()
+        insertMarkedFilms(films)
+    }
     //endregion
 
     //region BrowsingFilm
-    @Query("SELECT * FROM browsing_films")
-    fun getCashedBrowsingFilms(): Observable<List<BrowsingFilm>>
+    @Query("SELECT * FROM browsing_films WHERE title LIKE '%' || :query || '%' ORDER BY localId DESC")
+    fun getBrowsingFilms(query: String): PagingSource<Int, BrowsingFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertBrowsingFilm(film: BrowsingFilm)
+    suspend fun insertBrowsingFilm(film: BrowsingFilm)
     //endregion
 }

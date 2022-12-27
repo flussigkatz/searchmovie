@@ -1,24 +1,24 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.subjects.PublishSubject
+import androidx.paging.ExperimentalPagingApi
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 class MainActivityViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
-    val eventMessage: PublishSubject<String>
+    val eventMessage: LiveData<Int>
 
     init {
         App.instance.dagger.inject(this)
-        eventMessage = interactor.getEventMessage()
+        eventMessage = interactor.getEventMessageLiveData()
     }
 
     fun getSplashScreenStateStatus() = interactor.getSplashScreenStateFromPreferences()
-
-    fun getMarkedFilmsFromDB() = interactor.getMarkedFilmsFromDB()
 
     fun getNightModeStatus() = interactor.getNightModeFromPreferences()
 }

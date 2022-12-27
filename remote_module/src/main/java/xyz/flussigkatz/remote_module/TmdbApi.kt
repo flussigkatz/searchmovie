@@ -1,6 +1,5 @@
 package xyz.flussigkatz.remote_module
 
-import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -15,69 +14,69 @@ import xyz.flussigkatz.remote_module.entity.tmdb_result_dto.TmdbResultsDto
 interface TmdbApi {
     //region GET
     @GET("movie/{category}")
-    fun getFilms(
+    suspend fun getFilms(
         @Path("category") category: String,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("page") page: Int,
-    ): Observable<TmdbResultsDto>
+    ): TmdbResultsDto
 
     @GET("search/movie")
-    fun getSearchedFilms(
+    suspend fun getSearchedFilms(
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("query") query: String,
         @Query("page") page: Int,
-    ): Observable<TmdbResultsDto>
+    ): TmdbResultsDto
 
     @GET("list/{list_id}")
-    fun getMarkedFilms(
+    suspend fun getMarkedFilms(
         @Path("list_id") list_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
-    ): Observable<FavoriteMovieListDto>
+    ): FavoriteMovieListDto
 
     @GET("list/{list_id}/item_status")
-    fun getFilmMarkStatus(
+    suspend fun getFilmMarkStatus(
         @Path("list_id") list_id: Int,
         @Query("api_key") api_key: String,
         @Query("movie_id") movie_id: Int,
-    ): Observable<MarkFimStatusDto>
+    ): MarkFimStatusDto
 
     @GET("account/{account_id}/lists")
-    fun getFilmLists(
+    suspend fun getFilmLists(
         @Path("account_id") account_id: String,
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Query("language") language: String,
-    ): Observable<FilmListsDto>
+    ): FilmListsDto
     //endregion
 
     //region POST
     @Headers("Content-Type: application/json;charset=utf-8")
     @POST("list")
-    fun createFavoriteFilmList(
+    suspend fun createFavoriteFilmList(
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Body listInfo: ListInfo,
-    ): Observable<CreateFavoriteListResponseDto>
+    ): CreateFavoriteListResponseDto
 
     @Headers("Content-Type: application/json;charset=utf-8")
     @POST("list/{list_id}/add_item")
-    fun addFavoriteFilmToList(
+    suspend fun addFavoriteFilmToList(
         @Path("list_id") list_id: Int,
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Body favoriteMovieInfo: FavoriteMovieInfoDto,
-    ): Observable<FavoriteFilmAddingRemovingResponse>
+    ): FavoriteFilmAddingRemovingResponse
 
     @Headers("Content-Type: application/json;charset=utf-8")
     @POST("list/{list_id}/remove_item")
-    fun removeFavoriteFilmFromList(
+    suspend fun removeFavoriteFilmFromList(
         @Path("list_id") list_id: Int,
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Body favoriteMovieInfo: FavoriteMovieInfoDto,
-    ): Observable<FavoriteFilmAddingRemovingResponse>
+    ): FavoriteFilmAddingRemovingResponse
     //endregion
 }
