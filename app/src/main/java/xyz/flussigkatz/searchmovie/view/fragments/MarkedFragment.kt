@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.CheckBox
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,18 +17,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.LOAD_STATE_DEBOUNCE
-import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
-import xyz.flussigkatz.searchmovie.util.QueryAction
-import xyz.flussigkatz.searchmovie.view.MainActivity
-import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmPagingAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
+import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.MarkedFragmentViewModel
 
 @ExperimentalCoroutinesApi
@@ -57,34 +51,23 @@ class MarkedFragment : Fragment() {
 
     private fun initRecycler() {
         binding.markedRecycler.apply {
-            val onItemClickListener = object : FilmPagingAdapter.OnItemClickListener {
-                override fun click(film: FilmUiModel) {
-                    val bundle = Bundle()
-                    bundle.putParcelable(DETAILS_FILM_KEY, film)
-                    (requireActivity() as MainActivity).navController.navigate(
-                        R.id.action_markedFragment_to_detailsFragment, bundle
-                    )
-                }
-            }
-            val onCheckboxClickListener = object : FilmPagingAdapter.OnCheckboxClickListener {
-                override fun click(film: FilmUiModel, view: CheckBox) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        view.isChecked.run { viewModel.changeFavoriteMark(film.id, this) }
-                    }
+            val onItemClickListener = OnItemClickListener { requireContext().sendBroadcast(it) }
+            val onCheckboxClickListener = OnCheckboxClickListener{ film, view ->
+                lifecycleScope.launch {
+                    view.isChecked = viewModel.changeFavoriteMark(film.id, view.isChecked)
                 }
             }
             filmsAdapter = FilmPagingAdapter(onItemClickListener, onCheckboxClickListener)
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
-            val decorator = SpacingItemDecoration(5)
-            addItemDecoration(decorator)
+            addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
+            addOnScrollListener(OnScrollListener {
+                hideSoftKeyboard(it)
+                binding.root.clearFocus()
+            })
         }
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.filmFlow.collectLatest {
-                withContext(Dispatchers.Main) {
-                    filmsAdapter.submitData(it)
-                }
-            }
+        lifecycleScope.launch {
+            viewModel.filmFlow.collectLatest { filmsAdapter.submitData(it) }
         }
     }
 
@@ -93,8 +76,7 @@ class MarkedFragment : Fragment() {
             setOnFocusChangeListener { v, hasFocus ->
                 if (!hasFocus) hideSoftKeyboard(v)
             }
-            val queryAction: QueryAction = { query -> viewModel.setSearchQuery(query) }
-            setOnQueryTextListener(OnQueryTextListener(queryAction))
+            setOnQueryTextListener(OnQueryTextListener { query -> viewModel.setSearchQuery(query) })
         }
     }
 

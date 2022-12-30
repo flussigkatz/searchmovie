@@ -9,6 +9,7 @@ import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCHED_CATEGORY
@@ -32,6 +33,7 @@ class HomeFragmentViewModel : ViewModel() {
         .distinctUntilChanged()
         .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS)
         .flatMapLatest { interactor.getFilms(SEARCHED_CATEGORY, it.lowercase().trim()) }
+        .catch { Timber.d(it) }
         .cachedIn(viewModelScope)
 
     suspend fun changeFavoriteMark(id: Int, flag: Boolean) = interactor.changeFavoriteMark(id, flag)

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package xyz.flussigkatz.searchmovie.view.notification
 
 import android.app.*
@@ -8,12 +10,12 @@ import androidx.core.app.NotificationManagerCompat
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
+import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY
 
 object NotificationHelper {
     lateinit var notification: Notification.Builder
 
     fun initNotification(context: Context) {
-            @Suppress("DEPRECATION")
             notification = Notification.Builder(context)
     }
 
@@ -22,10 +24,8 @@ object NotificationHelper {
         if (film != null) {
             val notificationManager = NotificationManagerCompat.from(context)
             val intentBoringKillerInit = Intent()
-            intentBoringKillerInit.action =
-                NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY
-            intentBoringKillerInit.putExtra(
-                NotificationConstants.BORING_KILLER_NOTIFICATION_FILM_KEY, bundle
+            intentBoringKillerInit.action = BORING_KILLER_NOTIFICATION_FILM_KEY
+            intentBoringKillerInit.putExtra(BORING_KILLER_NOTIFICATION_FILM_KEY, bundle
             )
             val pendingIntentInit = PendingIntent.getBroadcast(
                 context,

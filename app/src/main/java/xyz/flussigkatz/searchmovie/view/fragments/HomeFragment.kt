@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
-import android.widget.CheckBox
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
@@ -19,20 +18,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.R.dimen.home_recycler_view_start_height
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.HALF_RATIO
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.IS_SCROLL_FLAG
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.LOAD_STATE_DEBOUNCE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_TITLE
@@ -43,14 +38,9 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY_TAB_NUMB
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY_TAB_TITLE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY_TAB_TITLE
-import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
-import xyz.flussigkatz.searchmovie.util.QueryAction
-import xyz.flussigkatz.searchmovie.view.MainActivity
-import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmPagingAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.HomeFragmentViewPagerAdapter
-import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
+import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
 
 @ExperimentalCoroutinesApi
@@ -84,41 +74,23 @@ class HomeFragment : Fragment() {
 
     private fun initRecycler() {
         binding.homeRecycler.apply {
-            filmsAdapter = FilmPagingAdapter(
-                object : FilmPagingAdapter.OnItemClickListener {
-                    override fun click(film: FilmUiModel) {
-                        Bundle().apply {
-                            putParcelable(DETAILS_FILM_KEY, film)
-                            (requireActivity() as MainActivity).navController.navigate(
-                                R.id.action_homeFragment_to_detailsFragment, this
-                            )
-                        }
-                    }
-                }, object : FilmPagingAdapter.OnCheckboxClickListener {
-                    override fun click(film: FilmUiModel, view: CheckBox) {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            view.isChecked.run { viewModel.changeFavoriteMark(film.id, this) }
-                        }
-                    }
+            val onItemClickListener = OnItemClickListener { requireContext().sendBroadcast(it) }
+            val onCheckboxClickListener = OnCheckboxClickListener { film, view ->
+                lifecycleScope.launch {
+                    view.isChecked = viewModel.changeFavoriteMark(film.id, view.isChecked)
                 }
-            )
+            }
+            filmsAdapter = FilmPagingAdapter(onItemClickListener, onCheckboxClickListener)
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (dy != IS_SCROLL_FLAG) {
-                        hideSoftKeyboard(recyclerView)
-                        binding.homeSearchView.clearFocus()
-                    }
-                }
+            addOnScrollListener(OnScrollListener {
+                hideSoftKeyboard(it)
+                binding.root.clearFocus()
             })
         }
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.filmFlow.collectLatest {
-                withContext(Dispatchers.Main) { filmsAdapter.submitData(it) }
-            }
+        lifecycleScope.launch {
+            viewModel.filmFlow.collectLatest { filmsAdapter.submitData(it) }
         }
     }
 
@@ -142,7 +114,8 @@ class HomeFragment : Fragment() {
             @Suppress("DEPRECATION")
             windowManager.defaultDisplay.height
         }
-        val recyclerHeightDimension = requireContext().resources.getDimension(home_recycler_view_start_height).toInt()
+        val recyclerHeightDimension =
+            requireContext().resources.getDimension(home_recycler_view_start_height).toInt()
         var recyclerCollapsed = binding.homeRecycler.height <= recyclerHeightDimension
         val anim = ValueAnimator.ofInt(recyclerHeightDimension, displayHeight).apply {
             addUpdateListener {
@@ -169,8 +142,7 @@ class HomeFragment : Fragment() {
                     anim.reverse()
                 }
             }
-            val queryAction: QueryAction = { query -> viewModel.setSearchQuery(query) }
-            setOnQueryTextListener(OnQueryTextListener(queryAction))
+            setOnQueryTextListener(OnQueryTextListener { query -> viewModel.setSearchQuery(query) })
         }
     }
 

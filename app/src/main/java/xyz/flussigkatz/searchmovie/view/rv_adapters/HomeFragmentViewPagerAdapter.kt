@@ -3,7 +3,6 @@ package xyz.flussigkatz.searchmovie.view.rv_adapters
 import androidx.fragment.app.Fragment
 import androidx.paging.ExperimentalPagingApi
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.HOME_VIEW_PAGER_TAB_COUNT
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY_TAB_NUMBER
@@ -28,5 +27,6 @@ class HomeFragmentViewPagerAdapter(parent: Fragment) : FragmentStateAdapter(pare
 
     companion object {
         private const val EXCEPTION_MESSAGE = "Wrong position"
+        private const val HOME_VIEW_PAGER_TAB_COUNT = 4
     }
 }
