@@ -8,6 +8,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -37,18 +38,13 @@ class MarkedFragmentViewModel : ViewModel() {
         .distinctUntilChanged()
         .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS)
         .flatMapLatest { interactor.getFilms(MARKED_CATEGORY, it.lowercase().trim()) }
+        .catch { Timber.d(it) }
         .cachedIn(viewModelScope)
 
     suspend fun changeFavoriteMark(id: Int, flag: Boolean) = interactor.changeFavoriteMark(id, flag)
 
     fun getMarkedFilmsFromApi() {
-        viewModelScope.launch {
-            try {
-                interactor.getMarkedFilmsFromApi()
-            } catch (e: Exception) {
-                Timber.d(e)
-            }
-        }
+        viewModelScope.launch { interactor.getMarkedFilmsFromApi() }
     }
 
     fun setSearchQuery(query: String) {

@@ -23,13 +23,10 @@ import androidx.paging.ExperimentalPagingApi
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
-import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_ORIGINAL
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGE_FORMAT_W500
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.DetailsFragmentViewModel
@@ -61,22 +58,17 @@ class DetailsFragment : Fragment() {
         initDownloadFilmPoster(film)
         lifecycleScope.launch {
             viewModel.insertBrowsingFilm(BrowsingFilm(film))
-            try {
-                film.favState = viewModel.getFilmMarkStatus(film.id).itemPresent
-            } catch (e: Exception) {
-                Timber.d(e)
-            }
+            film.favState = viewModel.getFilmMarkStatus(film.id)
         }
         initFab(film)
     }
 
     private fun initFab(film: FilmUiModel) {
         favoriteMarkState.postValue(film.favState)
-        favoriteMarkState.observe(viewLifecycleOwner) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.changeFavoriteMark(film.id, it).let { res ->
-                    film.favState = res
-                    if (res) binding.detailsFabFavorite.setImageResource(R.drawable.ic_favorite)
+        favoriteMarkState.observe(viewLifecycleOwner) { favoriteMarkState ->
+            lifecycleScope.launch {
+                film.favState = viewModel.changeFavoriteMark(film.id, favoriteMarkState).also {
+                    if (it) binding.detailsFabFavorite.setImageResource(R.drawable.ic_favorite)
                     else binding.detailsFabFavorite.setImageResource(R.drawable.ic_unfavorite)
                 }
             }
@@ -201,5 +193,7 @@ class DetailsFragment : Fragment() {
     companion object {
         private const val REQUEST_CODE = 1
         private const val IMAGE_QUALITY = 100
+        private const val IMAGE_FORMAT_ORIGINAL = "original"
+        private const val IMAGE_FORMAT_W500 = "w500"
     }
 }

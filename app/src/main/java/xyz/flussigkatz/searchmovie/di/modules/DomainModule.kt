@@ -18,7 +18,7 @@ class DomainModule {
 
     @Singleton
     @Provides
-    fun providePreferences(context: Context) = PreferenceProvider(context)
+    fun providePreferences(context: Context) = PreferenceProvider(context.applicationContext)
 
     @Singleton
     @Provides

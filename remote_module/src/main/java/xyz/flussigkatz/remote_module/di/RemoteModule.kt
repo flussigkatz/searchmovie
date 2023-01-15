@@ -2,13 +2,14 @@ package xyz.flussigkatz.remote_module.di
 
 import dagger.Module
 import dagger.Provides
-import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import xyz.flussigkatz.remote_module.ConstantsRemote
 import xyz.flussigkatz.remote_module.BuildConfig
+import xyz.flussigkatz.remote_module.ConstantsRemote.CALL_TIMEOUT
+import xyz.flussigkatz.remote_module.ConstantsRemote.READ_TIMEOUT
 import xyz.flussigkatz.remote_module.TmdbApi
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -18,8 +19,8 @@ class RemoteModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-        .callTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
+        .callTimeout(CALL_TIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
         .addInterceptor(HttpLoggingInterceptor().apply {
             if (BuildConfig.DEBUG) {
                 level = HttpLoggingInterceptor.Level.BASIC
@@ -32,7 +33,6 @@ class RemoteModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(ConstantsRemote.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .client(okHttpClient)
         .build()
 

@@ -4,22 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import xyz.flussigkatz.searchmovie.R
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
-import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
+import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
 import xyz.flussigkatz.searchmovie.databinding.FragmentUpcomingFilmsBinding
-import xyz.flussigkatz.searchmovie.view.MainActivity
 import xyz.flussigkatz.searchmovie.view.rv_adapters.FilmPagingAdapter
+import xyz.flussigkatz.searchmovie.view.rv_adapters.OnCheckboxClickListener
+import xyz.flussigkatz.searchmovie.view.rv_adapters.OnItemClickListener
+import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.UpcomingFilmsFragmentViewModel
 
 @ExperimentalPagingApi
@@ -45,33 +42,19 @@ class UpcomingFilmsFragment : Fragment() {
 
     private fun initRecycler() {
         binding.upcomingRecycler.apply {
-            filmsAdapter = FilmPagingAdapter(
-                object : FilmPagingAdapter.OnItemClickListener {
-                    override fun click(film: FilmUiModel) {
-                        Bundle().apply {
-                            putParcelable(DETAILS_FILM_KEY, film)
-                            (requireActivity() as MainActivity).navController.navigate(
-                                R.id.action_homeFragment_to_detailsFragment, this
-                            )
-                        }
-                    }
-                }, object : FilmPagingAdapter.OnCheckboxClickListener {
-                    override fun click(film: FilmUiModel, view: CheckBox) {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            view.isChecked.run { viewModel.changeFavoriteMark(film.id, this) }
-                        }
-                    }
-                }
-            )
-            adapter = filmsAdapter
-            layoutManager = LinearLayoutManager(context)
-        }
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.filmFlow.collectLatest {
-                withContext(Dispatchers.Main) {
-                    filmsAdapter.submitData(it)
+            val onItemClickListener = OnItemClickListener { requireContext().sendBroadcast(it) }
+            val onCheckboxClickListener = OnCheckboxClickListener { film, view ->
+                lifecycleScope.launch {
+                    view.isChecked = viewModel.changeFavoriteMark(film.id, view.isChecked)
                 }
             }
+            filmsAdapter = FilmPagingAdapter(onItemClickListener, onCheckboxClickListener)
+            adapter = filmsAdapter
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
+        }
+        lifecycleScope.launch {
+            viewModel.filmFlow.collectLatest { filmsAdapter.submitData(it) }
         }
     }
 }

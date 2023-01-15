@@ -5,9 +5,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import timber.log.Timber
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.BROWSING_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
@@ -31,6 +33,7 @@ class HistoryFragmentViewModel : ViewModel() {
         .distinctUntilChanged()
         .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS)
         .flatMapLatest { interactor.getFilms(BROWSING_CATEGORY, it.lowercase().trim()) }
+        .catch { Timber.d(it) }
         .cachedIn(viewModelScope)
 
     suspend fun changeFavoriteMark(id: Int, flag: Boolean) = interactor.changeFavoriteMark(id, flag)

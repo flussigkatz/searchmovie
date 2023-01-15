@@ -37,11 +37,15 @@ class FilmViewHolder(private val binding: FilmItemBinding) : RecyclerView.ViewHo
             clickListener.click(film)
         }
         Picasso.get()
-            .load(ConstantsApp.IMAGES_URL + ConstantsApp.IMAGE_FORMAT_W154 + film.posterId)
+            .load(ConstantsApp.IMAGES_URL + IMAGE_FORMAT_W154 + film.posterId)
             .fit()
             .centerCrop()
             .placeholder(R.drawable.ic_default_picture)
             .error(R.drawable.ic_default_picture)
             .into(binding.poster, callbackPicasso)
+    }
+
+    companion object {
+        private const val IMAGE_FORMAT_W154 = "w154"
     }
 }

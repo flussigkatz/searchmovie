@@ -27,7 +27,7 @@ android {
             keyPassword localProperties.getProperty("RELEASE_STORE_PASSWORD")
         }
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     buildFeatures {
@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId "xyz.flussigkatz.searchmovie"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -107,12 +107,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //Core-ktx
-    implementation core_ktx
+    implementation "androidx.core:core-ktx:1.9.0"
     implementation 'com.google.firebase:firebase-config-ktx:21.2.0'
 
     //Legacy
-    def legacy_support_version = "1.0.0"
-    implementation "androidx.legacy:legacy-support-v4:$legacy_support_version"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
     //Test
     testImplementation junit
@@ -123,10 +122,10 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
     //Material
-    implementation material
+    implementation "com.google.android.material:material:1.7.0"
 
     //AppCompat
-    implementation appcompat
+    implementation "androidx.appcompat:appcompat:1.5.1"
 
     //RecyclerView
     implementation "androidx.recyclerview:recyclerview:1.2.1"

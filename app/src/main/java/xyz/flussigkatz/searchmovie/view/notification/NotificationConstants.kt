@@ -1,7 +1,6 @@
 package xyz.flussigkatz.searchmovie.view.notification
 
 object NotificationConstants {
-
     const val NOTIFICATION_CHANNEL_ID = "Notification_Channel_1"
     const val BORING_KILLER_NOTIFICATION_ID = 456
     const val BORING_KILLER_NOTIFICATION_FILM_KEY = "boring_killer_notification_film_key"

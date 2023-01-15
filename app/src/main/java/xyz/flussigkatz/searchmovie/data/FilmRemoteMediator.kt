@@ -10,6 +10,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import xyz.flussigkatz.core_api.db.FilmDao
@@ -57,23 +61,29 @@ class FilmRemoteMediator @AssistedInject constructor(
         LoadType.REFRESH -> FIRST_PAGE
     }
 
-    private suspend fun fetchFilms(page: Int, category: String, query: String) = when (category) {
-        SEARCHED_CATEGORY -> {
-            if (query.isNotBlank()) retrofitService.getSearchedFilms(
-                API_KEY,
-                language,
-                query,
-                page
-            ).tmdbFilms
-            else listOf()
-        }
-        else -> retrofitService.getFilms(
-            category,
-            API_KEY,
-            language,
-            page
-        ).tmdbFilms
-    }
+    private suspend fun fetchFilms(page: Int, category: String, query: String) = flow {
+        emit(
+            when (category) {
+                SEARCHED_CATEGORY -> {
+                    retrofitService.getSearchedFilms(
+                        API_KEY,
+                        language,
+                        query,
+                        page
+                    ).tmdbFilms
+                }
+                else -> retrofitService.getFilms(
+                    category,
+                    API_KEY,
+                    language,
+                    page
+                ).tmdbFilms
+            }
+        )
+    }.catch {
+        Timber.d(it)
+        emit(listOf())
+    }.flowOn(Dispatchers.IO).singleOrNull().orEmpty()
 
     private suspend fun insertFilms(
         films: List<IFilm>,

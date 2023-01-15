@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.ExperimentalPagingApi
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.*
 import xyz.flussigkatz.remote_module.TmdbApi
@@ -27,73 +28,78 @@ class Interactor(
     private val preferences: PreferenceProvider,
 ) {
     private val language = Locale.getDefault().run { "$language-$country" }
+    private var favoriteListId = preferences.getMarkedFilmListId()
     private val mutableLiveEventMessage = MutableLiveData<Int>()
     private val eventMessage: LiveData<Int>
         get() = mutableLiveEventMessage
 
     init {
         GlobalScope.launch {
-            try {
-                checkFavoriteListIdStatus()
-                getMarkedFilmsFromApi()
-            } catch (e: Exception) {
-                Timber.d(e)
-            }
+            getMarkedFilmsFromApi()
         }
     }
 
     //region Api
     suspend fun getMarkedFilmsFromApi() {
-        withContext(Dispatchers.IO) {
-            retrofitService.getMarkedFilms(
-                list_id = preferences.getMarkedFilmListId(),
-                api_key = API_KEY,
-                language = language,
-            ).favoriteListItems.map { MarkedFilm(it, true) }.let {
-                repository.insertMarkedFilms(it)
-            }
+        checkFavoriteListIdStatus()
+        flow {
+            emit(
+                retrofitService.getMarkedFilms(
+                    list_id = favoriteListId,
+                    api_key = API_KEY,
+                    language = language,
+                )
+            )
+        }.map { favoriteMovieListDto ->
+            favoriteMovieListDto.favoriteListItems.map { MarkedFilm(it, true) }
+        }.catch { Timber.d(it) }.flowOn(Dispatchers.IO).collectLatest {
+            repository.insertMarkedFilms(it)
         }
     }
 
-    suspend fun getFilmMarkStatus(id: Int) = withContext(Dispatchers.IO) {
-        retrofitService.getFilmMarkStatus(
-            list_id = getFavoriteListIdFromPreferences(),
-            api_key = API_KEY,
-            movie_id = id
+    suspend fun getFilmMarkStatus(id: Int) = flow {
+        emit(
+            retrofitService.getFilmMarkStatus(
+                list_id = favoriteListId,
+                api_key = API_KEY,
+                movie_id = id
+            ).itemPresent
         )
-    }
+    }.catch { Timber.d(it) }.flowOn(Dispatchers.IO).singleOrNull() ?: false
 
-    private suspend fun getFilmListsFromApi() = retrofitService.getFilmLists(
-        account_id = ACCOUNT_ID,
-        api_key = API_KEY,
-        session_id = SESSION_ID,
-        language = language
-    )
+    private suspend fun getFilmListsFromApi() = flow {
+        emit(
+            retrofitService.getFilmLists(
+                account_id = ACCOUNT_ID,
+                api_key = API_KEY,
+                session_id = SESSION_ID,
+                language = language
+            ).results.find { it.name == FAVORITE_FILM_LIST_NAME }?.id
+        )
+    }.catch { Timber.d(it) }.flowOn(Dispatchers.IO).singleOrNull()
 
-    suspend fun changeFavoriteMark(id: Int, flag: Boolean) = withContext(Dispatchers.IO) {
-        try {
-            val res = if (flag) retrofitService.addFavoriteFilmToList(
-                list_id = getFavoriteListIdFromPreferences(),
+    suspend fun changeFavoriteMark(id: Int, flag: Boolean) = flow {
+        emit(
+            if (flag) retrofitService.addFavoriteFilmToList(
+                list_id = favoriteListId,
                 api_key = API_KEY,
                 session_id = SESSION_ID,
                 favoriteMovieInfo = FavoriteMovieInfoDto(mediaId = id)
             ).success
             else retrofitService.removeFavoriteFilmFromList(
-                list_id = getFavoriteListIdFromPreferences(),
+                list_id = favoriteListId,
                 api_key = API_KEY,
                 session_id = SESSION_ID,
                 favoriteMovieInfo = FavoriteMovieInfoDto(mediaId = id)
             ).success
-            if (res) getMarkedFilmsFromApi()
-            res
-        } catch (e: Exception) {
-            Timber.d(e)
-            false
-        }
-    }
+        )
+    }.catch {
+        Timber.d(it)
+        emit(!flag)
+    }.onEach { if (it) getMarkedFilmsFromApi() }.flowOn(Dispatchers.IO).singleOrNull() ?: !flag
 
-    private suspend fun createFavoriteFilmList() {
-        withContext(Dispatchers.IO) {
+    private suspend fun createFavoriteFilmList() = flow {
+        emit(
             retrofitService.createFavoriteFilmList(
                 api_key = API_KEY,
                 session_id = SESSION_ID,
@@ -102,12 +108,10 @@ class Interactor(
                     language = language,
                     name = FAVORITE_FILM_LIST_NAME
                 )
-            ).let {
-                if (it.success) preferences.setFavoriteFilmListId(it.listId)
-            }
-        }
-    }
-    //endregion
+            ).listId
+        )
+    }.catch { Timber.d(it) }.flowOn(Dispatchers.IO).singleOrNull()
+//endregion
 
     //region DB
     suspend fun insertBrowsingFilm(film: BrowsingFilm) {
@@ -117,7 +121,7 @@ class Interactor(
     }
 
     fun getFilms(category: String, query: String? = null) = repository.getFilms(category, query)
-    //endregion
+//endregion
 
     //region Preferences
     fun saveNightModeToPreferences(mode: Int) {
@@ -132,8 +136,7 @@ class Interactor(
 
     fun getSplashScreenStateFromPreferences() = preferences.getPlaySplashScreenState()
 
-    private fun getFavoriteListIdFromPreferences() = preferences.getMarkedFilmListId()
-    //endregion
+//endregion
 
     fun getEventMessageLiveData() = eventMessage
 
@@ -142,11 +145,10 @@ class Interactor(
     }
 
     private suspend fun checkFavoriteListIdStatus() {
-        withContext(Dispatchers.IO) {
-            if (preferences.getMarkedFilmListId() == DEFAULT_LIST_ID) {
-                getFilmListsFromApi().results.find { it.name == FAVORITE_FILM_LIST_NAME }?.let {
-                    preferences.setFavoriteFilmListId(it.id)
-                } ?: createFavoriteFilmList()
+        if (favoriteListId == DEFAULT_LIST_ID) {
+            getFilmListsFromApi() ?: createFavoriteFilmList()?.let {
+                favoriteListId = it
+                preferences.setFavoriteFilmListId(it)
             }
         }
     }

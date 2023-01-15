@@ -6,6 +6,8 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import timber.log.Timber
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
@@ -20,7 +22,9 @@ class PopularFilmsFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.inject(this)
-        filmFlow = interactor.getFilms(POPULAR_CATEGORY).cachedIn(viewModelScope)
+        filmFlow = interactor.getFilms(POPULAR_CATEGORY).catch {
+            Timber.d(it)
+        }.cachedIn(viewModelScope)
     }
 
     suspend fun changeFavoriteMark(id: Int, flag: Boolean) = interactor.changeFavoriteMark(id, flag)
