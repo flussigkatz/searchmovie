@@ -3,7 +3,6 @@ package xyz.flussigkatz.searchmovie.domain
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.ExperimentalPagingApi
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
@@ -21,7 +20,6 @@ import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
 import java.util.*
 
 @OptIn(DelicateCoroutinesApi::class)
-@ExperimentalPagingApi
 class Interactor(
     private val repository: MainRepository,
     private val retrofitService: TmdbApi,
@@ -121,6 +119,10 @@ class Interactor(
     }
 
     fun getFilms(category: String, query: String? = null) = repository.getFilms(category, query)
+
+    fun getIdsMarkedFilms() = repository.getIdsMarkedFilms()
+
+    fun getMarkedFilmById(id: Int) = repository.getMarkedFilmById(id)
 //endregion
 
     //region Preferences
@@ -130,11 +132,17 @@ class Interactor(
 
     fun getNightModeFromPreferences() = preferences.getNightMode()
 
-    fun setSplashScreenState(state: Boolean) {
-        preferences.setPlaySplashScreenState(state)
+    fun saveSplashScreenState(state: Boolean) {
+        preferences.savePlaySplashScreenState(state)
     }
 
     fun getSplashScreenStateFromPreferences() = preferences.getPlaySplashScreenState()
+
+    fun getDayOfYear() = preferences.getDayOfYear()
+
+    fun saveDayOfYear(day: Int) {
+        preferences.saveDayOfYear(day)
+    }
 
 //endregion
 
@@ -146,12 +154,13 @@ class Interactor(
 
     private suspend fun checkFavoriteListIdStatus() {
         if (favoriteListId == DEFAULT_LIST_ID) {
-            getFilmListsFromApi() ?: createFavoriteFilmList()?.let {
+            (getFilmListsFromApi() ?: createFavoriteFilmList())?.let {
                 favoriteListId = it
-                preferences.setFavoriteFilmListId(it)
+                preferences.saveFavoriteFilmListId(it)
             }
         }
     }
+
 
     companion object {
         private const val FAV_LIST_DESCRIPTION = "Favorite film list"

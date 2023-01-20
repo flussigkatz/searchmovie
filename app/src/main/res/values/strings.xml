@@ -20,8 +20,9 @@
     <string name="error_add_to_favorite_message">Error ,maybe later?</string>
     <string name="error_remove_from_favorite_message">Error ,maybe later?</string>
     <string name="open">Open</string>
+    <string name="cancel">Cancel</string>
     <string name="downloaded_to_gallery">Saved to the gallery.</string>
-    <string name="permission_storage">No permission. Please grant permission</string>
+    <string name="no_permission">No permission. Please grant permission</string>
     <string name="boring_killer_title">Boring?</string>
     <string name="boring_killer_text">Watch </string>
     <string name="boring_killer_button_text">Do not show again</string>

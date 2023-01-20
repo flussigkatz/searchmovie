@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -18,8 +17,6 @@ import xyz.flussigkatz.searchmovie.view.rv_adapters.OnCheckboxClickListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.OnItemClickListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.SpacingItemDecoration
 import xyz.flussigkatz.searchmovie.viewmodel.PopularFilmsFragmentViewModel
-
-@ExperimentalPagingApi
 
 class PopularFilmsFragment : Fragment() {
     private lateinit var binding: FragmentPopularFilmsBinding

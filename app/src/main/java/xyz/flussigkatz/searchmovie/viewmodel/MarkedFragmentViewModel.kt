@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -21,11 +20,8 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLIS
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
-@ExperimentalPagingApi
 class MarkedFragmentViewModel : ViewModel() {
-    @Inject
-    lateinit var interactor: Interactor
+    @Inject lateinit var interactor: Interactor
     private val searchQueryLiveData = MutableLiveData(EMPTY_QUERY)
 
     init {
@@ -33,7 +29,7 @@ class MarkedFragmentViewModel : ViewModel() {
         getMarkedFilmsFromApi()
     }
 
-    @OptIn(FlowPreview::class)
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val filmFlow = searchQueryLiveData.asFlow()
         .distinctUntilChanged()
         .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS)

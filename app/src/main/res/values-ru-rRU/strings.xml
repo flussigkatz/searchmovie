@@ -20,8 +20,9 @@
     <string name="error_add_to_favorite_message">Ошибка добавления, может позже?</string>
     <string name="error_remove_from_favorite_message">Ошибка удаления, может позже?</string>
     <string name="open">Открыть</string>
+    <string name="cancel">Отмена</string>
     <string name="downloaded_to_gallery">Сохранено в галерею.</string>
-    <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение.</string>
+    <string name="no_permission">Нет разрешения. Пожалуйста, предоставьте разрешение.</string>
     <string name="boring_killer_title">Скучно?</string>
     <string name="boring_killer_text">Посмотри </string>
     <string name="boring_killer_button_text">Больше не показывать</string>

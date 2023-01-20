@@ -2,7 +2,6 @@ package xyz.flussigkatz.searchmovie.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.Flow
@@ -14,10 +13,8 @@ import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-@ExperimentalPagingApi
 class TopRatedFilmsFragmentViewModel : ViewModel() {
-    @Inject
-    lateinit var interactor: Interactor
+    @Inject lateinit var interactor: Interactor
     val filmFlow: Flow<PagingData<FilmUiModel>>
 
     init {

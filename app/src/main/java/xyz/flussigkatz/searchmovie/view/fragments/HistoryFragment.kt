@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
@@ -21,8 +19,6 @@ import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.HistoryFragmentViewModel
 
-@ExperimentalCoroutinesApi
-@ExperimentalPagingApi
 class HistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var filmsAdapter: FilmPagingAdapter

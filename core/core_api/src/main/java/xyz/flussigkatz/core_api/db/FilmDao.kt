@@ -98,6 +98,9 @@ interface FilmDao {
     @Query("SELECT id FROM marked_films")
     fun getIdsMarkedFilms(): List<Int>
 
+    @Query("SELECT * FROM marked_films WHERE id LIKE :id")
+    fun getMarkedFilmById(id: Int): MarkedFilm
+
     @Query("SELECT * FROM marked_films WHERE title LIKE '%' || :query || '%'")
     fun getSearchedMarkedFilm(query: String): PagingSource<Int, MarkedFilm>
 

@@ -1,7 +1,6 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
 import androidx.lifecycle.*
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -17,18 +16,15 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLIS
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
-@ExperimentalPagingApi
 class HistoryFragmentViewModel : ViewModel() {
-    @Inject
-    lateinit var interactor: Interactor
+    @Inject lateinit var interactor: Interactor
     private val searchQueryLiveData = MutableLiveData(EMPTY_QUERY)
 
     init {
         App.instance.dagger.inject(this)
     }
 
-    @OptIn(FlowPreview::class)
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val filmFlow = searchQueryLiveData.asFlow()
         .distinctUntilChanged()
         .debounce(SEARCH_DEBOUNCE_TIME_MILLISECONDS)

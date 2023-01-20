@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
@@ -43,8 +42,6 @@ import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
 
-@ExperimentalCoroutinesApi
-@ExperimentalPagingApi
 class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmPagingAdapter
     private lateinit var binding: FragmentHomeBinding

@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
-import androidx.paging.ExperimentalPagingApi
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
 import xyz.flussigkatz.searchmovie.App
@@ -15,10 +14,8 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@ExperimentalPagingApi
 class DetailsFragmentViewModel : ViewModel() {
-    @Inject
-    lateinit var interactor: Interactor
+    @Inject lateinit var interactor: Interactor
 
     init {
         App.instance.dagger.inject(this)
