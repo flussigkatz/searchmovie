@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
@@ -30,8 +29,6 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.DetailsFragmentViewModel
-
-@ExperimentalPagingApi
 
 class DetailsFragment : Fragment() {
     private lateinit var binding: FragmentDetailsBinding
@@ -49,7 +46,7 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initFilm(arguments?.get(DETAILS_FILM_KEY) as FilmUiModel)
+        arguments?.getParcelable<FilmUiModel>(DETAILS_FILM_KEY)?.let { initFilm(it)}
         initNavigationIcon()
     }
 
@@ -91,11 +88,11 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun checkPermission() =
-        checkSelfPermission(requireContext(), WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED
-
-    private fun requestPermission() {
-        requestPermissions(requireActivity(), arrayOf(WRITE_EXTERNAL_STORAGE), REQUEST_CODE)
+    private fun checkPermission() {
+        if (checkSelfPermission(requireContext(), WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
+            Toast.makeText(requireContext(), R.string.no_permission, Toast.LENGTH_SHORT).show()
+            requestPermissions(requireActivity(), arrayOf(WRITE_EXTERNAL_STORAGE), REQUEST_CODE)
+        }
     }
 
     private fun saveToGallery(bitmap: Bitmap, film: FilmUiModel) {
@@ -141,13 +138,7 @@ class DetailsFragment : Fragment() {
     private fun String.handleSingleQuote() = this.replace("'", "")
 
     private fun performAsyncLoadOfPoster(film: FilmUiModel) {
-        if (!checkPermission()) {
-            Toast.makeText(
-                requireContext(), R.string.permission_storage, Toast.LENGTH_SHORT
-            ).show()
-            requestPermission()
-            return
-        }
+        checkPermission()
         lifecycleScope.launch(Dispatchers.Main) {
             binding.detailsProgressBar.isVisible = true
             val job = lifecycleScope.async(Dispatchers.IO) {

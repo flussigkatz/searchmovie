@@ -4,15 +4,12 @@ import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.ExperimentalPagingApi
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-@ExperimentalPagingApi
 class SettingsFragmentViewModel : ViewModel() {
-    @Inject
-    lateinit var interactor: Interactor
+    @Inject lateinit var interactor: Interactor
     private val mutableThemePropertyLifeData = MutableLiveData<Int>()
     val themePropertyLifeData: LiveData<Int>
         get() = mutableThemePropertyLifeData
@@ -43,7 +40,7 @@ class SettingsFragmentViewModel : ViewModel() {
     }
 
     fun putSplashScreenProperty(state: Boolean) {
-        interactor.setSplashScreenState(state)
+        interactor.saveSplashScreenState(state)
         getSplashScreenState()
     }
 }

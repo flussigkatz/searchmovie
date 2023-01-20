@@ -2,15 +2,12 @@ package xyz.flussigkatz.searchmovie.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.ExperimentalPagingApi
 import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-@ExperimentalPagingApi
 class MainActivityViewModel : ViewModel() {
-    @Inject
-    lateinit var interactor: Interactor
+    @Inject lateinit var interactor: Interactor
     val eventMessage: LiveData<Int>
 
     init {
@@ -20,5 +17,15 @@ class MainActivityViewModel : ViewModel() {
 
     fun getSplashScreenStateStatus() = interactor.getSplashScreenStateFromPreferences()
 
+    fun getIdsMarkedFilms() = interactor.getIdsMarkedFilms()
+
+    fun getMarkedFilmById(id: Int) = interactor.getMarkedFilmById(id)
+
     fun getNightModeStatus() = interactor.getNightModeFromPreferences()
+
+    fun saveDayOfYear(day: Int) {
+        interactor.saveDayOfYear(day)
+    }
+
+    fun getDayOfYear() = interactor.getDayOfYear()
 }

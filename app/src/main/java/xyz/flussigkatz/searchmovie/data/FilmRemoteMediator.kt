@@ -27,7 +27,7 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY
 import java.util.*
 
-@ExperimentalPagingApi
+@OptIn(ExperimentalPagingApi::class)
 class FilmRemoteMediator @AssistedInject constructor(
     private val filmDao: FilmDao,
     private val retrofitService: TmdbApi,
@@ -65,19 +65,9 @@ class FilmRemoteMediator @AssistedInject constructor(
         emit(
             when (category) {
                 SEARCHED_CATEGORY -> {
-                    retrofitService.getSearchedFilms(
-                        API_KEY,
-                        language,
-                        query,
-                        page
-                    ).tmdbFilms
+                    retrofitService.getSearchedFilms(API_KEY, language, query, page).tmdbFilms
                 }
-                else -> retrofitService.getFilms(
-                    category,
-                    API_KEY,
-                    language,
-                    page
-                ).tmdbFilms
+                else -> retrofitService.getFilms(category, API_KEY, language, page).tmdbFilms
             }
         )
     }.catch {

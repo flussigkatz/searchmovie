@@ -13,7 +13,6 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 
-@ExperimentalPagingApi
 class MainRepository(
     private val filmDao: FilmDao,
     private val remoteMediatorFactory: FilmRemoteMediator.Factory
@@ -26,6 +25,7 @@ class MainRepository(
         filmDao.insertMarkedFilms(films)
     }
 
+    @OptIn(ExperimentalPagingApi::class)
     fun getFilms(category: String, query: String?) = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
@@ -33,6 +33,7 @@ class MainRepository(
         ),
         remoteMediator = getRemoteMediator(category, query),
         pagingSourceFactory = {
+            @Suppress("UNCHECKED_CAST")
             when (category) {
                 POPULAR_CATEGORY -> filmDao.getPopularFilms()
                 TOP_RATED_CATEGORY -> filmDao.getTopRatedFilms()
@@ -46,6 +47,10 @@ class MainRepository(
 
         }
     ).flow.map { pagingData -> pagingData.map { FilmUiModel(it) } }
+
+    fun getIdsMarkedFilms() = filmDao.getIdsMarkedFilms()
+
+    fun getMarkedFilmById(id: Int) = filmDao.getMarkedFilmById(id)
 
     private fun getRemoteMediator(category: String, query: String?) = when(category) {
         MARKED_CATEGORY, BROWSING_CATEGORY -> null

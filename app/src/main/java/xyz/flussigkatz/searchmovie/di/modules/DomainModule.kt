@@ -1,7 +1,6 @@
 package xyz.flussigkatz.searchmovie.di.modules
 
 import android.content.Context
-import androidx.paging.ExperimentalPagingApi
 import dagger.Module
 import dagger.Provides
 import xyz.flussigkatz.core_api.db.FilmDao
@@ -13,7 +12,6 @@ import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Singleton
 
 @Module
-@ExperimentalPagingApi
 class DomainModule {
 
     @Singleton

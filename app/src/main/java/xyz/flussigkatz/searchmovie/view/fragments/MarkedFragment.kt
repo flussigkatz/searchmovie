@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.*
@@ -26,8 +25,6 @@ import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.MarkedFragmentViewModel
 
-@ExperimentalCoroutinesApi
-@ExperimentalPagingApi
 class MarkedFragment : Fragment() {
     private lateinit var filmsAdapter: FilmPagingAdapter
     private lateinit var binding: FragmentMarkedBinding

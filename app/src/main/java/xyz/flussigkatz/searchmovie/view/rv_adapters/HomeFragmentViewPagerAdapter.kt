@@ -1,7 +1,6 @@
 package xyz.flussigkatz.searchmovie.view.rv_adapters
 
 import androidx.fragment.app.Fragment
-import androidx.paging.ExperimentalPagingApi
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.POPULAR_CATEGORY_TAB_NUMBER
@@ -12,7 +11,6 @@ import xyz.flussigkatz.searchmovie.view.fragments.PopularFilmsFragment
 import xyz.flussigkatz.searchmovie.view.fragments.TopRatedFilmsFragment
 import xyz.flussigkatz.searchmovie.view.fragments.UpcomingFilmsFragment
 
-@ExperimentalPagingApi
 class HomeFragmentViewPagerAdapter(parent: Fragment) : FragmentStateAdapter(parent) {
 
     override fun getItemCount() = HOME_VIEW_PAGER_TAB_COUNT
