@@ -1,28 +1,23 @@
 package xyz.flussigkatz.searchmovie.view.notification
 
-import android.Manifest
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.*
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.view.MainActivity
-import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants.BORING_KILLER_NOTIFICATION_ID
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants.ACTION_BORING_KILLER_NOTIFICATION_FILM
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants.ACTION_BORING_KILLER_NOTIFICATION_OFF
+import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants.BORING_KILLER_NOTIFICATION_ID
 
 
 object NotificationHelper {

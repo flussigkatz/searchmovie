@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +15,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.LOAD_STATE_DEBOUNCE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
 import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
@@ -59,8 +56,7 @@ class MarkedFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
             addOnScrollListener(OnScrollListener {
-                hideSoftKeyboard(it)
-                binding.root.clearFocus()
+                binding.markedSearchView.clearFocus()
             })
         }
         lifecycleScope.launch {
@@ -70,8 +66,9 @@ class MarkedFragment : Fragment() {
 
     private fun initSearchView() {
         with(binding.markedSearchView) {
-            setOnFocusChangeListener { v, hasFocus ->
-                if (!hasFocus) hideSoftKeyboard(v)
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
+                if (hasFocus) clearFocus()
+                setOnQueryTextFocusChangeListener(null)
             }
             setOnQueryTextListener(OnQueryTextListener { query -> viewModel.setSearchQuery(query) })
         }
@@ -89,10 +86,5 @@ class MarkedFragment : Fragment() {
                 }.launchIn(lifecycleScope)
             }
         }
-    }
-
-    private fun hideSoftKeyboard(view: View) {
-        val inputMethodManager = getSystemService(requireContext(), InputMethodManager::class.java)
-        inputMethodManager?.hideSoftInputFromWindow(view.windowToken, HIDE_KEYBOARD_FLAG)
     }
 }

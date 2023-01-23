@@ -9,9 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
-import android.view.inputmethod.InputMethodManager
 import androidx.core.animation.doOnEnd
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -26,7 +24,6 @@ import kotlinx.coroutines.flow.onEach
 import xyz.flussigkatz.searchmovie.R.dimen.home_recycler_view_start_height
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.HALF_RATIO
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.LOAD_STATE_DEBOUNCE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_NUMBER
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.NOW_PLAYING_CATEGORY_TAB_TITLE
@@ -82,8 +79,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
             addOnScrollListener(OnScrollListener {
-                hideSoftKeyboard(it)
-                binding.root.clearFocus()
+                binding.homeSearchView.clearFocus()
             })
         }
         lifecycleScope.launch {
@@ -127,16 +123,16 @@ class HomeFragment : Fragment() {
             interpolator = DecelerateInterpolator()
         }
         with(binding.homeSearchView) {
-            setOnFocusChangeListener { v, hasFocus ->
-                if (!hasFocus) hideSoftKeyboard(v)
-            }
-            setOnQueryTextFocusChangeListener { _, hasFocus ->
-                if (hasFocus && recyclerCollapsed) anim.start()
-                else if (
-                    query.isNullOrBlank() &&
-                    !recyclerCollapsed && !hasFocus
-                ) {
-                    anim.reverse()
+            setOnQueryTextFocusChangeListener { _, _hasFocus ->
+                if (_hasFocus) clearFocus()
+                setOnQueryTextFocusChangeListener { _, hasFocus ->
+                    if (hasFocus && recyclerCollapsed) anim.start()
+                    else if (
+                        query.isNullOrBlank() &&
+                        !recyclerCollapsed && !hasFocus
+                    ) {
+                        anim.reverse()
+                    }
                 }
             }
             setOnQueryTextListener(OnQueryTextListener { query -> viewModel.setSearchQuery(query) })
@@ -156,11 +152,6 @@ class HomeFragment : Fragment() {
                 NOW_PLAYING_CATEGORY_TAB_NUMBER -> tab.text = NOW_PLAYING_CATEGORY_TAB_TITLE
             }
         }.attach()
-    }
-
-    private fun hideSoftKeyboard(view: View) {
-        val inputMethodManager = getSystemService(requireContext(), InputMethodManager::class.java)
-        inputMethodManager?.hideSoftInputFromWindow(view.windowToken, HIDE_KEYBOARD_FLAG)
     }
 
     companion object {

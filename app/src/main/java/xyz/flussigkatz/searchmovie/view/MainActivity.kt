@@ -202,6 +202,7 @@ class MainActivity : AppCompatActivity() {
     private fun initNavigation() {
         navController = Navigation.findNavController(this, nav_host_fragment)
         binding.mainBottomToolbar.setOnItemSelectedListener {
+            binding.root.clearFocus()
             navigate(it.itemId)
             true
         }
