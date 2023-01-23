@@ -33,5 +33,7 @@
     <string name="details_fab_favorite_description">Добавить фильм в избранное</string>
     <string name="details_fab_download_poster_description">Скачать постер фильма</string>
     <string name="film_item_poster_description">Постер фильма</string>
+    <string name="query_hint">Введите поисковый запрос здесь…</string>
+
 
 </resources>

@@ -9,7 +9,6 @@
     tools:context=".view.fragments.HomeFragment"
     tools:visibility="visible">
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/home_appbar"
         android:layout_width="match_parent"
@@ -32,11 +31,12 @@
                 android:layout_height="@dimen/home_search_view_height"
                 android:queryHint="Search"
                 android:theme="@style/SearchViewTextStyle"
-                app:iconifiedByDefault="false" />
-
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/query_hint"
+                app:searchHintIcon="@null"
+                app:searchIcon="@null" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -70,6 +70,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

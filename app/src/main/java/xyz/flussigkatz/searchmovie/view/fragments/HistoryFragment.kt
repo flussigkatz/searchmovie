@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import xyz.flussigkatz.searchmovie.data.ConstantsApp.HIDE_KEYBOARD_FLAG
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
 import xyz.flussigkatz.searchmovie.databinding.FragmentHistoryBinding
 import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
@@ -51,8 +48,7 @@ class HistoryFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SpacingItemDecoration(SPACING_ITEM_DECORATION_IN_DP))
             addOnScrollListener(OnScrollListener {
-                hideSoftKeyboard(it)
-                binding.root.clearFocus()
+                binding.historySearchView.clearFocus()
             })
         }
         lifecycleScope.launch {
@@ -62,15 +58,11 @@ class HistoryFragment : Fragment() {
 
     private fun initSearchView() {
         with(binding.historySearchView) {
-            setOnFocusChangeListener { v, hasFocus ->
-                if (!hasFocus) hideSoftKeyboard(v)
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
+                if (hasFocus) clearFocus()
+                setOnQueryTextFocusChangeListener(null)
             }
             setOnQueryTextListener(OnQueryTextListener { query -> viewModel.setSearchQuery(query) })
         }
-    }
-
-    private fun hideSoftKeyboard(view: View) {
-        val inputMethodManager = getSystemService(requireContext(), InputMethodManager::class.java)
-        inputMethodManager?.hideSoftInputFromWindow(view.windowToken, HIDE_KEYBOARD_FLAG)
     }
 }
