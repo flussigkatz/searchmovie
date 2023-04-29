@@ -16,24 +16,29 @@ import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DETAILS_FILM_KEY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.IMAGES_URL
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
 import xyz.flussigkatz.searchmovie.databinding.FragmentDetailsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.DetailsFragmentViewModel
+import javax.inject.Inject
 
 class DetailsFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: DetailsFragmentViewModel by viewModels { viewModelFactory }
     private lateinit var binding: FragmentDetailsBinding
     private val favoriteMarkState = MutableLiveData<Boolean>()
-    private val viewModel: DetailsFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +51,12 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getParcelable<FilmUiModel>(DETAILS_FILM_KEY)?.let { initFilm(it)}
+        App.appComponent.inject(this)
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(DETAILS_FILM_KEY, FilmUiModel::class.java)
+                ?.let { initFilm(it) }
+        } else arguments?.getParcelable<FilmUiModel>(DETAILS_FILM_KEY)?.let { initFilm(it) }
         initNavigationIcon()
     }
 

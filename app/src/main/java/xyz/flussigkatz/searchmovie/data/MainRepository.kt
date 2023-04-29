@@ -12,8 +12,11 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCHED_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.TOP_RATED_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.UPCOMING_CATEGORY
 import xyz.flussigkatz.searchmovie.data.model.FilmUiModel
+import xyz.flussigkatz.searchmovie.di.AppScope
+import javax.inject.Inject
 
-class MainRepository(
+@AppScope
+class MainRepository @Inject constructor(
     private val filmDao: FilmDao,
     private val remoteMediatorFactory: FilmRemoteMediator.Factory
 ) {

@@ -13,21 +13,17 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.MARKED_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
+import xyz.flussigkatz.searchmovie.di.AppScope
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-class MarkedFragmentViewModel : ViewModel() {
-    @Inject lateinit var interactor: Interactor
+@AppScope
+class MarkedFragmentViewModel @Inject constructor(private val interactor: Interactor) :
+    ViewModel() {
     private val searchQueryLiveData = MutableLiveData(EMPTY_QUERY)
-
-    init {
-        App.instance.dagger.inject(this)
-        getMarkedFilmsFromApi()
-    }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val filmFlow = searchQueryLiveData.asFlow()

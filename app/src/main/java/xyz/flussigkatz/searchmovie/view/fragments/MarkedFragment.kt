@@ -5,7 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.LOAD_STATE_DEBOUNCE
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
@@ -21,12 +23,14 @@ import xyz.flussigkatz.searchmovie.databinding.FragmentMarkedBinding
 import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.MarkedFragmentViewModel
+import javax.inject.Inject
 
 class MarkedFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: MarkedFragmentViewModel by viewModels { viewModelFactory }
     private lateinit var filmsAdapter: FilmPagingAdapter
     private lateinit var binding: FragmentMarkedBinding
-    private val viewModel: MarkedFragmentViewModel by activityViewModels()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +41,7 @@ class MarkedFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        App.appComponent.inject(this)
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
         initPullToRefresh()
@@ -46,7 +51,7 @@ class MarkedFragment : Fragment() {
     private fun initRecycler() {
         binding.markedRecycler.apply {
             val onItemClickListener = OnItemClickListener { requireContext().sendBroadcast(it) }
-            val onCheckboxClickListener = OnCheckboxClickListener{ film, view ->
+            val onCheckboxClickListener = OnCheckboxClickListener { film, view ->
                 lifecycleScope.launch {
                     view.isChecked = viewModel.changeFavoriteMark(film.id, view.isChecked)
                 }

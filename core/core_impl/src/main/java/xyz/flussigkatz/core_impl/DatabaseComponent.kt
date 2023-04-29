@@ -1,13 +1,17 @@
 package xyz.flussigkatz.core_impl
 
 import dagger.Component
-import xyz.flussigkatz.core_api.AppProvider
+import xyz.flussigkatz.core_api.ContextProvider
 import xyz.flussigkatz.core_api.db.DatabaseProvider
-import javax.inject.Singleton
 
-@Singleton
+@DatabaseComponentScope
 @Component(
-    dependencies = [AppProvider::class],
+    dependencies = [ContextProvider::class],
     modules = [DatabaseModule::class]
 )
-interface DatabaseComponent: DatabaseProvider
+interface DatabaseComponent: DatabaseProvider {
+    @Component.Factory
+    interface Factory {
+        fun create(contextProvider: ContextProvider): DatabaseComponent
+    }
+}

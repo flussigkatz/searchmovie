@@ -1,31 +1,35 @@
 package xyz.flussigkatz.searchmovie.di
 
-import android.app.Application
-import android.content.Context
-import dagger.BindsInstance
 import dagger.Component
-import xyz.flussigkatz.core_api.AppProvider
-import javax.inject.Singleton
+import xyz.flussigkatz.core_api.ContextProvider
+import xyz.flussigkatz.core_api.db.DatabaseProvider
+import xyz.flussigkatz.remote_module.RemoteProvider
+import xyz.flussigkatz.searchmovie.view.MainActivity
+import xyz.flussigkatz.searchmovie.view.fragments.*
 
-@Singleton
-@Component
-interface AppComponent : AppProvider {
-    companion object {
-        private var appComponent: AppProvider? = null
-        fun create(application: Application): AppProvider {
-            return appComponent ?: DaggerAppComponent
-                .builder()
-                .application(application.applicationContext)
-                .build().also {
-                    appComponent = it
-                }
-        }
-    }
+@AppScope
+@Component(
+    dependencies = [ContextProvider::class, RemoteProvider::class, DatabaseProvider::class],
+    modules = [ViewModelModule::class]
+)
+interface AppComponent {
+    fun inject(mainActivity: MainActivity)
+    fun inject(homeFragment: HomeFragment)
+    fun inject(markedFragment: MarkedFragment)
+    fun inject(settingsFragment: SettingsFragment)
+    fun inject(detailsFragment: DetailsFragment)
+    fun inject(historyFragment: HistoryFragment)
+    fun inject(popularFilmsFragment: PopularFilmsFragment)
+    fun inject(topRatedFilmsFragment: TopRatedFilmsFragment)
+    fun inject(upcomingFilmsFragment: UpcomingFilmsFragment)
+    fun inject(nowPlayingFilmsFragment: NowPlayingFilmsFragment)
 
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(context: Context): Builder
-        fun build(): AppComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+            contextProvider: ContextProvider,
+            remoteProvider: RemoteProvider,
+            databaseProvider: DatabaseProvider,
+        ): AppComponent
     }
 }

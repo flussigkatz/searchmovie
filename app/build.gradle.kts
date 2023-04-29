@@ -26,7 +26,7 @@ android {
         keyPassword = localProperties["RELEASE_STORE_PASSWORD"] as String
     }
     compileSdk = 33
-    buildToolsVersion = "30.0.3"
+    buildToolsVersion = "33.0.2"
 
     buildFeatures {
         viewBinding = true
@@ -60,10 +60,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 
     val api = "api"
@@ -102,7 +98,7 @@ android {
     val dagger2Compiler: String by extra
     dependencies {
         //Core-ktx
-        implementation("androidx.core:core-ktx:1.9.0")
+        implementation("androidx.core:core-ktx:1.10.0")
 
         //Legacy
         implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -116,13 +112,13 @@ android {
         implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
         //Material
-        implementation("com.google.android.material:material:1.7.0")
+        implementation("com.google.android.material:material:1.8.0")
 
         //AppCompat
-        implementation("androidx.appcompat:appcompat:1.6.0")
+        implementation("androidx.appcompat:appcompat:1.6.1")
 
         //RecyclerView
-        implementation("androidx.recyclerview:recyclerview:1.2.1")
+        implementation("androidx.recyclerview:recyclerview:1.3.0")
 
         //Lottie
         implementation("com.airbnb.android:lottie:4.1.0")
@@ -140,10 +136,10 @@ android {
         kapt(dagger2Compiler)
 
         //Fragment-ktx
-        implementation("androidx.fragment:fragment-ktx:1.5.5")
+        implementation("androidx.fragment:fragment-ktx:1.5.7")
 
         //Coroutines
-        val coroutinesVersion = "1.6.1"
+        val coroutinesVersion = "1.6.4"
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
@@ -153,7 +149,7 @@ android {
         //Firebase
         implementation(platform("com.google.firebase:firebase-bom:29.0.3"))
         implementation("com.google.firebase:firebase-analytics-ktx")
-        implementation("com.google.firebase:firebase-config-ktx:21.2.0")
+        implementation("com.google.firebase:firebase-config-ktx:21.3.0")
 
         //Timber
         implementation("com.jakewharton.timber:timber:5.0.1")
@@ -161,6 +157,5 @@ android {
         //Paging
         val pagingVersion = "3.1.1"
         implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
-        implementation("androidx.paging:paging-rxjava3:$pagingVersion")
     }
 }

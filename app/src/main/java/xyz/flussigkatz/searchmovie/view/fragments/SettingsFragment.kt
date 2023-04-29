@@ -1,20 +1,24 @@
 package xyz.flussigkatz.searchmovie.view.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate.*
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.databinding.FragmentSettingsBinding
 import xyz.flussigkatz.searchmovie.viewmodel.SettingsFragmentViewModel
-import java.lang.IllegalArgumentException
+import javax.inject.Inject
 
 class SettingsFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: SettingsFragmentViewModel by viewModels { viewModelFactory }
     private lateinit var binding: FragmentSettingsBinding
-    private val viewModel: SettingsFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +30,7 @@ class SettingsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        App.appComponent.inject(this)
         super.onViewCreated(view, savedInstanceState)
         viewModel.themePropertyLifeData.observe(viewLifecycleOwner) {
             when (it) {
