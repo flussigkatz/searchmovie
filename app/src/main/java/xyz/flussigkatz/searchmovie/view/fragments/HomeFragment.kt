@@ -11,7 +11,8 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R.dimen.home_recycler_view_start_height
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.HALF_RATIO
@@ -38,11 +40,14 @@ import xyz.flussigkatz.searchmovie.databinding.FragmentHomeBinding
 import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.HomeFragmentViewModel
+import javax.inject.Inject
 
 class HomeFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: HomeFragmentViewModel by viewModels { viewModelFactory }
     private lateinit var filmsAdapter: FilmPagingAdapter
     private lateinit var binding: FragmentHomeBinding
-    private val viewModel: HomeFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +59,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        App.appComponent.inject(this)
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
         initPullToRefresh()

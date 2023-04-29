@@ -1,6 +1,9 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -9,20 +12,17 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
-import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.BROWSING_CATEGORY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.EMPTY_QUERY
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SEARCH_DEBOUNCE_TIME_MILLISECONDS
+import xyz.flussigkatz.searchmovie.di.AppScope
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-class HistoryFragmentViewModel : ViewModel() {
-    @Inject lateinit var interactor: Interactor
+@AppScope
+class HistoryFragmentViewModel @Inject constructor(private val interactor: Interactor) :
+    ViewModel() {
     private val searchQueryLiveData = MutableLiveData(EMPTY_QUERY)
-
-    init {
-        App.instance.dagger.inject(this)
-    }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val filmFlow = searchQueryLiveData.asFlow()

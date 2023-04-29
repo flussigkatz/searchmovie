@@ -1,19 +1,13 @@
 package xyz.flussigkatz.searchmovie.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import xyz.flussigkatz.searchmovie.App
+import xyz.flussigkatz.searchmovie.di.AppScope
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-class MainActivityViewModel : ViewModel() {
-    @Inject lateinit var interactor: Interactor
-    val eventMessage: LiveData<Int>
-
-    init {
-        App.instance.dagger.inject(this)
-        eventMessage = interactor.getEventMessageLiveData()
-    }
+@AppScope
+class MainActivityViewModel @Inject constructor(private val interactor: Interactor) : ViewModel() {
+    val eventMessage = interactor.getEventMessageLiveData()
 
     fun getSplashScreenStateStatus() = interactor.getSplashScreenStateFromPreferences()
 

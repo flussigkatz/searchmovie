@@ -6,9 +6,15 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.appcompat.app.AppCompatDelegate.getDefaultNightMode
 import androidx.core.content.edit
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.DEFAULT_LIST_ID
+import xyz.flussigkatz.searchmovie.di.AppScope
+import javax.inject.Inject
 
-class PreferenceProvider(appContext: Context) {
-    private val preferences = appContext.getSharedPreferences(PREFERENCES_SETTINGS, MODE_PRIVATE)
+@AppScope
+class PreferenceProvider @Inject constructor(context: Context) {
+    private val preferences = context.applicationContext.getSharedPreferences(
+        PREFERENCES_SETTINGS,
+        MODE_PRIVATE
+    )
 
     init {
         if (preferences.getBoolean(KEY_FIRST_LAUNCH, false)) {

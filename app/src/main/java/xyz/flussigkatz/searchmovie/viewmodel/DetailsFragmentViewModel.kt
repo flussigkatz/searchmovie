@@ -6,7 +6,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
 import xyz.flussigkatz.core_api.entity.BrowsingFilm
-import xyz.flussigkatz.searchmovie.App
+import xyz.flussigkatz.searchmovie.di.AppScope
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import java.io.IOException
 import java.net.URL
@@ -14,12 +14,9 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class DetailsFragmentViewModel : ViewModel() {
-    @Inject lateinit var interactor: Interactor
-
-    init {
-        App.instance.dagger.inject(this)
-    }
+@AppScope
+class DetailsFragmentViewModel @Inject constructor(private val interactor: Interactor) :
+    ViewModel() {
 
     suspend fun loadFilmPoster(urlAddress: String): Bitmap? {
         return suspendCoroutine {

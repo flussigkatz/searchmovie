@@ -5,21 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.SPACING_ITEM_DECORATION_IN_DP
 import xyz.flussigkatz.searchmovie.databinding.FragmentHistoryBinding
 import xyz.flussigkatz.searchmovie.util.OnQueryTextListener
 import xyz.flussigkatz.searchmovie.view.rv_adapters.*
 import xyz.flussigkatz.searchmovie.viewmodel.HistoryFragmentViewModel
+import javax.inject.Inject
 
 class HistoryFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: HistoryFragmentViewModel by viewModels { viewModelFactory }
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var filmsAdapter: FilmPagingAdapter
-    private val viewModel: HistoryFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +35,7 @@ class HistoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        App.appComponent.inject(this)
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
         initSearchView()

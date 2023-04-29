@@ -32,12 +32,14 @@ import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import xyz.flussigkatz.searchmovie.App
 import xyz.flussigkatz.searchmovie.R
 import xyz.flussigkatz.searchmovie.R.id.*
 import xyz.flussigkatz.searchmovie.SearchMovieReceiver
@@ -55,17 +57,20 @@ import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants.NOTIF
 import xyz.flussigkatz.searchmovie.view.notification.NotificationConstants.PENDINGINTENT_ALARM_REQUEST_CODE
 import xyz.flussigkatz.searchmovie.viewmodel.MainActivityViewModel
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.hypot
 
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainActivityViewModel by viewModels()
     private val receiver = Receiver()
     private lateinit var navController: NavController
     private var backPressedTime = INITIAL_TIME
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        App.appComponent.inject(this)
         AppCompatDelegate.setDefaultNightMode(viewModel.getNightModeStatus())
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)

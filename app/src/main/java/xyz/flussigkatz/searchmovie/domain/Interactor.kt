@@ -17,10 +17,13 @@ import xyz.flussigkatz.searchmovie.data.ConstantsApp.DEFAULT_LIST_ID
 import xyz.flussigkatz.searchmovie.data.ConstantsApp.FAVORITE_FILM_LIST_NAME
 import xyz.flussigkatz.searchmovie.data.MainRepository
 import xyz.flussigkatz.searchmovie.data.preferences.PreferenceProvider
+import xyz.flussigkatz.searchmovie.di.AppScope
 import java.util.*
+import javax.inject.Inject
 
+@AppScope
 @OptIn(DelicateCoroutinesApi::class)
-class Interactor(
+class Interactor @Inject constructor(
     private val repository: MainRepository,
     private val retrofitService: TmdbApi,
     private val preferences: PreferenceProvider,

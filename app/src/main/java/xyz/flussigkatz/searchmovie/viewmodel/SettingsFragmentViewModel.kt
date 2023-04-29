@@ -4,12 +4,12 @@ import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import xyz.flussigkatz.searchmovie.App
+import xyz.flussigkatz.searchmovie.di.AppScope
 import xyz.flussigkatz.searchmovie.domain.Interactor
 import javax.inject.Inject
 
-class SettingsFragmentViewModel : ViewModel() {
-    @Inject lateinit var interactor: Interactor
+@AppScope
+class SettingsFragmentViewModel @Inject constructor(private val interactor: Interactor) : ViewModel() {
     private val mutableThemePropertyLifeData = MutableLiveData<Int>()
     val themePropertyLifeData: LiveData<Int>
         get() = mutableThemePropertyLifeData
@@ -18,7 +18,6 @@ class SettingsFragmentViewModel : ViewModel() {
         get() = mutableSplashScreenPropertyLifeData
 
     init {
-        App.instance.dagger.inject(this)
         getSplashScreenState()
         getNightMode()
     }
